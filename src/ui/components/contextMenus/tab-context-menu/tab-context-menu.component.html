@@ -1,0 +1,7 @@
+<div class="context-menu" [style.left.px]="position.x" [style.top.px]="position.y">
+    <button *ngIf="!tab.isPinned" (click)="pinTab()">Закрепить вкладку</button>
+    <button *ngIf="tab.isPinned" (click)="unpinTab()">Открепить вкладку</button>
+    <button *ngIf="!tab.isPinned" (click)="closeTab()">Закрыть вкладку</button>
+    <button (click)="closeOtherTabs()">Закрыть остальные вкладки</button>
+    <button (click)="closeAllTabs()">Закрыть все вкладки</button>
+</div>

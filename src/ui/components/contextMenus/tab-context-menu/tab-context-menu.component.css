@@ -1,0 +1,23 @@
+.context-menu {
+    position: absolute;
+    background-color: var(--text-color);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px 0;
+    z-index: 1000;
+}
+button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: var(--text-color);
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--background-color);
+}
+button:hover {
+    color: #4CAF50;
+}
