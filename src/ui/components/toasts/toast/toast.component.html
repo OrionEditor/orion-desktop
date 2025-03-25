@@ -1,0 +1,11 @@
+<div
+        *ngIf="toast"
+        class="toast"
+        [ngClass]="{
+        'toast-success': toast.type === TOASTS_TYPES.SUCCESS,
+        'toast-warning': toast.type === TOASTS_TYPES.WARNING,
+        'toast-danger': toast.type === TOASTS_TYPES.DANGER
+      }"
+>
+    {{ toast.message }}
+</div>

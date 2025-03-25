@@ -1,0 +1,12 @@
+<div class="cards-container">
+    <div
+            class="card"
+            *ngFor="let item of items; let i = index"
+            [class.active]="i === selectedIndex"
+            (click)="selectCard(i)"
+    >
+        <img *ngIf="item.icon" [src]="item.icon" alt="icon" class="card-icon" />
+        <h3 *ngIf="item.header" class="card-header">{{ item.header }}</h3>
+        <p *ngIf="item.description" class="card-description">{{ item.description }}</p>
+    </div>
+</div>

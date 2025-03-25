@@ -1,0 +1,20 @@
+@import '../../../../src/styles/animations/glow.animation.css';
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background-color: var(--background-color);
+}
+
+.glowing-logo {
+    display: block;
+    width: 150px;
+    height: 150px;
+}
+
+/* Анимация свечения фона для .logo-container */
+.logo-container {
+    animation: glow-background 5s infinite alternate;
+}

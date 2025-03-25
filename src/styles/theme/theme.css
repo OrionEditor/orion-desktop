@@ -1,0 +1,22 @@
+/* theme.css */
+:root {
+    --background-color: white;
+    --text-color: black;
+    --text-description-color: #888;
+    --text-header-gray-color: #333;
+    --sidebar-color: #333;
+    /* добавьте другие общие переменные */
+    --success: #28a745;
+    --primary: #007bff;
+    --danger: #dc3545;
+    --warning: #ffc107;
+}
+
+body.dark {
+    --background-color: #222020;
+    --sidebar-color: #333;
+    --text-color: #ffffff;
+    --text-description-color: #888;
+    --text-header-gray-color: #333;
+    /* дополнительные цвета для темной темы */
+}

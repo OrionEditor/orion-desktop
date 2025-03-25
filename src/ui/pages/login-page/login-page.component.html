@@ -1,0 +1,47 @@
+<div class="login-page">
+    <!-- Левая часть -->
+    <div class="left-section">
+        <app-logo-container></app-logo-container>
+        <h1 class="editor-title">{{ 'app.name' | translate }}</h1>
+    </div>
+
+    <!-- Правая часть -->
+    <div class="right-section">
+        <ng-container *ngIf="mode === AuthModes.LOGIN; else registerOrCodeMode">
+            <!-- Контент для входа -->
+            <h2 class="header-title">{{ 'loginPage.headers.login' | translate }}</h2>
+            <app-input-text-field
+                    id="usernameLogin"
+                    [label]="'loginPage.labels.username' | translate"
+                    [(value)]="username"
+                    [readonly]="false"
+            ></app-input-text-field>
+            <app-input-text-field
+                    id="passwordLogin"
+                    [label]="'loginPage.labels.password' | translate"
+                    [(value)]="password"
+                    [readonly]="false"
+                    [type]="'password'"
+            ></app-input-text-field>
+            <div class="options">
+                <app-fill-button
+                        [buttonText]="'loginPage.buttons.login' | translate"
+                        (click)="login({username, password})"
+                ></app-fill-button>
+                <div class="toggle-text">
+                    <a (click)="toggleMode()">{{ 'loginPage.labels.noAccount' | translate }}</a>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #registerOrCodeMode>
+            <ng-container *ngIf="mode === AuthModes.REGISTER; else confirmCodeMode">
+                <app-register-page [mode]="mode" [UUID]="UUID" (toggleMode)="toggleMode()" (toggleConfirmMode)="confirmCode()" (setEmail)="setEmail($event)" (setUUID)="setUUID($event)" (setUsername)="setUsername($event)" (setPassword)="setPassword($event)"/>
+            </ng-container>
+
+            <ng-template #confirmCodeMode>
+                <app-codeconfirm-page [email]="email" [UUID]="UUID" (login)="login($event)" [username]="username" [password]="password"/>
+            </ng-template>
+        </ng-template>
+    </div>
+</div>

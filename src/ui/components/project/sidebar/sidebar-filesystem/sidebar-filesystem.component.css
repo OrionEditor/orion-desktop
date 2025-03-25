@@ -1,0 +1,13 @@
+.sidebar-filesystem{
+    color: white;
+    width: 100vw;
+    height: 95vh;
+    margin-top: 5vh;
+    overflow-y: auto;
+    margin-left: 1vw;
+}
+
+.sidebar-filesystem ul{
+    margin: 0;
+    padding: 0;
+}

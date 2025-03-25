@@ -1,0 +1,42 @@
+/* create-project-page.component.css */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    width: 700px;
+    height: 400px;
+    box-sizing: border-box; /* Это гарантирует, что padding и border не увеличивают размер элемента */
+    margin: 0;
+}
+
+.create-project-form {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+label {
+    font-weight: bold;
+}
+
+button {
+    margin-top: 20px;
+    padding: 8px;
+}
+
+.project-path-container #choose-folder{
+    right: 0;
+}
+
+.confirm-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selection-types{
+margin-left: 30px;
+}

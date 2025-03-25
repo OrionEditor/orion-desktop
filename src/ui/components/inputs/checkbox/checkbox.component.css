@@ -1,0 +1,21 @@
+/* Стиль для чекбокса */
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: #4caf50; /* Зеленый цвет текста */
+}
+
+.custom-checkbox input[type="checkbox"] {
+    accent-color: #4caf50; /* Зеленый цвет чекбокса */
+    margin-right: 8px;
+}
+
+.custom-checkbox span {
+    color: #4caf50; /* Зеленый цвет текста метки */
+}
+
+.custom-checkbox input[type="checkbox"]:checked::before {
+    color: #fff; /* Белый цвет галочки */
+}

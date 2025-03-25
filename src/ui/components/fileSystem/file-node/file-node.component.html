@@ -1,0 +1,79 @@
+<!--<li *ngIf="!isHiddenDirectory()" class="file-node">-->
+<!--    <div class="file-node-content" (contextmenu)="onRightClick($event)" (click)="isDir ? toggleExpand() : openFile()"     (dragstart)="onDragStart($event,node)"-->
+<!--         (dragover)="onDragOver($event)"-->
+<!--         (drop)="onDrop($event,node)"-->
+<!--         [draggable]="true">-->
+<!--        <span *ngIf="isDir" class="file-node-icon folder-icon">-->
+<!--            <img [src]="DEFAULT_FOLDER_ICON">-->
+<!--        </span>-->
+<!--        <span *ngIf="!isDir" class="file-node-icon file-icon">-->
+<!--            <img [src]="getFileIcon()">-->
+<!--        </span>-->
+<!--        <span class="file-node-name">-->
+<!--            {{getNodeName()}}-->
+<!--            <ng-container *ngIf="isDir">-->
+<!--                <span class="count-contents">-->
+<!--                ({{'projectPage.labels.nodeFileCountContents' | translate}} {{ countContents(node).files }} - {{'projectPage.labels.nodeDirectoryCountContents' | translate}} {{ countContents(node).folders - 1 }})-->
+<!--                </span>-->
+<!--            </ng-container>-->
+<!--        </span>-->
+<!--    </div>-->
+<!--    <ul *ngIf="isExpanded && node.children" class="file-node-children">-->
+<!--        <app-file-node *ngFor="let child of node.children" [node]="child"></app-file-node>-->
+<!--    </ul>-->
+<!--    <app-context-menu-node-->
+<!--            *ngIf="contextMenuVisible"-->
+<!--            [node]="node"-->
+<!--            [ngStyle]="{ left: contextMenuPosition.x + 'px', top: contextMenuPosition.y + 'px' }">-->
+<!--    </app-context-menu-node>-->
+<!--</li>-->
+
+<li *ngIf="!isHiddenDirectory()" class="file-node">
+    <div class="file-node-content"
+         (contextmenu)="onRightClick($event)"
+         (click)="isDir ? toggleExpand() : openFile()"
+         (dragstart)="onDragStart($event,node)"
+         (dragover)="onDragOver($event)"
+         (drop)="onDrop($event,node)"
+         [draggable]="true">
+
+        <!-- Линия вложенности -->
+<!--        <div *ngIf="isExpanded" class="indent-line"></div>-->
+        <div *ngIf="isExpanded"
+             class="indent-line"
+             [ngStyle]="{ height: getIndentLineHeight() }">
+        </div>
+
+
+        <span class="file-node-expand-arrow">
+            <span *ngIf=""></span>
+            <span></span>
+        </span>
+        <span *ngIf="isDir" class="file-node-icon folder-icon">
+            <img [src]="DEFAULT_FOLDER_ICON">
+        </span>
+        <span *ngIf="!isDir" class="file-node-icon file-icon">
+            <img [src]="getFileIcon()">
+        </span>
+
+        <span class="file-node-name">
+            {{ getNodeName() }}
+            <ng-container *ngIf="isDir">
+                <span class="count-contents">
+                ({{'projectPage.labels.nodeFileCountContents' | translate}} {{ countContents(node).files }} - {{'projectPage.labels.nodeDirectoryCountContents' | translate}} {{ countContents(node).folders - 1 }})
+                </span>
+            </ng-container>
+        </span>
+    </div>
+
+    <!-- Дочерние элементы -->
+    <ul *ngIf="isExpanded && node.children" class="file-node-children">
+        <app-file-node *ngFor="let child of node.children" [node]="child"></app-file-node>
+    </ul>
+
+    <app-context-menu-node
+            *ngIf="contextMenuVisible"
+            [node]="node"
+            [ngStyle]="{ left: contextMenuPosition.x + 'px', top: contextMenuPosition.y + 'px' }">
+    </app-context-menu-node>
+</li>

@@ -1,0 +1,120 @@
+{
+  "app": {
+    "name": "Orion"
+  },
+  "messages": {
+    "errors": {
+      "api": {
+        "FAILED_TO_FETCH_UUID": "Couldn't get the UUID",
+        "REQUEST_FAILED": "Request execution error"
+      },
+      "auth": {
+        "ERROR_REGISTER": "Registration failed. Please check the entered information and try again."
+      }
+    },
+    "success": {
+      "auth": {
+        "SUCCESS_REGISTER": "Registration was successful!",
+        "SUCCESS_LOGIN": "You have successfully logged in!"
+      }
+    },
+    "warnings": {}
+  },
+  "startPage": {
+    "recentProjectsHeader": "Recent Projects:",
+    "buttons": {
+      "create": "Create",
+      "open": "Open",
+      "login": "Login"
+    },"actions": {
+      "actionItemCreate": {
+        "title": "Create a new storage",
+        "description": "Create a new storage for your projects."
+      },
+      "actionItemOpen": {
+        "title": "Open project",
+        "description": "Open an existing project on the device."
+      }
+    },
+    "alerts": {
+      "openProject": "Choose directory not a project."
+    }
+  },
+  "createPage": {
+    "labels": {
+      "projectName": "Project Name:",
+      "projectPath": "Project Path:",
+      "createReadme": "Create README.md",
+      "choosePreset": "Choose preset:"
+    },
+    "alerts": {
+      "nameProject": "The project name cannot be empty, start with a digit, contain special characters except - _ ( ), and must not exceed 50 characters!",
+      "pathProject": "The project path does not exist!"
+    },
+    "buttons": {
+      "chooseFolder": "Select Folder",
+      "createProject": "Create Project"
+    },
+    "presets": {
+      "preset0": "None",
+      "preset1": "Preset for learn language",
+      "preset2": "Preset for web-develop",
+      "preset3": "Preset for college"
+    }
+  },
+  "loginPage": {
+    "labels": {
+      "username": "Username",
+      "password": "Password",
+      "email": "Email",
+      "noAccount": "Don't have an account?",
+      "haveAccount": "Already have an account?",
+      "confirmCodeMessage": "A code has been sent to your email address: "
+    },
+    "headers": {
+      "login": "Login",
+      "register": "Register",
+      "confirmCode": "Confirm email"
+    },
+    "buttons": {
+      "login": "Login",
+      "register": "Register",
+      "submitCode": "Confirm"
+    }
+  },
+  "projectPage": {
+    "buttons": {
+      "createButton": "Create",
+      "cancelButton": "Cancel"
+    },
+    "placeholders": {
+      "searchSidebar": "Search files and folders..."
+    },
+    "labels": {
+      "noResultsFound": "No results found",
+      "nodeFileCountContents": "Files:",
+      "nodeDirectoryCountContents": "Folders:"
+    },
+    "modals": {
+      "createFolderModal": {
+        "header": "Create a folder",
+        "description": "",
+        "placeholder": "Enter folder name..."
+      },
+      "createNoteModal": {
+        "header": "Create a note",
+        "description": "",
+        "placeholder": "Enter note name..."
+      }
+    },
+    "contextMenus": {
+      "nodeContextMenu": {
+        "elements": {
+          "onRename": "Rename",
+          "onDelete": "Delete",
+          "onCreate": "Create"
+        }
+      }
+    }
+  }
+}

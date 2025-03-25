@@ -1,0 +1,17 @@
+.project-page {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.content {
+    flex-grow: 1;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow-y: auto;
+    padding: 20px;
+    transition: width 0.3s ease;
+}
+

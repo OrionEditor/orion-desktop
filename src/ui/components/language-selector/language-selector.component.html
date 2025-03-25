@@ -1,0 +1,7 @@
+<div class="language-selector">
+    <select [(ngModel)]="currentLang" (change)="changeLanguage(currentLang)">
+        <option *ngFor="let lang of languages" [value]="lang" (click)="changeLanguage(lang)">
+            {{ lang | uppercase }}
+        </option>
+    </select>
+</div>

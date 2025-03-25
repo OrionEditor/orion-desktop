@@ -1,0 +1,121 @@
+{
+  "app": {
+    "name": "Orion"
+  },
+  "messages": {
+    "errors": {
+      "api": {
+        "FAILED_TO_FETCH_UUID": "Не удалось получить UUID",
+        "REQUEST_FAILED": "Ошибка выполнения запроса"
+      },
+      "auth": {
+        "ERROR_REGISTER": "Регистрация не выполнена. Пожалуйста, проверьте введенные данные и попробуйте снова."
+      }
+    },
+    "success": {
+      "auth": {
+        "SUCCESS_REGISTER": "Регистрация прошла успешно!",
+        "SUCCESS_LOGIN": "Вы успешно вошли в систему!"
+      }
+    },
+    "warnings": {}
+  },
+  "startPage": {
+    "recentProjectsHeader": "Последние проекты:",
+    "buttons": {
+      "create": "Создать",
+      "open": "Открыть",
+      "login": "Войти"
+    },
+    "actions": {
+      "actionItemCreate": {
+        "title": "Создать новое хранилище",
+        "description": "Создайте новое хранилище для ваших проектов."
+      },
+      "actionItemOpen": {
+        "title": "Открыть проект",
+        "description": "Откройте существующий проект на устройстве."
+      }
+    },
+    "alerts": {
+      "openProject": "Выбранная директория не является проектом"
+    }
+  },
+  "createPage": {
+    "labels": {
+      "projectName": "Название проекта:",
+      "projectPath": "Путь к проекту:",
+      "createReadme": "Создать README.md",
+      "choosePreset": "Выберите пресет:"
+    },
+    "alerts": {
+      "nameProject": "Название проекта не может быть пустым, начинаться с цифры, содержать спец.символы кроме - _ ( )  ,а также не может быть более 50 символов!",
+      "pathProject": "Путь к проекту не существует!"
+    },
+    "buttons": {
+      "chooseFolder": "Выбрать папку",
+      "createProject": "Создать проект"
+    },
+    "presets": {
+      "preset0": "Нет",
+      "preset1": "Пресет для изучения языка",
+      "preset2": "Пресет для веб-разработки",
+      "preset3": "Пресет для обучения в вузе"
+    }
+  },
+  "loginPage": {
+    "labels": {
+      "username": "Имя пользователя",
+      "password": "Пароль",
+      "email": "Электронная почта",
+      "noAccount": "У вас нет аккаунта?",
+      "haveAccount": "У вас есть аккаунт?",
+      "confirmCodeMessage": "На вашу электронную почту было отправлено письмо с кодом:"
+    },
+    "headers": {
+      "login": "Вход",
+      "register": "Регистрация",
+      "confirmCode": "Подтверждение электронной почты"
+    },
+    "buttons": {
+      "login": "Войти",
+      "register": "Регистрация",
+      "submitCode": "Подтвердить"
+    }
+  },
+  "projectPage": {
+    "buttons": {
+      "createButton": "Создать",
+      "cancelButton": "Отмена"
+    },
+    "placeholders": {
+      "searchSidebar": "Поиск файлов и папок..."
+    },
+    "labels": {
+      "noResultsFound": "Результаты не найдены",
+      "nodeFileCountContents": "Файлы:",
+      "nodeDirectoryCountContents": "Папки:"
+    },
+    "modals": {
+      "createFolderModal": {
+        "header": "Создать папку",
+        "description": "",
+        "placeholder": "Введите имя папки..."
+      },
+      "createNoteModal": {
+        "header": "Создать заметку",
+        "description": "",
+        "placeholder": "Введите имя заметки..."
+      }
+    },
+    "contextMenus": {
+      "nodeContextMenu": {
+        "elements": {
+          "onRename": "Переименовать",
+          "onDelete": "Удалить",
+          "onCreate": "Создать"
+        }
+      }
+    }
+  }
+}

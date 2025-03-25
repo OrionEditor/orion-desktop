@@ -1,0 +1,25 @@
+.context-menu {
+    position: absolute;
+    background-color: var(--background-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 150px;
+    z-index: 1000;
+    color: var(--text-color);
+}
+
+.context-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.context-menu li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.context-menu li:hover {
+    background-color: var(--text-description-color);
+}

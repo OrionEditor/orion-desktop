@@ -1,0 +1,24 @@
+<app-upload-modal
+        [isUploading]="uploadService.isUploading"
+        [progress]="uploadService.progress"
+></app-upload-modal>
+<app-toast/>
+<ng-container *ngIf="windowLabel === WINDOWS_LABELS.MAIN">
+    <app-start-page/>
+</ng-container>
+
+<ng-container *ngIf="windowLabel === WINDOWS_LABELS.CREATE_PROJECT">
+    <app-create-project-page/>
+</ng-container>
+
+<ng-container *ngIf="windowLabel === WINDOWS_LABELS.PROJECT_FULLSCREEN">
+    <app-project-page/>
+</ng-container>
+
+<ng-container *ngIf="windowLabel === WINDOWS_LABELS.LOGIN">
+    <app-login-page/>
+</ng-container>
+
+<ng-container *ngIf="windowLabel === WINDOWS_LABELS.PROFILE">
+    <app-profile-page/>
+</ng-container>

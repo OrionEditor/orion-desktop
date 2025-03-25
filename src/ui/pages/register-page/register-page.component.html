@@ -1,0 +1,30 @@
+<!-- Контент для регистрации -->
+<h2 class="header-title">{{ 'loginPage.headers.register' | translate }}</h2>
+<app-input-text-field
+        id="usernameRegister"
+        [label]="'loginPage.labels.username' | translate"
+        [(value)]="username"
+        [readonly]="false"
+></app-input-text-field>
+<app-input-text-field
+        id="emailRegister"
+        [label]="'loginPage.labels.email' | translate"
+        [(value)]="email"
+        [readonly]="false"
+></app-input-text-field>
+<app-input-text-field
+        id="passwordRegister"
+        [label]="'loginPage.labels.password' | translate"
+        [(value)]="password"
+        [readonly]="false"
+        [type]="'password'"
+></app-input-text-field>
+<div class="options">
+    <app-fill-button
+            [buttonText]="'loginPage.buttons.register' | translate"
+            (click)="register()"
+    ></app-fill-button>
+    <div class="toggle-text">
+        <a (click)="toggleModeFuncType()">{{ 'loginPage.labels.haveAccount' | translate }}</a>
+    </div>
+</div>

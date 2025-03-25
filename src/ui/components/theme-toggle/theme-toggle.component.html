@@ -1,0 +1,6 @@
+<div class="theme-toggle">
+    <button class="theme-toggle-btn" (click)="toggleTheme()">
+        <img *ngIf="currentTheme === 'dark'" src="assets/icons/svg/sun.svg"/>
+        <img *ngIf="currentTheme === 'light'" src="assets/icons/svg/moon.svg"/>
+    </button>
+</div>

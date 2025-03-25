@@ -1,0 +1,19 @@
+<!-- Контент для подтверждения кода -->
+<h2 class="header-title">{{ 'loginPage.headers.confirmCode' | translate }}</h2>
+<p class="confirmation-text">{{ 'loginPage.labels.confirmCodeMessage' | translate }} {{ email }}</p>
+<div class="code-inputs" #codeInputsEl [ngClass]="{ 'invalid': !isCodeValid && isCodeEntered, 'valid': isCodeValid && isCodeEntered }">
+    <input *ngFor="let code of codeInputs; let i = index"
+           type="text"
+           maxlength="1"
+           class="code-input"
+           [id]="'codeInput' + i"
+           (input)="onCodeInput($event, i)"
+           [value]="codeInputs[i]"
+           #codeInput>
+</div>
+<!--<div class="confirm-code-btn">-->
+<!--    <app-fill-button-->
+<!--            [buttonText]="'loginPage.buttons.submitCode' | translate"-->
+<!--            (click)="submitRegister()"-->
+<!--    ></app-fill-button>-->
+<!--</div>-->

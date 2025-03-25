@@ -1,0 +1,7 @@
+<div class="select-container">
+    <label for="component-select">{{ label }}</label>
+    <select id="component-select" (change)="onSelect($event)">
+        <option *ngIf="noneElement" [value]="0">нет</option>
+        <option *ngFor="let select of selects" [value]="select.id">{{ select.name }}</option>
+    </select>
+</div>

@@ -1,0 +1,17 @@
+<div class="sidebar-filesystem">
+    <div class="sidebar-filesystem-controls">
+        <app-sidebar-filesystem-controls [projectPath]="projectPath"       (expandAllEvent)="expandAllNodes()"
+                                         (collapseAllEvent)="collapseAllNodes()"/>
+        <app-sidebar-filesystem-search (searchQuery)="onSearch($event)"/>
+    </div>
+    <ul>
+        <ng-container *ngFor="let node of filteredFileStructure">
+            <app-file-node [node]="node"         (dragstart)="onDragStart(node)"
+                           (dragover)="onDragOver($event)"
+                           (drop)="onDrop(node)" draggable="true"></app-file-node>
+        </ng-container>
+        <div *ngIf="filteredFileStructure.length === 0" class="no-results">
+            {{'projectPage.labels.noResultsFound' | translate}}
+        </div>
+    </ul>
+</div>

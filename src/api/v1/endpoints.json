@@ -1,0 +1,7 @@
+{
+  "auth": {
+    "verifyEmail": "verify-email",
+    "login": "login",
+    "register": "register"
+  }
+}

@@ -1,0 +1,7 @@
+<div class="context-menu">
+    <ul>
+        <li *ngIf="isDirectory()" (click)="onCreate()">{{'projectPage.contextMenus.nodeContextMenu.elements.onCreate' | translate}}</li>
+        <li (click)="onRename()">{{'projectPage.contextMenus.nodeContextMenu.elements.onRename' | translate}}</li>
+        <li (click)="onDelete()">{{'projectPage.contextMenus.nodeContextMenu.elements.onDelete' | translate}}</li>
+    </ul>
+</div>

@@ -1,0 +1,12 @@
+<div class="overlay" *ngIf="isUploading">
+    <div class="upload-modal">
+<!--        <h5>Загрузка</h5>-->
+        <div class="upload-status">
+            <div class="progress-bar-container">
+                <div class="progress-bar" [style.width.%]="progress"></div>
+            </div>
+            <p class="progress-text">{{ progress }}%</p>
+            <button (click)="cancelUpload()">Отмена</button>
+        </div>
+    </div>
+</div>

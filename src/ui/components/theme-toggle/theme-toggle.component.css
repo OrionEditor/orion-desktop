@@ -1,0 +1,22 @@
+/* Переключатель темы */
+.theme-toggle {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    background-color: transparent;
+}
+
+.theme-toggle-btn {
+    /*background-color: #f7f7f7;*/
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    background-color: transparent;
+}
+
+.theme-toggle-btn img{
+    width: 16px;
+    height: 16px;
+}

@@ -1,0 +1,45 @@
+<div class="start-page-container">
+    <div class="main-content">
+        <!-- Левая часть (список проектов) -->
+        <div *ngIf="recentProjects.length > 0"  class="recent-projects">
+            <h2>{{'startPage.recentProjectsHeader' | translate}}</h2>
+            <ul>
+                <li *ngFor="let project of recentProjects">
+                    <div class="project-item">
+                        <div class="project-details">
+                            <div class="project-name">{{ project.name }}</div>
+                            <div class="project-path">{{ project.path }}</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="right-section" id="right-section">
+            <div class="editor-header">
+                <app-logo-container width="150px" height="150px"/>
+                <h1 class="editor-title">{{'app.name' | translate}}</h1>
+                <app-language-selector id="start-lang-selector"/>
+                <app-avatar *ngIf="hasAuth" id="start-avatar"/>
+                <app-fill-button *ngIf="!hasAuth" id="open-login-page" [buttonText]="'startPage.buttons.login' | translate" [colorBtn]="success" (click)="openLoginPage()"/>
+            </div>
+            <div class="action-buttons">
+                <div class="action-item">
+                    <div class="action-content">
+                        <div class="action-title">{{'startPage.actions.actionItemCreate.title' | translate}}</div>
+                        <div class="action-description">{{'startPage.actions.actionItemCreate.description' | translate}}</div>
+                    </div>
+                    <app-fill-button [buttonText]="'startPage.buttons.create' | translate" [colorBtn]="success" (click)="createProject()"/>
+                </div>
+                <div class="action-item">
+                    <div class="action-content">
+                        <div class="action-title">{{'startPage.actions.actionItemOpen.title' | translate}}</div>
+                        <div class="action-description">{{'startPage.actions.actionItemOpen.description' | translate}}</div>
+                    </div>
+                    <app-outline-button [buttonText]="'startPage.buttons.open' | translate" [colorBtn]="success" (click)="openProject()"/>
+                </div>
+                <app-theme-toggle [currentTheme]="currentTheme"/>
+            </div>
+        </div>
+    </div>
+</div>

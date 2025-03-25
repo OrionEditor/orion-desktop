@@ -1,0 +1,212 @@
+@import '../../../../src/styles/animations/glow.animation.css';
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    width: 800px;
+    height: 600px;
+    box-sizing: border-box; /* Это гарантирует, что padding и border не увеличивают размер элемента */
+}
+
+html, body{
+    overflow: hidden!important;
+    box-sizing: border-box; /* Это гарантирует, что padding и border не увеличивают размер элемента */
+}
+
+.start-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    width: 800px;
+    height: 600px;
+    overflow: hidden;
+    scrollbar-width: none;
+    scroll-margin: 0;
+    overflow-scrolling: auto;
+    box-sizing: border-box; /* Это гарантирует, что padding и border не увеличивают размер элемента */
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    background-color: var(--background-color);
+}
+
+.main-content {
+    display: flex;
+    /*width: 100%;*/
+    background-color: var(--background-color);
+    margin: 0;
+    color: var(--text-color);
+    height: 100%;
+}
+
+.recent-projects {
+    flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    align-content: start;
+    align-items: start;
+    /*align-items: center;*/
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.right-section{
+    margin-top: 100px;
+    flex: 0 0 70%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.recent-projects h2 {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.recent-projects ul {
+    list-style-type: none;
+    padding: 0;
+    background-color: var(--background-color);
+}
+
+.recent-projects li {
+}
+
+.project-item {
+    display: flex;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    transition: box-shadow 0.3s ease; /* Плавный переход для свечения */
+    background-color: var(--background-color);
+    min-width: 220px;
+    max-width: 250px;
+}
+
+.project-item:hover {
+    animation: glow-shadow-border 1.5s infinite alternate;
+    cursor: pointer;
+}
+
+.project-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--background-color);
+}
+
+.project-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.project-path {
+    font-size: 0.7rem;
+    color: var(--text-description-color)!important;
+    background-color: var(--background-color);
+}
+
+.editor-header {
+    flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*padding: 15px;*/
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.editor-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--background-color);
+}
+
+.editor-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    /*margin-top: 10px;*/
+}
+
+.action-buttons {
+    flex: 0 0 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    background-color: var(--background-color);
+}
+
+.action-item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+    /*border-radius: 5px;*/
+    /*width: 100%;*/
+    justify-content: space-between;
+    background-color: var(--background-color);
+}
+
+.action-content {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
+}
+
+.action-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.action-description {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 5px 0;
+    background-color: var(--background-color);
+}
+
+.settings-btn {
+    padding: 5px 10px;
+    background: none;
+    color: green;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+#start-lang-selector{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+}
+
+#open-login-page{
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+#start-avatar{
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}

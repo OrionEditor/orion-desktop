@@ -1,0 +1,11 @@
+<div class="sidebar" [class.hidden]="isSidebarHidden" [style.width]="sidebarWidth">
+    <div class="resizer" (mousedown)="startResizing($event)"></div>
+    <div class="left">
+        <app-sidebar-toolbar (toggleSidebar)="toggleSidebar()"/>
+        <app-sidebar-actions/>
+    </div>
+
+    <div class="right">
+        <app-sidebar-filesystem/>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="sidebar-filesystem-controls-items">
+    <div class="sidebar-filesystem-controls-item" (click)="onCreateNote()">
+        <img src="assets/icons/svg/filesystem/controls/new-note.svg">
+    </div>
+    <div class="sidebar-filesystem-controls-item" (click)="onCreateFolder()">
+        <img src="assets/icons/svg/filesystem/controls/new-folder.svg">
+    </div>
+</div>
+<app-text-modal
+        *ngIf="textModalService.isModalOpenStatus()"
+        [title]="textModalService.getModalTitle()"
+        [inputValue]="textModalService.getModalInput()"
+        (confirm)="confirmModal()"
+        (close)="closeModal()"
+        (inputValueChange)="textModalService.updateModalInput($event)"
+        [placeholderInput]="textModalService.getModalInputPlaceholder()"
+></app-text-modal>

@@ -1,0 +1,36 @@
+/* Контейнер для select */
+.select-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Стили для выпадающего списка */
+.select-container select {
+    padding: 8px 12px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4CAF50; /* Зелёный фон */
+    border: 2px solid #388E3C; /* Тёмно-зелёная рамка */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Стили при наведении и фокусе на select */
+.select-container select:hover,
+.select-container select:focus {
+    background-color: #66BB6A; /* Светло-зелёный фон при наведении */
+    border-color: #2E7D32; /* Более тёмная зелёная рамка */
+}
+
+/* Стили для опций */
+.select-container option {
+    color: #fff; /* Белый текст */
+    background-color: #4CAF50; /* Зелёный фон */
+}
+
+/* Стили для активной опции */
+.select-container option:checked {
+    background-color: #66BB6A; /* Светло-зелёный фон для выбранной опции */
+    color: #fff;
+}

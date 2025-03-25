@@ -1,0 +1,15 @@
+.account-btn {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.account-btn img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%; /* Круглый аватар */
+    transition: transform 0.2s ease;
+}
+
+.account-btn:hover img {
+    transform: scale(1.1); /* Увеличение при наведении */
+}

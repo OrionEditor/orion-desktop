@@ -1,0 +1,125 @@
+body{
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.login-page {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    height: 100vh; /* Полная высота экрана */
+}
+
+.left-section {
+    flex: 3; /* 30% ширины */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.right-section {
+    flex: 7; /* 70% ширины */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.editor-title {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.header-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: normal;
+    text-align: center;
+}
+
+app-input-text-field {
+    margin-bottom: 10px;
+    width: 80%; /* Для большей читаемости */
+}
+
+app-fill-button {
+    margin-top: 20px;
+}
+
+.toggle-text {
+    width: 220px;
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: space-between;
+    margin-left: 80px;
+}
+
+.toggle-text a {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.toggle-text a:hover {
+    text-decoration: underline;
+}
+
+.options{
+    /*margin-left: 35px;*/
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+}
+
+
+.code-inputs {
+    display: flex;
+    gap: 8px; /* Задаем промежуток между input'ами */
+    justify-content: center;
+    margin: 20px 0;
+    color: var(--success);
+}
+
+.code-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+    background-color: transparent;
+    color: var(--success);
+}
+
+.code-input:focus {
+    border-color: var(--success);
+}
+
+.code-inputs.valid .code-input{
+    border-color: green;
+    background-color: green;
+}
+
+.code-inputs.invalid .code-input{
+    border-color: red;
+    background-color: red;
+}
+
+.confirm-code-btn{
+    margin-left: 140px;
+}
