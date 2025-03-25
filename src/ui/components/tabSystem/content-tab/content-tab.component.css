@@ -65,7 +65,7 @@
 }
 
 .editor-textarea {
-    /*background: linear-gradient(to bottom, transparent 0%, transparent calc(1.5em * (var(--current-line) - 1)), rgba(76, 175, 80, 0.1) calc(1.5em * (var(--current-line) - 1)), rgba(76, 175, 80, 0.1) calc(1.5em * var(--current-line)), transparent calc(1.5em * var(--current-line)), transparent 100%);*/
+    background: linear-gradient(to bottom, transparent 0%, transparent calc(1.5em * (var(--current-line) - 1)), rgba(76, 175, 80, 0.1) calc(1.5em * (var(--current-line) - 1)), rgba(76, 175, 80, 0.1) calc(1.5em * var(--current-line)), transparent calc(1.5em * var(--current-line)), transparent 100%);
 }
 
 .rendered-content {
@@ -99,4 +99,18 @@
     height: 2vh;
     display: flex;
     flex-direction: column;
+}
+
+.info-stats {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    font-size: 12px;
+    color: #666;
+}
+
+.info-stats span {
+    background-color: var(--background-color);
+    padding: 2px 6px;
+    border-radius: 3px;
 }

@@ -20,6 +20,13 @@
     </div>
 
     <div class="tab-controls-info">
+        <div class="info-stats">
+            <span>Символов: {{ statistics.characterCount }}</span>
+            <span>Слов: {{ statistics.wordCount }}</span>
+            <span>Строк: {{ statistics.lineCount }}</span>
+            <span>Время чтения: {{ statistics.readingTime }}</span>
+            <span>Заголовков: {{ statistics.headingCount }}</span>
+        </div>
         <div class="info-path">
             <p>{{ filePath }}</p>
         </div>
