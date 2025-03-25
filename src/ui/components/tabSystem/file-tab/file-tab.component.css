@@ -3,17 +3,22 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
+    align-content: center;
     gap: 8px;
     opacity: 0.4;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 .tab.active {
-    background-color: var(--background-color);
-    opacity: 1;
+    background-color: var(--text-color);
+    opacity: 0.8;
     color: #2E7D32;
 }
 .close-btn {
     border: none;
     background: none;
     cursor: pointer;
-    color: var(--text-color);
+    color: #791616;
+    font-size: 1.2rem;
 }

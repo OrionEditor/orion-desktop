@@ -2,6 +2,7 @@
 :root {
     --background-color: white;
     --text-color: black;
+    --green-color: green;
     --text-description-color: #888;
     --text-header-gray-color: #333;
     --sidebar-color: #333;
@@ -15,6 +16,7 @@ body.dark {
     --background-color: #222020;
     --sidebar-color: #333;
     --text-color: #ffffff;
+    --green-color: green;
     --text-description-color: #888;
     --text-header-gray-color: #333;
     --success: #28a745;

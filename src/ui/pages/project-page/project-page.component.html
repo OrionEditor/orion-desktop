@@ -2,7 +2,7 @@
     <app-sidebar     [sidebarWidth]="sidebarWidth"
                      [isSidebarHidden]="isSidebarHidden" [projectPath]="projectPath" (fileSelected)="openTab($event)"/>
 
-    <div class="content">
+    <div class="content" *ngIf="tabs.length > 0">
         <div class="tabs-container" [style.border-bottom]="tabs.length > 0 ? '1px solid var(--text-color)' : null">
             <app-file-tab
                     *ngFor="let tab of tabs"
@@ -16,5 +16,24 @@
                 *ngIf="activeTab"
                 [filePath]="activeTab.filePath">
         </app-content-tab>
+    </div>
+
+    <div class="standard-content" *ngIf="tabs.length === 0">
+        <div class="welcome-container">
+            <h2>Добро пожаловать в Markdown-редактор!</h2>
+            <p>Откройте файл из боковой панели или создайте новый файл/папку, чтобы начать работу.</p>
+            <div class="button-group">
+                <button class="new-file-btn">Создать новый файл</button>
+                <button class="new-folder-btn">Создать новую папку</button>
+            </div>
+            <div class="tips">
+                <h3>Полезные советы:</h3>
+                <ul>
+                    <li>Кликните на файл в боковой панели для открытия</li>
+                    <li>Используйте правую кнопку мыши для контекстного меню</li>
+                    <li>Прокручивайте табы, если их слишком много</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
