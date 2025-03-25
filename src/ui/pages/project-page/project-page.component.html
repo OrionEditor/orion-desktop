@@ -3,7 +3,7 @@
                      [isSidebarHidden]="isSidebarHidden" [projectPath]="projectPath" (fileSelected)="openTab($event)"/>
 
     <div class="content">
-        <div class="tabs-container">
+        <div class="tabs-container" [style.border-bottom]="tabs.length > 0 ? '1px solid var(--text-color)' : null">
             <app-file-tab
                     *ngFor="let tab of tabs"
                     [tab]="tab"

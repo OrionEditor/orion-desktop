@@ -4,12 +4,16 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    opacity: 0.4;
 }
 .tab.active {
-    background-color: #e0e0e0;
+    background-color: var(--background-color);
+    opacity: 1;
+    color: #2E7D32;
 }
 .close-btn {
     border: none;
     background: none;
     cursor: pointer;
+    color: var(--text-color);
 }

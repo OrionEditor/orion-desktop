@@ -28,7 +28,6 @@ export class SidebarComponent {
   constructor(private tabService: TabService) {}
 
   onFileSelected(fileInfo: {path: string, name: string}) {
-    this.tabService.createTab(fileInfo.path, fileInfo.name);
     this.fileSelected.emit(fileInfo);
   }
 
