@@ -8,7 +8,13 @@
                     *ngFor="let tab of tabs"
                     [tab]="tab"
                     (close)="closeTab($event)"
-                    (select)="setActiveTab($event)">
+                    (select)="setActiveTab($event)"
+                    [class.pinned]="tab.isPinned"
+                    (pinTabEvent)="pinTab($event)"
+                    (unpinTabEvent)="unpinTab($event)"
+                    (closeOthersEvent)="closeOtherTabs($event)"
+                    (closeAllEvent)="closeAllTabs()">
+            >
             </app-file-tab>
         </div>
 
@@ -23,8 +29,8 @@
             <h2>Добро пожаловать в Markdown-редактор!</h2>
             <p>Откройте файл из боковой панели или создайте новый файл/папку, чтобы начать работу.</p>
             <div class="button-group">
-                <button class="new-file-btn">Создать новый файл</button>
-                <button class="new-folder-btn">Создать новую папку</button>
+                <button class="new-file-btn" (click)="onCreateNote()">Создать новый файл</button>
+                <button class="new-folder-btn" (click)="onCreateFolder()">Создать новую папку</button>
             </div>
             <div class="tips">
                 <h3>Полезные советы:</h3>

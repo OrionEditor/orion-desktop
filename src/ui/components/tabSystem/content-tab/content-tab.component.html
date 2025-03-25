@@ -1,3 +1,27 @@
 <div class="tab-content" *ngIf="filePath">
-    <p>Редактирование файла: {{ filePath }}</p>
+    <div class="tab-controls-actions">
+
+    </div>
+
+    <div class="tab-controls-editor">
+        <div class="editor-container">
+            <div class="line-numbers">
+                <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>
+            </div>
+            <textarea
+                    class="editor-textarea"
+                    [(ngModel)]="content"
+                    (input)="onContentChange($event)"
+                    (keyup)="onCursorMove($event)"
+                    (click)="onCursorMove($event)"
+                    placeholder="Введите Markdown здесь..."></textarea>
+            <div class="rendered-content" [innerHTML]="renderedContent"></div>
+        </div>
+    </div>
+
+    <div class="tab-controls-info">
+        <div class="info-path">
+            <p>{{ filePath }}</p>
+        </div>
+    </div>
 </div>

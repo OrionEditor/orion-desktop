@@ -1,4 +1,14 @@
-<div class="tab" [class.active]="tab.isActive" (click)="onTabClick()">
+<div class="tab" [class.active]="tab.isActive" (click)="onTabClick()" (contextmenu)="onRightClick($event)">
     <span>{{ tab.fileName }}</span>
-    <button class="close-btn" (click)="onClose($event)">×</button>
+    <button *ngIf="!tab.isPinned" class="close-btn" (click)="onClose($event)">×</button>
 </div>
+<app-tab-context-menu
+        *ngIf="showContextMenu"
+        [tab]="tab"
+        [position]="contextMenuPosition"
+        (pin)="pinTab()"
+        (unpin)="unpinTab()"
+        (close)="closeTab()"
+        (closeOthers)="closeOtherTabs()"
+        (closeAll)="closeAllTabs()">
+</app-tab-context-menu>

@@ -4,4 +4,5 @@ export interface Tab {
     filePath: string;
     content?: string;
     isActive: boolean;
+    isPinned: boolean;
 }

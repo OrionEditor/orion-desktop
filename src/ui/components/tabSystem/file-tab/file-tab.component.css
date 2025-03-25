@@ -15,10 +15,14 @@
     opacity: 0.8;
     color: #2E7D32;
 }
+.tab.pinned {
+    opacity: 0.6;
+    border-left: 3px solid #4CAF50;
+}
 .close-btn {
     border: none;
     background: none;
     cursor: pointer;
     color: #791616;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }

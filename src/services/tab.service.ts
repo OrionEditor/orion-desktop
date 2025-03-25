@@ -23,7 +23,8 @@ export class TabService {
                 id,
                 fileName,
                 filePath,
-                isActive: true
+                isActive: true,
+                isPinned: false
             };
 
             this.tabs.forEach(tab => tab.isActive = false);
@@ -34,11 +35,9 @@ export class TabService {
 
     closeTab(id: string): void {
         const index = this.tabs.findIndex(tab => tab.id === id);
-        if (index !== -1) {
+        if (index !== -1 && !this.tabs[index].isPinned) {
             const wasActive = this.tabs[index].isActive;
             this.tabs.splice(index, 1);
-
-            // Если закрытый таб был активным, активируем первый оставшийся
             if (wasActive && this.tabs.length > 0) {
                 this.tabs[0].isActive = true;
             }
@@ -65,5 +64,32 @@ export class TabService {
 
     private updateTabs(): void {
         this.tabsSubject.next([...this.tabs]);
+    }
+
+    pinTab(id: string): void {
+        const tab = this.tabs.find(tab => tab.id === id);
+        if (tab) {
+            tab.isPinned = true;
+            this.updateTabs();
+        }
+    }
+
+    unpinTab(id: string): void {
+        const tab = this.tabs.find(tab => tab.id === id);
+        if (tab) {
+            tab.isPinned = false;
+            this.updateTabs();
+        }
+    }
+
+    closeOtherTabs(currentTabId: string): void {
+        this.tabs = this.tabs.filter(tab => tab.id === currentTabId || tab.isPinned);
+        this.setActiveTab(currentTabId);
+        this.updateTabs();
+    }
+
+    closeAllTabs(): void {
+        this.tabs = [];
+        this.updateTabs();
     }
 }

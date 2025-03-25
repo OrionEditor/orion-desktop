@@ -10,6 +10,9 @@ import {NgForOf, NgIf} from "@angular/common";
 import {ContentTabComponent} from "../../components/tabSystem/content-tab/content-tab.component";
 import {TabService} from "../../../services/tab.service";
 import {Tab} from "../../../interfaces/components/tab.interface";
+import {TEXT_MODAL_TYPES} from "../../../shared/constants/modals/textModal/textModal.types";
+import {TextModalService} from "../../../services/Modals/TextModal/textModal.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-project-page',
@@ -39,7 +42,7 @@ export class ProjectPageComponent {
   tabs: Tab[] = [];
   activeTab: Tab | undefined;
 
-  constructor(private configService: ConfigService, private languageService: LanguageService, private tabService: TabService) {
+  constructor(private configService: ConfigService, private languageService: LanguageService, private tabService: TabService, protected textModalService: TextModalService, private translateService: TranslateService) {
     this.tabService.tabs$.subscribe(tabs => {
       this.tabs = tabs;
       this.activeTab = tabs.find(tab => tab.isActive);
@@ -73,5 +76,35 @@ export class ProjectPageComponent {
 
   setActiveTab(tabId: string): void {
     this.tabService.setActiveTab(tabId);
+  }
+
+  async onCreateNote() {
+    const translatedHeader = await this.translateService.get(`projectPage.modals.createNoteModal.header`).toPromise();
+    const translatedPlaceholder = await this.translateService.get(`projectPage.modals.createNoteModal.placeholder`).toPromise();
+
+    this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.NOTE, translatedPlaceholder);
+  }
+
+  async onCreateFolder() {
+    const translatedHeader = await this.translateService.get(`projectPage.modals.createFolderModal.header`).toPromise();
+    const translatedPlaceholder = await this.translateService.get(`projectPage.modals.createFolderModal.placeholder`).toPromise();
+
+    this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.FOLDER, translatedPlaceholder);
+  }
+
+  pinTab(tabId: string): void {
+    this.tabService.pinTab(tabId);
+  }
+
+  unpinTab(tabId: string): void {
+    this.tabService.unpinTab(tabId);
+  }
+
+  closeOtherTabs(tabId: string): void {
+    this.tabService.closeOtherTabs(tabId);
+  }
+
+  closeAllTabs(): void {
+    this.tabService.closeAllTabs();
   }
 }
