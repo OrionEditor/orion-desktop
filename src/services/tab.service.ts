@@ -14,18 +14,22 @@ export class TabService {
     constructor() {}
 
     createTab(filePath: string, fileName: string): void {
-        const id = this.generateUniqueId();
-        const newTab: Tab = {
-            id,
-            fileName,
-            filePath,
-            isActive: true
-        };
+        const existingTab = this.tabs.find(tab => tab.filePath === filePath);
+        if (existingTab) {
+            this.setActiveTab(existingTab.id);
+        } else {
+            const id = this.generateUniqueId();
+            const newTab: Tab = {
+                id,
+                fileName,
+                filePath,
+                isActive: true
+            };
 
-        // Деактивируем все остальные табы
-        this.tabs.forEach(tab => tab.isActive = false);
-        this.tabs.push(newTab);
-        this.updateTabs();
+            this.tabs.forEach(tab => tab.isActive = false);
+            this.tabs.push(newTab);
+            this.updateTabs();
+        }
     }
 
     closeTab(id: string): void {
