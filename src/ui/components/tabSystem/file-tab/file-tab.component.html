@@ -1,0 +1,4 @@
+<div class="tab" [class.active]="tab.isActive" (click)="onTabClick()">
+    <span>{{ tab.fileName }}</span>
+    <button class="close-btn" (click)="onClose($event)">×</button>
+</div>

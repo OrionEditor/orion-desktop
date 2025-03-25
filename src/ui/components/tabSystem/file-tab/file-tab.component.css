@@ -1,0 +1,15 @@
+.tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tab.active {
+    background-color: #e0e0e0;
+}
+.close-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
