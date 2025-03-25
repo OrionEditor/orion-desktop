@@ -8,7 +8,9 @@
         <ng-container *ngFor="let node of filteredFileStructure">
             <app-file-node [node]="node"         (dragstart)="onDragStart(node)"
                            (dragover)="onDragOver($event)"
-                           (drop)="onDrop(node)" draggable="true"></app-file-node>
+                           (drop)="onDrop(node)" draggable="true"
+                           (fileSelected)="onFileSelected($event)"
+            ></app-file-node>
         </ng-container>
         <div *ngIf="filteredFileStructure.length === 0" class="no-results">
             {{'projectPage.labels.noResultsFound' | translate}}

@@ -6,6 +6,7 @@ import {DEFAULT_FILE_ICON, FILE_ICONS} from "../../../../shared/constants/FileSy
 import {DEFAULT_FOLDER_ICON} from "../../../../shared/constants/FileSystem/folder";
 import {TranslatePipe} from "@ngx-translate/core";
 import { ChangeDetectorRef } from '@angular/core';
+import {TabService} from "../../../../services/tab.service";
 
 
 @Component({
@@ -26,13 +27,14 @@ export class FileNodeComponent {
   @Output() dragstart = new EventEmitter<void>();
   @Output() dragover = new EventEmitter<DragEvent>();
   @Output() drop = new EventEmitter<FileSystemNode>();
+  @Output() fileSelected = new EventEmitter<{path: string, name: string}>();
 
   isExpanded = false;
   isDir: boolean = false;
   contextMenuVisible = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private cdRef: ChangeDetectorRef, private tabService: TabService) { }
 
     onDragStart(event: DragEvent, node: FileSystemNode) {
     event.stopPropagation(); // Предотвращаем всплытие события
@@ -94,8 +96,13 @@ export class FileNodeComponent {
 
   // Метод для открытия файла
   openFile() {
-    console.log('Файл открыт:', this.node.name);
-  }
+    if (!this.isDir) {
+      this.fileSelected.emit({
+        path: this.node.path,
+        name: this.node.name
+      });
+      console.log('Файл открыт:', this.node.name);
+    }  }
 
   onRightClick(event: MouseEvent) {
     event.preventDefault(); // Останавливаем стандартное контекстное меню

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ConfigService} from "../../../../../services/configService";
 import {FileSystemNode, FileSystemService} from "../../../../../services/FileSystem/fileSystem.service";
 import {NgForOf, NgIf} from "@angular/common";
@@ -6,6 +6,7 @@ import {FileNodeComponent} from "../../../fileSystem/file-node/file-node.compone
 import {SidebarFilesystemSearchComponent} from "./sidebar-filesystem-search/sidebar-filesystem-search.component";
 import {SidebarFilesystemControlsComponent} from "./sidebar-filesystem-controls/sidebar-filesystem-controls.component";
 import {TranslatePipe} from "@ngx-translate/core";
+import {TabService} from "../../../../../services/tab.service";
 
 @Component({
   selector: 'app-sidebar-filesystem',
@@ -27,6 +28,11 @@ export class SidebarFilesystemComponent {
   filteredFileStructure: FileSystemNode[] = [];
   searchQuery: string = '';
   draggedNode: FileSystemNode | null = null;
+  @Output() fileSelected = new EventEmitter<{path: string, name: string}>();
+
+  onFileSelected(fileInfo: {path: string, name: string}){
+    this.fileSelected.emit(fileInfo);
+  }
 
   onDragStart(node: FileSystemNode) {
     this.draggedNode = node;

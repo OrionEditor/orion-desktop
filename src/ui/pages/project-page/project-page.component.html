@@ -1,9 +1,20 @@
 <div class="project-page">
     <app-sidebar     [sidebarWidth]="sidebarWidth"
-                     [isSidebarHidden]="isSidebarHidden" [projectPath]="projectPath"/>
+                     [isSidebarHidden]="isSidebarHidden" [projectPath]="projectPath" (fileSelected)="openTab($event)"/>
 
     <div class="content">
-        <!-- Контент правой части (табы и редактирование) -->
-        <h1>Редактирование файла</h1>
+        <div class="tabs-container">
+            <app-file-tab
+                    *ngFor="let tab of tabs"
+                    [tab]="tab"
+                    (close)="closeTab($event)"
+                    (select)="setActiveTab($event)">
+            </app-file-tab>
+        </div>
+
+        <app-content-tab
+                *ngIf="activeTab"
+                [filePath]="activeTab.filePath">
+        </app-content-tab>
     </div>
 </div>

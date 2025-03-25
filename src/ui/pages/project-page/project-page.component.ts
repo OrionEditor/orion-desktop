@@ -5,12 +5,21 @@ import {ConfigService} from "../../../services/configService";
 import {LanguageService} from "../../../services/language.service";
 import {invoke} from "@tauri-apps/api/core";
 import {SidebarComponent} from "../../components/project/sidebar/sidebar.component";
+import {FileTabComponent} from "../../components/tabSystem/file-tab/file-tab.component";
+import {NgForOf, NgIf} from "@angular/common";
+import {ContentTabComponent} from "../../components/tabSystem/content-tab/content-tab.component";
+import {TabService} from "../../../services/tab.service";
+import {Tab} from "../../../interfaces/components/tab.interface";
 
 @Component({
   selector: 'app-project-page',
   standalone: true,
   imports: [
-    SidebarComponent
+    SidebarComponent,
+    FileTabComponent,
+    NgForOf,
+    ContentTabComponent,
+    NgIf
   ],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.css'
@@ -27,7 +36,15 @@ export class ProjectPageComponent {
 
   isDragging: boolean = false;
 
-  constructor(private configService: ConfigService, private languageService: LanguageService) {}
+  tabs: Tab[] = [];
+  activeTab: Tab | undefined;
+
+  constructor(private configService: ConfigService, private languageService: LanguageService, private tabService: TabService) {
+    this.tabService.tabs$.subscribe(tabs => {
+      this.tabs = tabs;
+      this.activeTab = tabs.find(tab => tab.isActive);
+    });
+  }
 
   ngOnInit() {
     this.currentTheme = this.configService.getTheme();
@@ -44,5 +61,17 @@ export class ProjectPageComponent {
     observeThemeChanges();
 
     this.projectPath = this.configService.getLastOpened();
+  }
+
+  openTab(fileInfo: {path: string, name: string}): void {
+    this.tabService.createTab(fileInfo.path, fileInfo.name);
+  }
+
+  closeTab(tabId: string): void {
+    this.tabService.closeTab(tabId);
+  }
+
+  setActiveTab(tabId: string): void {
+    this.tabService.setActiveTab(tabId);
   }
 }

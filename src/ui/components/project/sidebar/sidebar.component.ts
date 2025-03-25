@@ -3,6 +3,7 @@ import {invoke} from "@tauri-apps/api/core";
 import {SidebarToolbarComponent} from "./sidebar-toolbar/sidebar-toolbar.component";
 import {SidebarActionsComponent} from "./sidebar-actions/sidebar-actions.component";
 import {SidebarFilesystemComponent} from "./sidebar-filesystem/sidebar-filesystem.component";
+import {TabService} from "../../../../services/tab.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -22,6 +23,14 @@ export class SidebarComponent {
   @Input() projectPath: string | null = "";
   @Output() sidebarWidthChange = new EventEmitter<string>();
   @Output() isSidebarHiddenChange = new EventEmitter<boolean>();
+  @Output() fileSelected = new EventEmitter<{path: string, name: string}>();
+
+  constructor(private tabService: TabService) {}
+
+  onFileSelected(fileInfo: {path: string, name: string}) {
+    this.tabService.createTab(fileInfo.path, fileInfo.name);
+    this.fileSelected.emit(fileInfo);
+  }
 
   startResizing(event: MouseEvent) {
     event.preventDefault();
