@@ -1,4 +1,3 @@
-// markdown-import.service.ts (альтернативная версия)
 import { Injectable } from '@angular/core';
 import { readTextFile, readFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import htmlToMd from 'html-to-md';
