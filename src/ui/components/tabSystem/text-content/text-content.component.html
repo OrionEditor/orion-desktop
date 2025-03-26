@@ -1,1 +1,24 @@
-<p>text-content works!</p>
+<div class="text-content" *ngIf="filePath">
+    <div class="editor-container">
+        <div class="line-numbers">
+      <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">
+        {{ number }}
+      </span>
+        </div>
+        <textarea
+            #textareaRef
+            class="editor-textarea"
+            [(ngModel)]="content"
+            (input)="onContentChange($event)"
+            (keyup)="onCursorMove($event)"
+            (click)="onCursorMove($event)"
+            placeholder="Введите текст здесь..."
+        ></textarea>
+    </div>
+
+    <div class="info">
+        <span>Имя файла: {{ fileName }}</span>
+        <span>Размер: {{ fileSize }}</span>
+        <span>Строк: {{ lineCount }}</span>
+    </div>
+</div>

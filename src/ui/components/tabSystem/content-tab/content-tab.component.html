@@ -11,6 +11,10 @@
         <app-video-content [fileName]="fileName" [filePath]="filePath"/>
     </ng-container>
 
+    <ng-container *ngIf="getFileExtension(fileName) === FILE_TYPES.TXT">
+        <app-text-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedFile(getFileExtension(fileName))">
         <app-not-open-content [fileName]="fileName" [filePath]="filePath"/>
     </ng-container>

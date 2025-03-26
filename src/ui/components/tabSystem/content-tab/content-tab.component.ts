@@ -14,6 +14,7 @@ import {MarkdownContentComponent} from "../markdown-content/markdown-content.com
 import {ImageContentComponent} from "../image-content/image-content.component";
 import {VideoContentComponent} from "../video-content/video-content.component";
 import {NotOpenContentComponent} from "../not-open-content/not-open-content.component";
+import {TextContentComponent} from "../text-content/text-content.component";
 
 @Component({
   selector: 'app-content-tab',
@@ -25,7 +26,8 @@ import {NotOpenContentComponent} from "../not-open-content/not-open-content.comp
     MarkdownContentComponent,
     ImageContentComponent,
     VideoContentComponent,
-    NotOpenContentComponent
+    NotOpenContentComponent,
+    TextContentComponent
   ],
   templateUrl: './content-tab.component.html',
   styleUrl: './content-tab.component.css'
