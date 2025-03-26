@@ -1,47 +1,17 @@
 <div class="tab-content" *ngIf="filePath">
-    <div class="tab-controls-actions">
-        <div class="export-section">
-            <select [(ngModel)]="exportFormat" class="export-select">
-                <option value="html">Экспорт в HTML</option>
-                <option value="pdf">Экспорт в PDF</option>
-            </select>
-            <button (click)="exportFile()" class="export-btn">Экспортировать</button>
-        </div>
-        <div class="import-section">
-            <select [(ngModel)]="importFormat" class="import-select">
-                <option value="html">Импорт из HTML</option>
-                <option value="pdf">Импорт из PDF</option>
-            </select>
-            <button (click)="importFile()" class="import-btn">Импортировать</button>
-        </div>
-    </div>
+    <ng-container *ngIf="getFileExtension(fileName) === FILE_TYPES.MD">
+        <app-markdown-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
 
-    <div class="tab-controls-editor">
-        <div class="editor-container">
-            <div class="line-numbers">
-                <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>
-            </div>
-            <textarea
-                    class="editor-textarea"
-                    [(ngModel)]="content"
-                    (input)="onContentChange($event)"
-                    (keyup)="onCursorMove($event)"
-                    (click)="onCursorMove($event)"
-                    placeholder="Введите Markdown здесь..."></textarea>
-            <div class="rendered-content" [innerHTML]="renderedContent"></div>
-        </div>
-    </div>
+    <ng-container *ngIf="isImageFile(getFileExtension(fileName))">
+        <app-image-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
 
-    <div class="tab-controls-info">
-        <div class="info-path">
-            <span>{{ filePath }}</span>
-        </div>
-        <div class="info-stats">
-            <span>Символов: {{ statistics.characterCount }}</span>
-            <span>Слов: {{ statistics.wordCount }}</span>
-            <span>Строк: {{ statistics.lineCount }}</span>
-            <span>Время чтения: {{ statistics.readingTime }}</span>
-            <span>Заголовков: {{ statistics.headingCount }}</span>
-        </div>
-    </div>
+    <ng-container *ngIf="isVideoFile(getFileExtension(fileName))">
+        <app-video-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
+
+    <ng-container *ngIf="!isSupportedFile(getFileExtension(fileName))">
+        <app-not-open-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
 </div>

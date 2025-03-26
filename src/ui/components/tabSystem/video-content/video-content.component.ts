@@ -1,13 +1,13 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-image-content',
+  selector: 'app-video-content',
   standalone: true,
   imports: [],
-  templateUrl: './image-content.component.html',
-  styleUrl: './image-content.component.css'
+  templateUrl: './video-content.component.html',
+  styleUrl: './video-content.component.css'
 })
-export class ImageContentComponent {
+export class VideoContentComponent {
   @Input() filePath: string = '';
   @Input() fileName: string = '';
 }
