@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {getFileExtension} from "../../../../utils/file.utils";
 
 @Component({
   selector: 'app-not-open-content',
@@ -10,4 +11,8 @@ import {Component, Input} from '@angular/core';
 export class NotOpenContentComponent {
   @Input() filePath: string = '';
   @Input() fileName: string = '';
+
+  get fileExtension(): string {
+    return getFileExtension(this.fileName) || 'неизвестный формат';
+  }
 }
