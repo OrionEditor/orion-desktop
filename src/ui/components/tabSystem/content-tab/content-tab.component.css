@@ -3,9 +3,21 @@
 }
 
 .tab-controls-actions{
-    width: 100%;
+    width: 98%;
     height: 5vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
 
+.export-section, .import-section{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
 }
 
 .tab-controls-editor{
@@ -127,7 +139,7 @@
     border-radius: 3px;
 }
 
-.export-select {
+.export-select, .import-select {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -135,7 +147,7 @@
     background-color: #fff;
 }
 
-.export-btn {
+.export-btn, .import-btn {
     padding: 5px 15px;
     background-color: #4CAF50;
     color: white;
@@ -145,6 +157,6 @@
     font-size: 14px;
 }
 
-.export-btn:hover {
+.export-btn:hover, .import-btn:hover {
     background-color: #45a049;
 }

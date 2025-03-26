@@ -7,7 +7,8 @@ import {MarkdownStatistics} from "../../../../interfaces/markdown/markdown-stati
 import {MarkdownInfoService} from "../../../../services/Markdown/markdown-info.service";
 import {DialogService} from "../../../../services/dialog.service";
 import {MarkdownExportService} from "../../../../services/Markdown/markdown-export.service";
-import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
+import {FILE_TYPES, getExtensionWithDot} from "../../../../shared/constants/FileSystem/files.types";
+import {MarkdownImportService} from "../../../../services/Markdown/markdown.import.service";
 
 @Component({
   selector: 'app-content-tab',
@@ -39,6 +40,7 @@ export class ContentTabComponent {
   }
 
   exportFormat: string = FILE_TYPES.HTML;
+  importFormat: string = FILE_TYPES.HTML;
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
@@ -113,7 +115,7 @@ export class ContentTabComponent {
   }
 
   async exportFile() {
-    const selectedPath = await this.dialogService.selectPath(true); // Выбор директории
+    const selectedPath = await this.dialogService.selectPath(true);
     if (selectedPath) {
       const exportPath = `${selectedPath}/${this.fileName}.${this.exportFormat}`;
       try {
@@ -124,6 +126,31 @@ export class ContentTabComponent {
         }
       } catch (error) {
       }
+    }
+  }
+
+  async importFile() {
+    const selectedPath = await this.dialogService.selectPath(false); // Выбор файла
+    if (selectedPath && typeof selectedPath === 'string' && (selectedPath.endsWith(getExtensionWithDot(FILE_TYPES.HTML)))) {
+      let markdownContent: string;
+      try {
+        if (this.importFormat === FILE_TYPES.HTML) {
+          markdownContent = await MarkdownImportService.importFromHtml(selectedPath);
+        } else {
+          return;
+        }
+
+        const savePath = await this.dialogService.selectPath(true);
+        if (savePath && typeof savePath === 'string') {
+          // const fileName = selectedPath.split('/').pop()?.split('.')[0] || 'imported';
+          const markdownPath = `${savePath}/${this.fileName}.${FILE_TYPES.MD}`;
+          await MarkdownImportService.saveMarkdown(markdownContent, markdownPath);
+          this.content = markdownContent;
+          this.markdownService.saveMarkdownFile(this.filePath, markdownContent);
+        }
+      } catch (error) {
+      }
+    } else {
     }
   }
 }

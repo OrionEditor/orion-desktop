@@ -19,14 +19,12 @@ export class DialogService {
         }
     }
 
-    // Функция для проверки наличия папки .mnote внутри выбранной папки
     async hasOrionFolder(path: string): Promise<boolean> {
         try {
             // Чтение содержимого папки
             const entries = await readDir(path);
-            // Проверяем, есть ли папка с именем .mnote
-            const hasMnote = entries.some(entry => entry.isDirectory && entry.name === '.orion');
-            return hasMnote;
+            const hasOrion = entries.some(entry => entry.isDirectory && entry.name === '.orion');
+            return hasOrion;
         } catch (error) {
             return false;
         }
