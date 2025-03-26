@@ -12,7 +12,8 @@ export const FILE_TYPES = {
         IMG: 'image'
     },
     VIDEO: {
-        MP4: 'mp4'
+        MP4: 'mp4',
+        VIDEO: 'video'
     },
     OTHER: {
         XML: 'xml'

@@ -1,1 +1,13 @@
-<p>video-content works!</p>
+<div class="video-content">
+    <div class="video-container">
+        <video #videoRef controls [src]="videoDataUrl" [title]="fileName">
+            Плеер не поддерживает воспроизведение видео.
+        </video>
+    </div>
+
+    <div class="info">
+        <span>Имя файла: {{ fileName }}</span>
+        <span>Размер: {{ fileSize }}</span>
+        <span>Длительность: {{ duration }}</span>
+    </div>
+</div>
