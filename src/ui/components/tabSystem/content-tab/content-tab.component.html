@@ -1,6 +1,10 @@
 <div class="tab-content" *ngIf="filePath">
     <div class="tab-controls-actions">
-
+        <select [(ngModel)]="exportFormat" class="export-select">
+            <option value="html">Экспорт в HTML</option>
+            <option value="pdf">Экспорт в PDF</option>
+        </select>
+        <button (click)="exportFile()" class="export-btn">Экспортировать</button>
     </div>
 
     <div class="tab-controls-editor">
@@ -20,15 +24,15 @@
     </div>
 
     <div class="tab-controls-info">
+        <div class="info-path">
+            <span>{{ filePath }}</span>
+        </div>
         <div class="info-stats">
             <span>Символов: {{ statistics.characterCount }}</span>
             <span>Слов: {{ statistics.wordCount }}</span>
             <span>Строк: {{ statistics.lineCount }}</span>
             <span>Время чтения: {{ statistics.readingTime }}</span>
             <span>Заголовков: {{ statistics.headingCount }}</span>
-        </div>
-        <div class="info-path">
-            <p>{{ filePath }}</p>
         </div>
     </div>
 </div>

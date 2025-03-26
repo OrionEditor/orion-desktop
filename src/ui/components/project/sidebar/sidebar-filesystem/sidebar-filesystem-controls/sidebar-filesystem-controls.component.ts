@@ -4,7 +4,7 @@ import {AsyncPipe, NgIf, NgStyle} from "@angular/common";
 import {FileSystemService} from "../../../../../../services/FileSystem/fileSystem.service";
 import {TextModalComponent} from "../../../../modals/text-modal/text-modal.component";
 import {TEXT_MODAL_TYPES} from "../../../../../../shared/constants/modals/textModal/textModal.types";
-import {FILE_TYPES} from "../../../../../../shared/constants/FileSystem/files.types";
+import {FILE_TYPES, getExtensionWithDot} from "../../../../../../shared/constants/FileSystem/files.types";
 import {TextModalService} from "../../../../../../services/Modals/TextModal/textModal.service";
 import {ValidationService} from "../../../../../../services/validation.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -55,7 +55,7 @@ export class SidebarFilesystemControlsComponent {
       if (modalType === TEXT_MODAL_TYPES.NOTE) {
         await this.fileSystemService.createFile(
             this.projectPath,
-            modalInput + FILE_TYPES.MD
+            modalInput + getExtensionWithDot(FILE_TYPES.MD)
         );
       } else if (modalType === TEXT_MODAL_TYPES.FOLDER) {
         await this.fileSystemService.createDirectory(

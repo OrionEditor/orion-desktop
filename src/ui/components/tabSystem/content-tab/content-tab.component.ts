@@ -5,6 +5,9 @@ import {marked} from "marked";
 import {FormsModule} from "@angular/forms";
 import {MarkdownStatistics} from "../../../../interfaces/markdown/markdown-statisctics.interface";
 import {MarkdownInfoService} from "../../../../services/Markdown/markdown-info.service";
+import {DialogService} from "../../../../services/dialog.service";
+import {MarkdownExportService} from "../../../../services/Markdown/markdown-export.service";
+import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
 
 @Component({
   selector: 'app-content-tab',
@@ -19,11 +22,12 @@ import {MarkdownInfoService} from "../../../../services/Markdown/markdown-info.s
 })
 export class ContentTabComponent {
   @Input() filePath: string = '';
+  @Input() fileName: string = '';
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
 
-  content: string = ''; // Содержимое файла
-  renderedContent: string = ''; // Отрендеренный HTML из Markdown
-  lineNumbers: number[] = []; // Массив номеров строк
+  content: string = '';
+  renderedContent: string = '';
+  lineNumbers: number[] = [];
   currentLine: number = 1;
 
   statistics: MarkdownStatistics = {
@@ -34,7 +38,9 @@ export class ContentTabComponent {
     headingCount: 0
   }
 
-  constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService) {}
+  exportFormat: string = FILE_TYPES.HTML;
+
+  constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.loadContent();
@@ -69,7 +75,7 @@ export class ContentTabComponent {
   }
 
   private updateRenderedContent(): void {
-    this.renderedContent = marked(this.content).toString(); // Парсим Markdown в HTML
+    this.renderedContent = marked(this.content).toString();
   }
 
   private updateLineNumbers(): void {
@@ -103,6 +109,21 @@ export class ContentTabComponent {
   private updateTextareaHighlight(): void {
     if (this.textareaRef) {
       this.textareaRef.nativeElement.style.setProperty('--current-line', this.currentLine.toString());
+    }
+  }
+
+  async exportFile() {
+    const selectedPath = await this.dialogService.selectPath(true); // Выбор директории
+    if (selectedPath) {
+      const exportPath = `${selectedPath}/${this.fileName}.${this.exportFormat}`;
+      try {
+        if (this.exportFormat === FILE_TYPES.HTML) {
+          await MarkdownExportService.exportToHtml(this.content, exportPath, this.fileName);
+        } else if (this.exportFormat === FILE_TYPES.PDF) {
+          await MarkdownExportService.exportToPdf(this.content, exportPath);
+        }
+      } catch (error) {
+      }
     }
   }
 }

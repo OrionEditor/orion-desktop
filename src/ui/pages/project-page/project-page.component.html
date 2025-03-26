@@ -20,7 +20,9 @@
 
         <app-content-tab
                 *ngIf="activeTab"
-                [filePath]="activeTab.filePath">
+                [filePath]="activeTab.filePath"
+                [fileName]="activeTab.fileName"
+        >
         </app-content-tab>
     </div>
 

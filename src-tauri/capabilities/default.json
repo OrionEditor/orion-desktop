@@ -33,6 +33,7 @@
     "fs:read-dirs",
     "fs:allow-read-dir",
     "fs:read-meta",
-    "core:window:allow-start-dragging"
+    "core:window:allow-start-dragging",
+    "fs:allow-write-text-file"
   ]
 }
