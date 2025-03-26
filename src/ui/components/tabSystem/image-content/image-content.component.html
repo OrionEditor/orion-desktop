@@ -1,1 +1,25 @@
-<p>image-content works!</p>
+<div class="image-content">
+    <div class="controls">
+        <button (click)="zoomIn()" title="Увеличить">+</button>
+        <button (click)="zoomOut()" title="Уменьшить">-</button>
+        <button (click)="rotateLeft()" title="Повернуть влево">↺</button>
+        <button (click)="rotateRight()" title="Повернуть вправо">↻</button>
+        <button (click)="reset()" title="Сбросить">⟳</button>
+        <span class="scale-info">Масштаб: {{ (scale * 100).toFixed(0) }}%</span>
+    </div>
+
+    <div class="image-container">
+        <img
+            #imageRef
+            [src]="imageDataUrl"
+            [alt]="fileName"
+            [style.transform]="'scale(' + scale + ') rotate(' + rotation + 'deg)'"
+        />
+    </div>
+
+    <div class="info">
+        <span>Имя файла: {{ fileName }}</span>
+        <span>Размер: {{ fileSize }}</span>
+<!--        <span>Разрешение: {{ resolution }}</span>-->
+    </div>
+</div>

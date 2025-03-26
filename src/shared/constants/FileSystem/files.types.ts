@@ -8,10 +8,14 @@ export const FILE_TYPES = {
         JPEG: 'jpeg',
         PNG: 'png',
         WEBP: 'webp',
-        SVG: 'svg'
+        SVG: 'svg',
+        IMG: 'image'
     },
     VIDEO: {
         MP4: 'mp4'
+    },
+    OTHER: {
+        XML: 'xml'
     }
 }
 

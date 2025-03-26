@@ -7,6 +7,7 @@ import {DEFAULT_FOLDER_ICON} from "../../../../shared/constants/FileSystem/folde
 import {TranslatePipe} from "@ngx-translate/core";
 import { ChangeDetectorRef } from '@angular/core';
 import {TabService} from "../../../../services/tab.service";
+import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
 
 
 @Component({
@@ -117,12 +118,36 @@ export class FileNodeComponent {
 
   // Получить иконку для файла
   getFileIcon(): string {
+    // if (this.isDir) {
+    //   return DEFAULT_FOLDER_ICON;
+    // }
+    //
+    // const extension = this.node.name.split('.').pop()?.toLowerCase(); // Получаем расширение файла
+    // const fileIcon = FILE_ICONS.find(icon => icon.type === `.${extension}`);
+    // return fileIcon ? fileIcon.icon : DEFAULT_FILE_ICON;
+
     if (this.isDir) {
       return DEFAULT_FOLDER_ICON;
     }
 
-    const extension = this.node.name.split('.').pop()?.toLowerCase(); // Получаем расширение файла
-    const fileIcon = FILE_ICONS.find(icon => icon.type === `.${extension}`);
+    const extension = this.node.name.split('.').pop()?.toLowerCase();
+    if (!extension) {
+      return DEFAULT_FILE_ICON;
+    }
+
+    const fullExtension = `.${extension}`;
+
+    if (Object.values(FILE_TYPES.IMAGE).includes(extension)) {
+      const fileIcon = FILE_ICONS.find(icon => icon.type === fullExtension);
+      return fileIcon ? fileIcon.icon : 'image-icon.png';
+    }
+
+    if (Object.values(FILE_TYPES.VIDEO).includes(extension)) {
+      const fileIcon = FILE_ICONS.find(icon => icon.type === fullExtension);
+      return fileIcon ? fileIcon.icon : 'video-icon.png';
+    }
+
+    const fileIcon = FILE_ICONS.find(icon => icon.type === fullExtension);
     return fileIcon ? fileIcon.icon : DEFAULT_FILE_ICON;
   }
 
