@@ -28,7 +28,6 @@ export class MarkdownContentComponent {
 
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
-
   content: string = '';
   renderedContent: string = '';
   lineNumbers: number[] = [];
@@ -170,6 +169,7 @@ export class MarkdownContentComponent {
 
   onOneSide(){
     this.view = MarkdownView.ONE_SIDE;
+    setTimeout(() => this.focusCurrentLine(), 0);
   }
 
   onTwoSide(){
@@ -178,11 +178,12 @@ export class MarkdownContentComponent {
 
   /*ONE-SIDE*/
 
-  // Обработка ввода в one-side режиме
+  //Обработка ввода в one-side режиме
   onInput(event: Event): void {
     const editor = this.editorRef.nativeElement;
     const currentLineElement = editor.children[this.currentLineIndex] as HTMLElement;
     const newContent = currentLineElement.innerText;
+
 
     this.lines[this.currentLineIndex] = newContent;
     this.content = this.lines.join('\n');
@@ -190,7 +191,9 @@ export class MarkdownContentComponent {
     this.updateStats();
   }
 
-  // Обработка нажатия клавиш
+
+
+  //Обработка нажатия клавиш
   onKeyDown(event: KeyboardEvent): void {
     const editor = this.editorRef.nativeElement;
     if (event.key === 'Enter') {
@@ -214,14 +217,31 @@ export class MarkdownContentComponent {
     }
   }
 
-  // Фокусировка на текущей строке
+  //Фокусировка на текущей строке
+  // private focusCurrentLine(): void {
+  //   const editor = this.editorRef.nativeElement;
+  //   const currentLineElement = editor.children[this.currentLineIndex] as HTMLElement;
+  //   if (currentLineElement) {
+  //     currentLineElement.focus();
+  //   }
+  // }
+
   private focusCurrentLine(): void {
-    const editor = this.editorRef.nativeElement;
-    const currentLineElement = editor.children[this.currentLineIndex] as HTMLElement;
-    if (currentLineElement) {
-      currentLineElement.focus();
-    }
+    requestAnimationFrame(() => {
+      const editor = this.editorRef.nativeElement;
+      const currentLineElement = editor.children[this.currentLineIndex] as HTMLElement;
+      if (currentLineElement) {
+        if (currentLineElement.classList.contains('editable')) {
+          currentLineElement.innerText = this.lines[this.currentLineIndex];
+        }
+        currentLineElement.focus();
+
+        document.execCommand('selectAll', false);
+        document.getSelection()?.collapseToEnd();
+      }
+    });
   }
+
 
   // Обработка клика для выбора строки
   onLineClick(index: number): void {
