@@ -15,6 +15,7 @@ import {ImageContentComponent} from "../image-content/image-content.component";
 import {VideoContentComponent} from "../video-content/video-content.component";
 import {NotOpenContentComponent} from "../not-open-content/not-open-content.component";
 import {TextContentComponent} from "../text-content/text-content.component";
+import {HtmlContentComponent} from "../html-content/html-content.component";
 
 @Component({
   selector: 'app-content-tab',
@@ -27,7 +28,8 @@ import {TextContentComponent} from "../text-content/text-content.component";
     ImageContentComponent,
     VideoContentComponent,
     NotOpenContentComponent,
-    TextContentComponent
+    TextContentComponent,
+    HtmlContentComponent
   ],
   templateUrl: './content-tab.component.html',
   styleUrl: './content-tab.component.css'

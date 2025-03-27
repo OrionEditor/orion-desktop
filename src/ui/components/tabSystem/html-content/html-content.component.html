@@ -1,0 +1,15 @@
+<div class="html-content" *ngIf="filePath">
+<!--    <div class="html-container">-->
+<!--        <iframe #htmlIframe sandbox="allow-same-origin" [srcdoc]="htmlContent"></iframe>-->
+<!--    </div>-->
+
+    <div class="html-container">
+        <div [innerHTML]="htmlContent"></div>
+    </div>
+
+    <div class="info">
+        <span>Имя файла: {{ fileName }}</span>
+        <span>Размер: {{ fileSize }}</span>
+        <span>Строк: {{ lineCount }}</span>
+    </div>
+</div>
