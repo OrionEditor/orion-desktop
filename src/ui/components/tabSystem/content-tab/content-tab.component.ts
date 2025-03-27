@@ -17,6 +17,7 @@ import {NotOpenContentComponent} from "../not-open-content/not-open-content.comp
 import {TextContentComponent} from "../text-content/text-content.component";
 import {HtmlContentComponent} from "../html-content/html-content.component";
 import {PdfContentComponent} from "../pdf-content/pdf-content.component";
+import {AudioContentComponent} from "../audio-content/audio-content.component";
 
 @Component({
   selector: 'app-content-tab',
@@ -31,7 +32,8 @@ import {PdfContentComponent} from "../pdf-content/pdf-content.component";
     NotOpenContentComponent,
     TextContentComponent,
     HtmlContentComponent,
-    PdfContentComponent
+    PdfContentComponent,
+    AudioContentComponent
   ],
   templateUrl: './content-tab.component.html',
   styleUrl: './content-tab.component.css'
@@ -48,6 +50,10 @@ export class ContentTabComponent {
     return Object.values(FILE_TYPES.VIDEO).includes(extension);
   }
 
+  isAudioFile(extension: string): boolean {
+    return Object.values(FILE_TYPES.AUDIO).includes(extension);
+  }
+
   isSupportedFile(extension: string): boolean {
     return (
         extension === FILE_TYPES.MD ||
@@ -55,7 +61,8 @@ export class ContentTabComponent {
         extension === FILE_TYPES.HTML ||
         extension === FILE_TYPES.PDF ||
         this.isImageFile(extension) ||
-        this.isVideoFile(extension)
+        this.isVideoFile(extension) ||
+            this.isAudioFile(extension)
     );
   }
 

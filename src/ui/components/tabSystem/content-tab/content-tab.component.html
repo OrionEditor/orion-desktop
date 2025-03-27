@@ -23,6 +23,10 @@
         <app-pdf-content [fileName]="fileName" [filePath]="filePath"/>
     </ng-container>
 
+    <ng-container *ngIf="isAudioFile(getFileExtension(fileName))">
+        <app-audio-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedFile(getFileExtension(fileName))">
         <app-not-open-content [fileName]="fileName" [filePath]="filePath"/>
     </ng-container>

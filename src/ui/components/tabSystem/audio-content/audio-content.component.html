@@ -1,0 +1,13 @@
+<div class="audio-content" *ngIf="filePath">
+    <div class="audio-container">
+        <audio #audioRef controls [src]="audioDataUrl" [title]="fileName">
+            Плеер не поддерживает воспроизведение аудио.
+        </audio>
+    </div>
+
+    <div class="info">
+        <span>Имя файла: {{ fileName }}</span>
+        <span>Размер: {{ fileSize }}</span>
+        <span>Длительность: {{ duration }}</span>
+    </div>
+</div>

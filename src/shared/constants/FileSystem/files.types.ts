@@ -17,7 +17,10 @@ export const FILE_TYPES = {
     },
     AUDIO: {
       MP3: 'mp3',
-      OGG: 'ogg'
+      OGG: 'ogg',
+        WAV: 'wav',
+        MPEG: 'mpeg',
+        AUDIO: 'audio'
     },
     OTHER: {
         XML: 'xml'
