@@ -219,3 +219,33 @@
     width: 20px;
     height: 20px;
 }
+
+.one-side-editor {
+    width: 100%;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+    overflow: auto;
+}
+
+.one-side-editor div {
+    min-height: 1.5em;
+    padding: 2px 5px;
+}
+
+.one-side-editor .editable {
+    background-color: var(--background-color);
+    color: #333;
+    /*border-radius: 3px;*/
+}
+
+.one-side-editor .rendered {
+    background-color: var(--background-color);
+    cursor: pointer;
+}
+
+.one-side-editor .rendered:hover {
+    /*background-color: #f0f0f0;*/
+}

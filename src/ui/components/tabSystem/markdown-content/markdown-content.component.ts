@@ -27,6 +27,7 @@ export class MarkdownContentComponent {
   @Input() fileName: string = '';
 
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
 
   content: string = '';
   renderedContent: string = '';
@@ -46,6 +47,9 @@ export class MarkdownContentComponent {
 
   view: MarkdownView = MarkdownView.TWO_SIDE;
 
+  lines: string[] = [];
+  currentLineIndex: number = 0;
+
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
   ngOnInit(): void {
@@ -55,7 +59,13 @@ export class MarkdownContentComponent {
       this.updateRenderedContent();
       this.updateLineNumbers();
       this.updateStats();
+      this.updateLines();
     });
+  }
+
+  private updateLines(): void {
+    this.lines = this.content.split('\n');
+    this.updateStats();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -164,6 +174,64 @@ export class MarkdownContentComponent {
 
   onTwoSide(){
     this.view = MarkdownView.TWO_SIDE
+  }
+
+  /*ONE-SIDE*/
+
+  // Обработка ввода в one-side режиме
+  onInput(event: Event): void {
+    const editor = this.editorRef.nativeElement;
+    const currentLineElement = editor.children[this.currentLineIndex] as HTMLElement;
+    const newContent = currentLineElement.innerText;
+
+    this.lines[this.currentLineIndex] = newContent;
+    this.content = this.lines.join('\n');
+    this.markdownService.saveMarkdownFile(this.filePath, this.content).then();
+    this.updateStats();
+  }
+
+  // Обработка нажатия клавиш
+  onKeyDown(event: KeyboardEvent): void {
+    const editor = this.editorRef.nativeElement;
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (this.currentLineIndex < this.lines.length - 1) {
+        this.currentLineIndex++;
+      } else {
+        this.lines.push('');
+        this.currentLineIndex = this.lines.length - 1;
+      }
+      this.content = this.lines.join('\n');
+      this.focusCurrentLine();
+    } else if (event.key === 'ArrowUp' && this.currentLineIndex > 0) {
+      event.preventDefault();
+      this.currentLineIndex--;
+      this.focusCurrentLine();
+    } else if (event.key === 'ArrowDown' && this.currentLineIndex < this.lines.length - 1) {
+      event.preventDefault();
+      this.currentLineIndex++;
+      this.focusCurrentLine();
+    }
+  }
+
+  // Фокусировка на текущей строке
+  private focusCurrentLine(): void {
+    const editor = this.editorRef.nativeElement;
+    const currentLineElement = editor.children[this.currentLineIndex] as HTMLElement;
+    if (currentLineElement) {
+      currentLineElement.focus();
+    }
+  }
+
+  // Обработка клика для выбора строки
+  onLineClick(index: number): void {
+    this.currentLineIndex = index;
+    this.focusCurrentLine();
+  }
+
+  // Рендеринг строки как Markdown
+  renderLine(line: string): string {
+    return marked(line).toString();
   }
 
   protected readonly MarkdownView = MarkdownView;
