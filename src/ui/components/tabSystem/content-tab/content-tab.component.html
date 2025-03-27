@@ -19,6 +19,10 @@
         <app-html-content [fileName]="fileName" [filePath]="filePath"/>
     </ng-container>
 
+    <ng-container *ngIf="getFileExtension(fileName) === FILE_TYPES.PDF">
+        <app-pdf-content [fileName]="fileName" [filePath]="filePath"/>
+    </ng-container>
+
     <ng-container *ngIf="!isSupportedFile(getFileExtension(fileName))">
         <app-not-open-content [fileName]="fileName" [filePath]="filePath"/>
     </ng-container>

@@ -15,6 +15,10 @@ export const FILE_TYPES = {
         MP4: 'mp4',
         VIDEO: 'video'
     },
+    AUDIO: {
+      MP3: 'mp3',
+      OGG: 'ogg'
+    },
     OTHER: {
         XML: 'xml'
     }

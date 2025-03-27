@@ -1,0 +1,12 @@
+<div class="pdf-content" *ngIf="filePath">
+    <div class="pdf-container">
+        <iframe [src]="pdfDataUrl" [title]="fileName" *ngIf="pdfDataUrl"></iframe>
+        <p *ngIf="!pdfDataUrl">Не удалось загрузить PDF-файл.</p>
+    </div>
+
+    <div class="info">
+        <span>Имя файла: {{ fileName }}</span>
+        <span>Размер: {{ fileSize }}</span>
+        <span>Страниц: {{ pageCount }}</span>
+    </div>
+</div>
