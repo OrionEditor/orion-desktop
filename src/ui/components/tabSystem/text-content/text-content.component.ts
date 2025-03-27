@@ -2,6 +2,7 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {readTextFile, stat, writeTextFile} from "@tauri-apps/plugin-fs";
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
+import {formatFileSize} from "../../../../utils/format.utils";
 
 @Component({
   selector: 'app-text-content',
@@ -74,16 +75,9 @@ export class TextContentComponent {
     try {
       const fileStats = await stat(this.filePath);
       const sizeInBytes = fileStats.size;
-      this.fileSize = this.formatFileSize(sizeInBytes);
+      this.fileSize = formatFileSize(sizeInBytes);
     } catch (error) {
       this.fileSize = 'Не удалось определить';
     }
-  }
-
-  private formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} ГБ`;
   }
 }

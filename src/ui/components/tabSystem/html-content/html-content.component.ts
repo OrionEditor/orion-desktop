@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {readTextFile, stat} from "@tauri-apps/plugin-fs";
 import {NgIf} from "@angular/common";
+import {formatFileSize} from "../../../../utils/format.utils";
 
 @Component({
   selector: 'app-html-content',
@@ -39,17 +40,9 @@ export class HtmlContentComponent {
     try {
       const fileStats = await stat(this.filePath);
       const sizeInBytes = fileStats.size;
-      this.fileSize = this.formatFileSize(sizeInBytes);
+      this.fileSize = formatFileSize(sizeInBytes);
     } catch (error) {
       this.fileSize = 'Не удалось определить';
     }
-  }
-
-  // Форматирование размера файла
-  private formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} ГБ`;
   }
 }

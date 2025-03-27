@@ -43,7 +43,7 @@ export class PdfContentComponent {
     // try {
     //   const fileStats = await stat(this.filePath);
     //   const sizeInBytes = fileStats.size;
-    //   this.fileSize = this.formatFileSize(sizeInBytes);
+    //   this.fileSize = formatFileSize(sizeInBytes);
     //
     //   const fileData = await readFile(this.filePath); // Uint8Array
     //   const pdfData = await pdf(fileData as any); // Приведение к any
@@ -53,13 +53,5 @@ export class PdfContentComponent {
     //   this.fileSize = 'Не удалось определить';
     //   this.pageCount = 0;
     // }
-  }
-
-  // Форматирование размера файла
-  private formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} ГБ`;
   }
 }

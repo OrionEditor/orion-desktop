@@ -1,6 +1,7 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {readFile, stat} from "@tauri-apps/plugin-fs";
 import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
+import {formatFileSize} from "../../../../utils/format.utils";
 @Component({
   selector: 'app-image-content',
   standalone: true,
@@ -60,7 +61,7 @@ export class ImageContentComponent {
     try {
       const fileStats = await stat(this.filePath);
       const sizeInBytes = fileStats.size;
-      this.fileSize = this.formatFileSize(sizeInBytes);
+      this.fileSize = formatFileSize(sizeInBytes);
 
       const img = this.imageRef.nativeElement;
       img.onload = () => {
@@ -70,13 +71,6 @@ export class ImageContentComponent {
       this.fileSize = 'Не удалось определить';
       this.resolution = 'Не удалось определить';
     }
-  }
-
-  private formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} ГБ`;
   }
 
   // Увеличение изображения

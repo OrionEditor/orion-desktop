@@ -2,6 +2,7 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {readFile, stat} from "@tauri-apps/plugin-fs";
 import {NgIf} from "@angular/common";
 import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
+import {formatFileSize} from "../../../../utils/format.utils";
 
 @Component({
   selector: 'app-audio-content',
@@ -44,7 +45,7 @@ export class AudioContentComponent {
       // размер файла
       const fileStats = await stat(this.filePath);
       const sizeInBytes = fileStats.size;
-      this.fileSize = this.formatFileSize(sizeInBytes);
+      this.fileSize = formatFileSize(sizeInBytes);
 
       // длительность аудио
       const audio = this.audioRef.nativeElement;
@@ -58,13 +59,6 @@ export class AudioContentComponent {
       this.fileSize = 'Не удалось определить';
       this.duration = 'Не удалось определить';
     }
-  }
-
-  private formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} Б`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} ГБ`;
   }
 
   private formatDuration(seconds: number): string {
