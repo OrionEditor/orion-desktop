@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, SimpleChanges, ViewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {MarkdownStatistics} from "../../../../interfaces/markdown/markdown-statisctics.interface";
 import {MarkdownService} from "../../../../services/Markdown/markdown.service";
 import {MarkdownInfoService} from "../../../../services/Markdown/markdown-info.service";
@@ -9,13 +9,15 @@ import {marked} from "marked";
 import {MarkdownExportService} from "../../../../services/Markdown/markdown-export.service";
 import {FILE_TYPES, getExtensionWithDot} from "../../../../shared/constants/FileSystem/files.types";
 import {MarkdownImportService} from "../../../../services/Markdown/markdown.import.service";
+import {MarkdownView} from "../../../../shared/enums/markdown-view.enum";
 
 @Component({
   selector: 'app-markdown-content',
   standalone: true,
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -41,6 +43,8 @@ export class MarkdownContentComponent {
 
   exportFormat: string = FILE_TYPES.HTML;
   importFormat: string = FILE_TYPES.HTML;
+
+  view: MarkdownView = MarkdownView.TWO_SIDE;
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
@@ -153,4 +157,14 @@ export class MarkdownContentComponent {
     } else {
     }
   }
+
+  onOneSide(){
+    this.view = MarkdownView.ONE_SIDE;
+  }
+
+  onTwoSide(){
+    this.view = MarkdownView.TWO_SIDE
+  }
+
+  protected readonly MarkdownView = MarkdownView;
 }
