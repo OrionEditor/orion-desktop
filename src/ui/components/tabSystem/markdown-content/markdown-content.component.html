@@ -52,16 +52,36 @@
 <!--            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLineIndex + 1">{{ number }}</span>-->
 <!--        </div>-->
 <!--        Добавить textContent тоже самое что innerHtml, для просмотра кода-->
-        <div #editorRef class="one-side-editor" (input)="onInput($event)" (keydown)="onKeyDown($event)" tabindex="0">
-            <div
-                    *ngFor="let line of lines; let i = index"
-                    [class.editable]="i === currentLineIndex"
-                    [class.rendered]="i !== currentLineIndex"
-                    [innerHTML]="i === currentLineIndex ? line : renderLine(line)"
-                    (click)="onLineClick(i)"
-                    contenteditable="true"
-                    spellcheck="true"
-            ></div>
+<!--        <div #editorRef class="one-side-editor" (input)="onInput($event)" (keydown)="onKeyDown($event)" tabindex="0">-->
+<!--            <div-->
+<!--                    *ngFor="let line of lines; let i = index"-->
+<!--                    [class.editable]="i === currentLineIndex"-->
+<!--                    [class.rendered]="i !== currentLineIndex"-->
+<!--                    [innerHTML]="i === currentLineIndex ? line : renderLine(line)"-->
+<!--                    (click)="onLineClick(i)"-->
+<!--                    contenteditable="true"-->
+<!--                    spellcheck="true"-->
+<!--            ></div>-->
+<!--        </div>-->
+
+        <div #editorRef class="one-side-editor" (keydown)="onKeyDown($event)" tabindex="0">
+            <ng-container *ngFor="let line of lines; let i = index">
+                <div
+                        *ngIf="i !== currentLineIndex"
+                        class="rendered"
+                        [innerHTML]="renderLine(line)"
+                        (click)="onLineClick(i)"
+                ></div>
+                <input
+                        *ngIf="i === currentLineIndex"
+                        [value]="line"
+                        (input)="onInput($event)"
+                        (blur)="onBlur($event)"
+                        class="editor-input"
+                        spellcheck="true"
+                        autofocus
+                />
+            </ng-container>
         </div>
     </div>
 </div>

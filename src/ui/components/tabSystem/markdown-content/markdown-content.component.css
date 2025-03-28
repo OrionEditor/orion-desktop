@@ -247,7 +247,7 @@
 
 .one-side-editor .editable {
     background-color: var(--background-color);
-    color: #333;
+    color: var(--text-color);
     /*border-radius: 3px;*/
     border: none;
     outline: none;
@@ -268,4 +268,17 @@
 .line-container {
     min-height: 1.5em;
     padding: 2px 5px;
+}
+
+.editor-input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: var(--text-color);
 }
