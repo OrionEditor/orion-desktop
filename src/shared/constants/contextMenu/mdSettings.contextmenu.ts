@@ -1,10 +1,11 @@
 import {ContextMenuItem} from "../../../interfaces/context-menu-item.interface";
+import {MarkdownSettingsContextMenuService} from "../../../services/Markdown/markdown-settings-context-menu.service";
 
-export const MdSettingsContextMenu: ContextMenuItem[] = [
+export const MdSettingsContextMenu = (filePath: string = ''): ContextMenuItem[] => [
     {
         id: 'view-code',
         text: 'Просмотр исходного кода',
-        action: () => console.log('Просмотр исходного кода'),
+        action: () => MarkdownSettingsContextMenuService.viewCode,
         icon: 'assets/icons/svg/contextMenu/code.svg',
         select: false,
         possibleSelect: true
@@ -18,14 +19,14 @@ export const MdSettingsContextMenu: ContextMenuItem[] = [
             {
                 id: 'rename',
                 text: 'Переименовать',
-                action: () => console.log('Переименовать'),
+                action:MarkdownSettingsContextMenuService.rename,
                 icon: 'assets/icons/svg/contextMenu/rename.svg',
             },
             {
                 id: 'delete',
                 text: 'Удалить',
                 icon: 'assets/icons/svg/contextMenu/delete.svg',
-                action: () => console.log('Удалить нажато'),
+                action: () => MarkdownSettingsContextMenuService.delete,
             },
         ],
     },
@@ -38,13 +39,13 @@ export const MdSettingsContextMenu: ContextMenuItem[] = [
             {
                 id: 'export-html',
                 text: 'Экспортировать в HTML',
-                action: () => console.log('Экспортировать в HTML'),
+                action: () => MarkdownSettingsContextMenuService.exportToHtml,
                 icon: 'assets/icons/svg/contextMenu/export-html.svg',
             },
             {
                 id: 'export-pdf',
                 text: 'Экспортировать в PDF',
-                action: () => console.log('Экспортировать в PDF'),
+                action: () => MarkdownSettingsContextMenuService.exportToPdf,
                 icon: 'assets/icons/svg/contextMenu/export-pdf.svg',
             },
         ],
@@ -58,7 +59,7 @@ export const MdSettingsContextMenu: ContextMenuItem[] = [
             {
                 id: 'ai-translate',
                 text: 'Перевести текст',
-                action: () => console.log('Перевести текст'),
+                action: () => MarkdownSettingsContextMenuService.translateText,
                 icon: 'assets/icons/svg/contextMenu/translate.svg',
             },
             {
@@ -70,14 +71,14 @@ export const MdSettingsContextMenu: ContextMenuItem[] = [
                     {
                         id: 'ai-voice-male',
                         text: 'Мужской голос',
-                        action: () => console.log('Переименовать'),
+                        action: () => MarkdownSettingsContextMenuService.voiceMale,
                         icon: 'assets/icons/svg/contextMenu/male.svg',
                     },
                     {
                         id: 'ai-voice-female',
                         text: 'Женский голос',
                         icon: 'assets/icons/svg/contextMenu/female.svg',
-                        action: () => console.log('Удалить нажато'),
+                        action: () => MarkdownSettingsContextMenuService.voiceFemale,
                     },
                 ],
             },
@@ -86,7 +87,7 @@ export const MdSettingsContextMenu: ContextMenuItem[] = [
     {
         id: 'open-explorer',
         text: 'Открыть в проводнике',
-        action: () => console.log('Открыть в проводнике'),
+        action: () => MarkdownSettingsContextMenuService.openExplorer(filePath),
         icon: 'assets/icons/svg/contextMenu/explorer.svg',
     },
 ];

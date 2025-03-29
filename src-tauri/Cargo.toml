@@ -29,6 +29,7 @@ tauri-plugin-fs = "2"
 blocking = "*"
 chrono = "0.4.38"
 tauri-plugin-store = "2"
+tauri-plugin-opener = "2.2.6"
 
 
 

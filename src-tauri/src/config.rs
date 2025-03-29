@@ -16,7 +16,7 @@ pub struct Config {
     pub last_opened: Option<String>,
     pub theme: String,
     pub font_size: u8,
-    pub language: String, // Новое поле для языка
+    pub language: String,           // Новое поле для языка
     pub auth_token: Option<String>, // Поле для токена
 }
 
@@ -168,7 +168,8 @@ impl Config {
 
         // Читаем существующий конфиг и обновляем только поле auth_token
         if let Ok(existing_config) = fs::read_to_string(&config_path) {
-            if let Ok(mut config_json) = serde_json::from_str::<serde_json::Value>(&existing_config) {
+            if let Ok(mut config_json) = serde_json::from_str::<serde_json::Value>(&existing_config)
+            {
                 // Если поле auth_token существует, обновляем его, иначе создаём
                 if let Some(auth_token_field) = config_json.get_mut("auth_token") {
                     *auth_token_field = serde_json::Value::String(token.to_string());
@@ -193,7 +194,8 @@ impl Config {
 
         // Читаем существующий конфиг и обновляем только поле auth_token
         if let Ok(existing_config) = fs::read_to_string(&config_path) {
-            if let Ok(mut config_json) = serde_json::from_str::<serde_json::Value>(&existing_config) {
+            if let Ok(mut config_json) = serde_json::from_str::<serde_json::Value>(&existing_config)
+            {
                 // Если поле auth_token существует, удаляем его, иначе ничего не делаем
                 if config_json.get("auth_token").is_some() {
                     config_json["auth_token"] = serde_json::Value::Null;
@@ -206,8 +208,6 @@ impl Config {
             }
         }
     }
-
-
 
     pub fn toggle_theme(&mut self) {
         // Меняем тему

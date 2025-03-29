@@ -19,6 +19,19 @@ export class DialogService {
         }
     }
 
+     static async StaticSelectPath(directory: boolean = true, multiple: boolean = false): Promise<string | string[] | null> {
+        try {
+            const selectedPath = await open({
+                directory,
+                multiple
+            });
+
+            return selectedPath ? selectedPath : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
     async hasOrionFolder(path: string): Promise<boolean> {
         try {
             // Чтение содержимого папки

@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, Input} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 
@@ -17,20 +17,34 @@ export class ContextMenuComponent {
   @Input() items: ContextMenuItem[] = [];
   @Input() x: number = 0;
   @Input() y: number = 0;
+  @Output() close = new EventEmitter<void>();
+  @Input() submenuDirection: 'left' | 'right' = 'right';
 
   activeSubmenu: string | null = null;
   submenuPosition: 'left' | 'right' = 'right';
 
-  constructor(private elementRef: ElementRef) {}
+  private isInitialClick: boolean = true;
+
+  constructor(private elementRef: ElementRef) {
+    this.submenuPosition = this.submenuDirection;
+  }
 
   ngOnInit(): void {
+    this.submenuPosition = this.submenuDirection;
     this.adjustPosition();
+
+    requestAnimationFrame(() => {
+      this.isInitialClick = false;
+    });
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
+    if (this.isInitialClick) {
+      return; // Игнорируем первый клик, который открывает меню
+    }
     if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.activeSubmenu = null;
+      this.closeMenu();
     }
   }
 
@@ -40,7 +54,17 @@ export class ContextMenuComponent {
         item.select = !item.select;
       }
       item.action();
+      this.closeMenu();
     }
+  }
+
+  onSubmenuClose(): void {
+    this.closeMenu();
+  }
+
+  private closeMenu(): void {
+    this.activeSubmenu = null;
+    this.close.emit();
   }
 
   onMouseEnter(item: ContextMenuItem): void {

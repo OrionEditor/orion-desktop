@@ -105,20 +105,17 @@ async fn create_login_window(handle: AppHandle) {
 
 #[tauri::command]
 async fn create_main_window(handle: AppHandle) {
-    let new_window = WebviewWindowBuilder::new(
-        &handle,
-        "main",
-        WebviewUrl::App("index.html".into()),
-    )
-        .title("Orion - Start page")
-        .resizable(false)
-        .inner_size(800.0, 600.0)
-        .fullscreen(false)
-        .maximized(false)
-        .maximizable(false)
-        .always_on_top(true)
-        .build()
-        .expect("Ошибка при создании окна");
+    let new_window =
+        WebviewWindowBuilder::new(&handle, "main", WebviewUrl::App("index.html".into()))
+            .title("Orion - Start page")
+            .resizable(false)
+            .inner_size(800.0, 600.0)
+            .fullscreen(false)
+            .maximized(false)
+            .maximizable(false)
+            .always_on_top(true)
+            .build()
+            .expect("Ошибка при создании окна");
 
     new_window.show().unwrap();
 }
@@ -130,15 +127,15 @@ async fn create_profile_window(handle: AppHandle) {
         "profile-window",
         WebviewUrl::App("index.html".into()),
     )
-        .title("Profile")
-        .resizable(false)
-        .inner_size(700.0, 400.0)
-        .fullscreen(false)
-        .maximized(false)
-        .maximizable(false)
-        .always_on_top(true)
-        .build()
-        .expect("Ошибка при создании окна");
+    .title("Profile")
+    .resizable(false)
+    .inner_size(700.0, 400.0)
+    .fullscreen(false)
+    .maximized(false)
+    .maximizable(false)
+    .always_on_top(true)
+    .build()
+    .expect("Ошибка при создании окна");
 
     new_window.show().unwrap();
 }
@@ -152,7 +149,7 @@ async fn create_fullscreen_project_window(handle: AppHandle) {
     )
     .title("Project Window")
     .maximized(true) // Полноэкранный режим
-        .disable_drag_drop_handler()
+    .disable_drag_drop_handler()
     .build()
     .expect("Ошибка при создании окна");
 
@@ -216,15 +213,15 @@ fn get_auth_token() -> Option<String> {
 }
 
 #[tauri::command]
-fn clear_auth_token(){
+fn clear_auth_token() {
     let mut config = Config::load();
     config.clear_auth_token();
 }
 
-
 use serde::Serialize;
 use std::fs;
 use std::path::Path;
+use tauri_plugin_shell::process::Command;
 
 #[derive(Serialize)]
 struct FileSystemNode {
@@ -237,7 +234,6 @@ struct FileSystemNode {
 
 #[tauri::command]
 fn get_file_structure(path: String) -> Result<Vec<FileSystemNode>, String> {
-
     fn is_directory(path: String) -> bool {
         match fs::metadata(&path) {
             Ok(metadata) => metadata.is_dir(),
@@ -257,15 +253,17 @@ fn get_file_structure(path: String) -> Result<Vec<FileSystemNode>, String> {
 
                         // println!("Проверяем путь: {}", path_str);
 
-
                         // Используем вашу функцию `is_directory` для проверки
                         let is_directory = is_directory(path_str.clone());
 
                         // println!("Это: {}", is_directory);
 
-
                         nodes.push(FileSystemNode {
-                            type_id: if is_directory { "Directory".to_string() } else { "File".to_string() }, // Устанавливаем значение type_id
+                            type_id: if is_directory {
+                                "Directory".to_string()
+                            } else {
+                                "File".to_string()
+                            }, // Устанавливаем значение type_id
                             name: entry.file_name().to_string_lossy().into_owned(),
                             path: path_str,
                             is_directory,
@@ -287,9 +285,6 @@ fn get_file_structure(path: String) -> Result<Vec<FileSystemNode>, String> {
 
         nodes
     }
-
-
-
 
     let path = Path::new(&path);
     if !path.exists() {
@@ -320,7 +315,10 @@ fn move_folder(source: String, destination: String) -> Result<(), String> {
 
     // Проверяем, существует ли исходная папка
     if !source_path.exists() || !source_path.is_dir() {
-        return Err(format!("Source folder does not exist or is not a directory: {}", source));
+        return Err(format!(
+            "Source folder does not exist or is not a directory: {}",
+            source
+        ));
     }
 
     // Проверяем, существует ли папка назначения
@@ -342,11 +340,11 @@ fn move_folder(source: String, destination: String) -> Result<(), String> {
     Ok(())
 }
 
-
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_fs::init()) // Инициализация плагина dialog
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             get_config,
             get_recent_projects,
@@ -371,7 +369,7 @@ fn main() {
             get_file_structure,
             create_directory,
             create_file,
-            move_folder
+            move_folder,
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

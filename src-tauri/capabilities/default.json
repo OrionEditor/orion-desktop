@@ -34,6 +34,9 @@
     "fs:allow-read-dir",
     "fs:read-meta",
     "core:window:allow-start-dragging",
-    "fs:allow-write-text-file"
+    "fs:allow-write-text-file",
+    "opener:allow-open-path",
+    "opener:allow-open-url",
+    "opener:allow-reveal-item-in-dir"
   ]
 }

@@ -55,10 +55,11 @@ export class MarkdownContentComponent {
   private lastFocusedLineIndex: number | null = null;
   private lastCursorPosition: number = 0;
   selectAllMode: boolean = false;
+  MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath);
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.loadContent();
     this.markdownService.content$.subscribe(content => {
       this.content = content;
@@ -67,6 +68,7 @@ export class MarkdownContentComponent {
       this.updateStats();
       this.updateLines();
     });
+    this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath);
   }
 
   private updateLines(): void {
@@ -368,6 +370,10 @@ export class MarkdownContentComponent {
     this.menuX = event.clientX;
     this.menuY = event.clientY;
     this.showContextMenu = true;
+  }
+
+  onMenuClose(): void {
+    this.showContextMenu = false;
   }
 
   protected readonly MarkdownView = MarkdownView;

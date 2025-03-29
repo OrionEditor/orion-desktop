@@ -28,7 +28,7 @@
         
         <div class="parameters">
             <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
-            <app-context-menu *ngIf="showContextMenu" [items]="MdSettingsContextMenu" [x]="menuX" [y]="menuY"></app-context-menu>
+            <app-context-menu *ngIf="showContextMenu" [items]="MarkdownSettingsMenuItems" [x]="menuX" [y]="menuY" (close)="onMenuClose()"></app-context-menu>
         </div>
     </div>
 </div>
@@ -44,6 +44,7 @@
                 (input)="onContentChange($event)"
                 (keyup)="onCursorMove($event)"
                 (click)="onCursorMove($event)"
+                [value]="MarkdownSettingsMenuItems[0].select ? renderedContent : content"
                 placeholder="Введите Markdown здесь..."></textarea>
         <div class="rendered-content" [innerHTML]="renderedContent"></div>
     </div>
@@ -52,30 +53,23 @@
 <!--        <div class="line-numbers">-->
 <!--            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLineIndex + 1">{{ number }}</span>-->
 <!--        </div>-->
-<!--        Добавить textContent тоже самое что innerHtml, для просмотра кода-->
-<!--        <div #editorRef class="one-side-editor" (input)="onInput($event)" (keydown)="onKeyDown($event)" tabindex="0">-->
-<!--            <div-->
-<!--                    *ngFor="let line of lines; let i = index"-->
-<!--                    [class.editable]="i === currentLineIndex"-->
-<!--                    [class.rendered]="i !== currentLineIndex"-->
-<!--                    [innerHTML]="i === currentLineIndex ? line : renderLine(line)"-->
-<!--                    (click)="onLineClick(i)"-->
-<!--                    contenteditable="true"-->
-<!--                    spellcheck="true"-->
-<!--            ></div>-->
-<!--        </div>-->
-
         <div #editorRef class="one-side-editor" tabindex="0">
             <ng-container *ngFor="let line of lines; let i = index">
                 <div
-                        *ngIf="i !== currentLineIndex"
+                        *ngIf="i !== currentLineIndex && MarkdownSettingsMenuItems[0].select"
+                        class="rendered"
+                        (click)="onLineClick(i)"
+                        [textContent]="renderLine(line)"
+                ></div>
+                <div
+                        *ngIf="i !== currentLineIndex && !MarkdownSettingsMenuItems[0].select"
                         class="rendered"
                         [innerHTML]="renderLine(line)"
                         (click)="onLineClick(i)"
                 ></div>
                 <input
                         *ngIf="selectAllMode || i === currentLineIndex"
-                        [value]="line"
+                        [value]="!MarkdownSettingsMenuItems[0].select ? line : renderLine(line)"
                         (input)="onInput($event)"
                         (blur)="onBlur($event)"
                         class="editor-input"
