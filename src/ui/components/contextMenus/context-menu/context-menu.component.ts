@@ -36,6 +36,9 @@ export class ContextMenuComponent {
 
   onItemClick(item: ContextMenuItem): void {
     if (item.action && !item.isSubmenu) {
+      if(item.possibleSelect){
+        item.select = !item.select;
+      }
       item.action();
     }
   }

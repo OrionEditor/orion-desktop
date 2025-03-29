@@ -3,14 +3,18 @@
             *ngFor="let item of items"
             [id]="'item-' + item.id"
             class="menu-item"
-            (click)="onItemClick(item)"
+            [ngClass]="item.unavailable ? 'unavailable-item' : null"
+            (click)="!item.unavailable ? onItemClick(item): null"
             (mouseenter)="onMouseEnter(item)"
             (mouseleave)="onMouseLeave()"
     >
         <img *ngIf="item.icon" class="icon-menu" [src]="item.icon">
         <span>{{ item.text }}</span>
         <span *ngIf="item.isSubmenu" class="submenu-indicator">▶</span>
-        <img class="check" *ngIf="item.select" src="assets/icons/svg/contextMenu/check.svg">
+        <img class="check" *ngIf="item.select && item.possibleSelect" src="assets/icons/svg/contextMenu/check.svg">
+        <div class="premium-container">
+            <span class="premium" *ngIf="item.premium">ПРЕМИУМ</span>
+        </div>
         <ng-container *ngIf="item.isSubmenu && item.submenuItems && activeSubmenu === item.id">
             <app-context-menu
                     [items]="item.submenuItems"

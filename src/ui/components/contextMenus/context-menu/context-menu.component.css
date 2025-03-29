@@ -2,7 +2,7 @@
     position: absolute;
     background-color: var(--text-color);
     border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);*/
     min-width: 150px;
     z-index: 1000;
     color: var(--background-color);
@@ -33,7 +33,7 @@
 }
 
 .menu-item:hover, .submenu:hover {
-    background-color: var(--background-color);
+    background-color: #4CAF50;
     opacity: 0.5;
     color: var(--text-color);
 }
@@ -55,4 +55,18 @@
 .icon-menu, .check{
     width: 16px;
     height: 16px;
+}
+
+.unavailable-item:hover{
+    cursor: not-allowed;
+    background-color: red;
+    opacity: 0.4;
+}
+
+.premium-container{
+    background-color: #4CAF50;
+}
+
+.premium{
+    color: white;
 }

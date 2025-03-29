@@ -6,4 +6,7 @@ export interface ContextMenuItem {
     submenuItems?: ContextMenuItem[];
     icon?: string;
     select?: boolean;
+    possibleSelect?: boolean;
+    unavailable?: boolean;
+    premium?: boolean;
 }

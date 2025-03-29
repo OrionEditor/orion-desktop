@@ -1,7 +1,3 @@
-<div (contextmenu)="onRightClick($event)" style="height: 100vh;">
-    Щёлкните правой кнопкой мыши
-    <app-context-menu *ngIf="showContextMenu" [items]="MdSettingsContextMenu" [x]="menuX" [y]="menuY"></app-context-menu>
-</div>
 <div class="tab-controls-actions">
     <div class="export-import-section">
         <div class="export-section">
@@ -31,7 +27,8 @@
         </div>
         
         <div class="parameters">
-            <img src="assets/icons/svg/actions/parameters.svg">
+            <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
+            <app-context-menu *ngIf="showContextMenu" [items]="MdSettingsContextMenu" [x]="menuX" [y]="menuY"></app-context-menu>
         </div>
     </div>
 </div>
