@@ -1,24 +1,33 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TTSService} from "../../../../services/tts.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-audio-track',
   standalone: true,
-  imports: [],
+  imports: [
+    NgIf
+  ],
   templateUrl: './audio-track.component.html',
   styleUrl: './audio-track.component.css'
 })
 export class AudioTrackComponent {
   @Input() text: string = '';
   @Input() gender: 'male' | 'female' = 'female';
+  @Input() fileName: string = '';
   @Output() closed = new EventEmitter<void>();
 
   progress: number = 0;
-  private totalDuration: number = 0;
+  protected totalDuration: number = 0;
   private startTime: number = 0;
+  isMinimized: boolean = false;
 
   constructor() {
     setTimeout(() => this.start(), 0);
+  }
+
+  toggleMinimize(): void {
+    this.isMinimized = !this.isMinimized;
   }
 
   start(): void {
@@ -83,6 +92,12 @@ export class AudioTrackComponent {
         if (!TTSService.isSpeaking()) this.progress = 0; // Сбрасываем после небольшой задержки
       }, 500);
     };
+  }
+
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
   TTSService = TTSService;

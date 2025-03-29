@@ -1,7 +1,47 @@
-<div class="audio-track">
+<!--<div class="audio-track">-->
+<!--    <div class="progress-bar">-->
+<!--        <div class="progress" [style.width]="progress + '%'"></div>-->
+<!--    </div>-->
+<!--    <div class="info">-->
+<!--        <span>Примерное время озвучки: <span class="info-data">{{ formatTime(totalDuration) }}</span></span>-->
+<!--        <span>Имя файла: <span class="info-data">{{fileName}}</span></span>-->
+<!--        <span>Голос: <span class="info-data">{{ gender === 'male' ? 'Мужской' : 'Женский' }}</span></span>-->
+<!--    </div>-->
+<!--    <div class="controls">-->
+<!--        <button (click)="togglePlayPause()" [disabled]="!TTSService.isSpeaking()">-->
+<!--            {{ TTSService.isPaused() ? 'Возобновить' : 'Пауза' }}-->
+<!--        </button>-->
+<!--        <button (click)="stop()" [disabled]="!TTSService.isSpeaking()">Остановить</button>-->
+<!--        <button (click)="close()">Закрыть</button>-->
+<!--    </div>-->
+<!--    <div class="disclaimer">-->
+<!--        <p class="disclaimer-item">-->
+<!--            Время озвучки указано приблизительно, так как точная длительность зависит от системы и голосового движка.-->
+<!--        </p>-->
+<!--        <p class="disclaimer-item">-->
+<!--            Озвучка выполнена синтезированным голосом и может не полностью передавать эмоциональную или смысловую тонкость текста.-->
+<!--        </p>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div class="audio-track" [class.minimized]="isMinimized">
     <div class="progress-bar">
-        <!-- Простая имитация прогресса, можно улучшить с реальным временем -->
         <div class="progress" [style.width]="progress + '%'"></div>
+    </div>
+    <div class="content" *ngIf="!isMinimized">
+        <div class="info">
+            <span>Примерное время озвучки: <span class="info-data">{{ formatTime(totalDuration) }}</span></span>
+            <span>Имя файла: <span class="info-data">{{ fileName }}</span></span>
+            <span>Голос: <span class="info-data">{{ gender === 'male' ? 'Мужской' : 'Женский' }}</span></span>
+        </div>
+        <div class="disclaimer">
+            <p class="disclaimer-item">
+                Время озвучки указано приблизительно, так как точная длительность зависит от системы и голосового движка.
+            </p>
+            <p class="disclaimer-item">
+                Озвучка выполнена синтезированным голосом и может не полностью передавать эмоциональную или смысловую тонкость текста.
+            </p>
+        </div>
     </div>
     <div class="controls">
         <button (click)="togglePlayPause()" [disabled]="!TTSService.isSpeaking()">
@@ -9,5 +49,8 @@
         </button>
         <button (click)="stop()" [disabled]="!TTSService.isSpeaking()">Остановить</button>
         <button (click)="close()">Закрыть</button>
+        <button class="toggle-size" (click)="toggleMinimize()">
+            {{ isMinimized ? '▲' : '▼' }}
+        </button>
     </div>
 </div>

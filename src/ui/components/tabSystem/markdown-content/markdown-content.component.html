@@ -100,5 +100,7 @@
         *ngIf="showAudioTrack"
         [text]="content"
         [gender]="currentGender"
-        (closed)="hideAudioTrack()">
+        (closed)="hideAudioTrack()"
+        [fileName]="fileName"
+>
 </app-audio-track>

@@ -1,7 +1,7 @@
 .audio-track {
     position: fixed;
-    bottom: 0;
-    left: 0;
+    bottom: 20px;
+    left: 10vw;
     right: 0;
     background: #333;
     color: white;
@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 80vw;
+    border-radius: 20px;
 }
 .progress-bar {
     width: 100%;
@@ -36,4 +38,26 @@ button {
 button:disabled {
     background: #777;
     cursor: not-allowed;
+}
+
+.disclaimer {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.disclaimer-item{
+    color: red;
+    margin: 0;
+    padding: 0;
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.info-data{
+    color: #4CAF50;
 }
