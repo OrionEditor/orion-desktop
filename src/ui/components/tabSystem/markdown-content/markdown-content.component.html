@@ -34,9 +34,9 @@
 
 <div class="tab-controls-editor">
     <div class="editor-container" *ngIf="view === MarkdownView.TWO_SIDE">
-        <div class="line-numbers">
-            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>
-        </div>
+<!--        <div class="line-numbers">-->
+<!--            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>-->
+<!--        </div>-->
         <textarea
                 class="editor-textarea"
                 [(ngModel)]="content"
@@ -64,7 +64,7 @@
 <!--            ></div>-->
 <!--        </div>-->
 
-        <div #editorRef class="one-side-editor" (keydown)="onKeyDown($event)" tabindex="0">
+        <div #editorRef class="one-side-editor" tabindex="0">
             <ng-container *ngFor="let line of lines; let i = index">
                 <div
                         *ngIf="i !== currentLineIndex"
@@ -73,13 +73,14 @@
                         (click)="onLineClick(i)"
                 ></div>
                 <input
-                        *ngIf="i === currentLineIndex"
+                        *ngIf="selectAllMode || i === currentLineIndex"
                         [value]="line"
                         (input)="onInput($event)"
                         (blur)="onBlur($event)"
                         class="editor-input"
                         spellcheck="true"
                         autofocus
+                        (keydown)="onInputKeyDown($event)"
                 />
             </ng-container>
         </div>
@@ -87,10 +88,10 @@
 </div>
 
 <div class="tab-controls-info">
-    <div class="info-path">
+    <div class="info">
         <span>{{ filePath }}</span>
     </div>
-    <div class="info-stats">
+    <div class="info">
         <span>Символов: {{ statistics.characterCount }}</span>
         <span>Слов: {{ statistics.wordCount }}</span>
         <span>Строк: {{ statistics.lineCount }}</span>

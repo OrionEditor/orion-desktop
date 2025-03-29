@@ -282,3 +282,19 @@
     box-sizing: border-box;
     color: var(--text-color);
 }
+
+.info {
+    padding: 10px;
+    background-color: var(--background-color);
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.info span {
+    background-color: #212529;
+    padding: 4px 8px;
+    border-radius: 3px;
+}

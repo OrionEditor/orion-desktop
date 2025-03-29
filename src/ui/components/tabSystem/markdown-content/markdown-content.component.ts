@@ -50,6 +50,7 @@ export class MarkdownContentComponent {
   currentLineIndex: number | null = null;
   private lastFocusedLineIndex: number | null = null;
   private lastCursorPosition: number = 0;
+  selectAllMode: boolean = false;
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
@@ -188,49 +189,148 @@ export class MarkdownContentComponent {
   }
 
   onBlur(event: Event): void {
+    // const input = event.target as HTMLInputElement;
+    // this.lines[this.currentLineIndex!] = input.value;
+    // this.content = this.lines.join('\n');
+    // this.markdownService.saveMarkdownFile(this.filePath, this.content).then();
+    // this.updateLines();
+    // this.currentLineIndex = null;
     const input = event.target as HTMLInputElement;
-    this.lines[this.currentLineIndex!] = input.value;
+    if (this.selectAllMode) {
+      // Обновляем все строки в режиме выделения
+      const inputs = this.editorRef.nativeElement.querySelectorAll('input');
+      this.lines = Array.from(inputs).map((inp: HTMLInputElement) => inp.value);
+    } else {
+      this.lines[this.currentLineIndex!] = input.value; // Обновляем только текущую строку
+    }
     this.content = this.lines.join('\n');
     this.markdownService.saveMarkdownFile(this.filePath, this.content).then();
     this.updateLines();
     this.currentLineIndex = null;
+    this.selectAllMode = false; // Выключаем режим выделения после потери фокуса
   }
 
-  onKeyDown(event: KeyboardEvent): void {
-    if (this.currentLineIndex === null) return;
+  // onKeyDown(event: KeyboardEvent): void {
+  //   if (this.currentLineIndex === null) return;
+  //
+  //   const input = event.target as HTMLInputElement;
+  //   if (event.key === 'Enter') {
+  //     event.preventDefault();
+  //     this.lines[this.currentLineIndex] = input.value;
+  //     this.content = this.lines.join('\n');
+  //     if (this.currentLineIndex < this.lines.length - 1) {
+  //       this.currentLineIndex++;
+  //     } else {
+  //       this.lines.push('');
+  //       this.currentLineIndex = this.lines.length - 1;
+  //     }
+  //     this.updateLines();
+  //     this.focusInput();
+  //   } else if (event.key === 'ArrowUp' && this.currentLineIndex > 0) {
+  //     event.preventDefault();
+  //     this.lines[this.currentLineIndex] = input.value;
+  //     this.content = this.lines.join('\n');
+  //     this.currentLineIndex--;
+  //     this.updateLines();
+  //     this.focusInput();
+  //   } else if (event.key === 'ArrowDown' && this.currentLineIndex < this.lines.length - 1) {
+  //     event.preventDefault();
+  //     this.lines[this.currentLineIndex] = input.value;
+  //     this.content = this.lines.join('\n');
+  //     this.currentLineIndex++;
+  //     this.updateLines();
+  //     this.focusInput();
+  //   } else if (event.key === 'Escape') {
+  //     this.lines[this.currentLineIndex] = input.value;
+  //     this.content = this.lines.join('\n');
+  //     this.currentLineIndex = null; // Завершаем редактирование
+  //     this.updateLines();
+  //   }
+  // }
 
+  // onKeyDown(event: KeyboardEvent): void {
+  //   const editor = this.editorRef.nativeElement;
+  //   if (event.target instanceof HTMLInputElement) {
+  //     const input = event.target as HTMLInputElement;
+  //     if (event.key === 'Enter' || event.key === 'Escape') {
+  //       event.preventDefault();
+  //       this.lines[this.currentLineIndex!] = input.value;
+  //       this.content = this.lines.join('\n');
+  //       this.updateLines();
+  //
+  //       if (event.key === 'Enter') {
+  //         if (this.currentLineIndex! < this.lines.length - 1) {
+  //           this.currentLineIndex!++;
+  //         } else {
+  //           this.lines.push('');
+  //           this.currentLineIndex = this.lines.length - 1;
+  //         }
+  //         this.focusInput();
+  //       } else {
+  //         this.currentLineIndex = null; // Завершаем редактирование
+  //       }
+  //     }
+  //   } else if (this.currentLineIndex === null) {
+  //     if (event.key === 'ArrowUp' && this.currentLine > 1) {
+  //       event.preventDefault();
+  //       this.currentLine--;
+  //       this.currentLineIndex = this.currentLine - 1;
+  //       this.focusInput();
+  //     } else if (event.key === 'ArrowDown' && this.currentLine < this.lines.length) {
+  //       event.preventDefault();
+  //       this.currentLine++;
+  //       this.currentLineIndex = this.currentLine - 1;
+  //       this.focusInput();
+  //     }
+  //   }
+  // }
+
+  onInputKeyDown(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
-    if (event.key === 'Enter') {
+    if (event.ctrlKey && event.key === 'a') {
       event.preventDefault();
-      this.lines[this.currentLineIndex] = input.value;
+      this.selectAllMode = true; // Активируем режим выделения всех строк
+      this.currentLineIndex = null; // Отключаем одиночное редактирование
+      this.updateLines();
+      requestAnimationFrame(() => {
+        const inputs = this.editorRef.nativeElement.querySelectorAll('input');
+        inputs.forEach((inp: HTMLInputElement) => {
+          inp.focus();
+          inp.select(); // Выделяем текст в каждом input
+        });
+      });
+    }
+    if (event.key === 'Enter' || event.key === 'Backspace') {
+      event.preventDefault();
+      this.lines[this.currentLineIndex!] = input.value; // Сохраняем текущую строку
       this.content = this.lines.join('\n');
-      if (this.currentLineIndex < this.lines.length - 1) {
-        this.currentLineIndex++;
-      } else {
-        this.lines.push('');
-        this.currentLineIndex = this.lines.length - 1;
+
+      if (event.key === 'Enter') {
+        this.lines.splice(this.currentLineIndex! + 1, 0, ''); // Вставляем пустую строку
+        this.currentLineIndex!++; // Переходим на новую строку
+
+        this.content = this.lines.join('\n');
+        this.updateLines();
+        // Очищаем значение input для новой строки
+        const editor = this.editorRef.nativeElement;
+        const newInput = editor.querySelector('input') as HTMLInputElement;
+        if (newInput) {
+          newInput.value = ''; // Устанавливаем пустое значение
+          this.onLineClick(this.currentLineIndex!);
+        }
+        this.onLineClick(this.currentLineIndex!);
+      } else if (event.key === 'Backspace') {
+        if (input.value.trim() === '') {
+          // Если строка пуста, удаляем её
+          this.lines.splice(this.currentLineIndex!, 1);
+          this.content = this.lines.join('\n');
+          this.updateLines();
+        } else {
+          // Если строка не пуста, просто сохраняем и завершаем
+          this.updateLines();
+        }
+        this.currentLineIndex = null; // Завершаем редактирование
       }
-      this.updateLines();
-      this.focusInput();
-    } else if (event.key === 'ArrowUp' && this.currentLineIndex > 0) {
-      event.preventDefault();
-      this.lines[this.currentLineIndex] = input.value;
-      this.content = this.lines.join('\n');
-      this.currentLineIndex--;
-      this.updateLines();
-      this.focusInput();
-    } else if (event.key === 'ArrowDown' && this.currentLineIndex < this.lines.length - 1) {
-      event.preventDefault();
-      this.lines[this.currentLineIndex] = input.value;
-      this.content = this.lines.join('\n');
-      this.currentLineIndex++;
-      this.updateLines();
-      this.focusInput();
-    } else if (event.key === 'Escape') {
-      this.lines[this.currentLineIndex] = input.value;
-      this.content = this.lines.join('\n');
-      this.currentLineIndex = null; // Завершаем редактирование
-      this.updateLines();
     }
   }
 
@@ -250,7 +350,6 @@ export class MarkdownContentComponent {
     this.focusInput();
   }
 
-  // Рендеринг строки как Markdown
   renderLine(line: string): string {
     return marked(line).toString();
   }
