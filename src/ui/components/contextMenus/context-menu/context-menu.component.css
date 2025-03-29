@@ -2,7 +2,7 @@
     position: absolute;
     background-color: var(--text-color);
     border-radius: 4px;
-    /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);*/
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     min-width: 150px;
     z-index: 1000;
     color: var(--background-color);
@@ -32,9 +32,8 @@
     opacity: 1;
 }
 
-.menu-item:hover, .submenu:hover {
+.menu-item:hover {
     background-color: #4CAF50;
-    opacity: 0.5;
     color: var(--text-color);
 }
 
