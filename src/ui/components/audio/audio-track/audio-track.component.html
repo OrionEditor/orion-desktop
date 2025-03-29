@@ -1,0 +1,13 @@
+<div class="audio-track">
+    <div class="progress-bar">
+        <!-- Простая имитация прогресса, можно улучшить с реальным временем -->
+        <div class="progress" [style.width]="progress + '%'"></div>
+    </div>
+    <div class="controls">
+        <button (click)="togglePlayPause()" [disabled]="!TTSService.isSpeaking()">
+            {{ TTSService.isPaused() ? 'Возобновить' : 'Пауза' }}
+        </button>
+        <button (click)="stop()" [disabled]="!TTSService.isSpeaking()">Остановить</button>
+        <button (click)="close()">Закрыть</button>
+    </div>
+</div>

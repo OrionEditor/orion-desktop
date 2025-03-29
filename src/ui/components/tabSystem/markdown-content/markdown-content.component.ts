@@ -14,6 +14,7 @@ import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interfac
 import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
 import {MdSettingsContextMenu} from "../../../../shared/constants/contextMenu/mdSettings.contextmenu";
 import {TTSService} from "../../../../services/tts.service";
+import {AudioTrackComponent} from "../../audio/audio-track/audio-track.component";
 
 @Component({
   selector: 'app-markdown-content',
@@ -22,7 +23,8 @@ import {TTSService} from "../../../../services/tts.service";
     FormsModule,
     NgForOf,
     NgIf,
-    ContextMenuComponent
+    ContextMenuComponent,
+    AudioTrackComponent
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -366,6 +368,9 @@ export class MarkdownContentComponent {
   menuX: number = 0;
   menuY: number = 0;
 
+  showAudioTrack: boolean = false;
+  currentGender: 'male' | 'female' = 'female';
+
   onRightClick(event: MouseEvent): void {
     event.preventDefault();
     this.menuX = event.clientX;
@@ -377,15 +382,15 @@ export class MarkdownContentComponent {
     this.showContextMenu = false;
   }
 
-  voice(){
-    TTSService.speak(this.content, 'male');
+  speak(gender: 'male' | 'female'): void {
+    this.currentGender = gender;
+    this.showAudioTrack = true; // Показываем дорожку
   }
 
-  voiceBreak(){
-    if(TTSService.isSpeaking()){
-      TTSService.stop();
-    }
+  hideAudioTrack(): void {
+    this.showAudioTrack = false; // Скрываем дорожку
   }
+
   protected readonly MarkdownView = MarkdownView;
   protected readonly MdSettingsContextMenu = MdSettingsContextMenu;
 }
