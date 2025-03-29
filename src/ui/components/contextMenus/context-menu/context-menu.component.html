@@ -1,0 +1,24 @@
+<div class="context-menu" [style.left.px]="x" [style.top.px]="y">
+    <div
+            *ngFor="let item of items"
+            [id]="'item-' + item.id"
+            class="menu-item"
+            (click)="onItemClick(item)"
+            (mouseenter)="onMouseEnter(item)"
+            (mouseleave)="onMouseLeave()"
+    >
+        <img *ngIf="item.icon" class="icon-menu" [src]="item.icon">
+        <span>{{ item.text }}</span>
+        <span *ngIf="item.isSubmenu" class="submenu-indicator">▶</span>
+        <img class="check" *ngIf="item.select" src="assets/icons/svg/contextMenu/check.svg">
+        <ng-container *ngIf="item.isSubmenu && item.submenuItems && activeSubmenu === item.id">
+            <app-context-menu
+                    [items]="item.submenuItems"
+                    [x]="submenuPosition === 'right' ? 0 : -0"
+                    [y]="0"
+                    class="submenu"
+                    [ngClass]="submenuPosition"
+            ></app-context-menu>
+        </ng-container>
+    </div>
+</div>

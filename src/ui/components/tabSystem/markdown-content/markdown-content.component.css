@@ -221,7 +221,8 @@
 }
 
 .one-side-editor {
-    width: 100%;
+    margin-left: 10%;
+    width: 90%;
     padding: 10px;
     font-family: monospace;
     font-size: 14px;

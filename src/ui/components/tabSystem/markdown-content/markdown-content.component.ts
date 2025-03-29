@@ -10,6 +10,9 @@ import {MarkdownExportService} from "../../../../services/Markdown/markdown-expo
 import {FILE_TYPES, getExtensionWithDot} from "../../../../shared/constants/FileSystem/files.types";
 import {MarkdownImportService} from "../../../../services/Markdown/markdown.import.service";
 import {MarkdownView} from "../../../../shared/enums/markdown-view.enum";
+import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
+import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
+import {MdSettingsContextMenu} from "../../../../shared/constants/contextMenu/mdSettings.contextmenu";
 
 @Component({
   selector: 'app-markdown-content',
@@ -17,7 +20,8 @@ import {MarkdownView} from "../../../../shared/enums/markdown-view.enum";
   imports: [
     FormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    ContextMenuComponent
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -354,5 +358,18 @@ export class MarkdownContentComponent {
     return marked(line).toString();
   }
 
+
+  showContextMenu: boolean = false;
+  menuX: number = 0;
+  menuY: number = 0;
+
+  onRightClick(event: MouseEvent): void {
+    event.preventDefault();
+    this.menuX = event.clientX;
+    this.menuY = event.clientY;
+    this.showContextMenu = true;
+  }
+
   protected readonly MarkdownView = MarkdownView;
+  protected readonly MdSettingsContextMenu = MdSettingsContextMenu;
 }

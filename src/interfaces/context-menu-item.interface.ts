@@ -1,0 +1,9 @@
+export interface ContextMenuItem {
+    id: string;
+    text: string
+    action?: () => void;
+    isSubmenu?: boolean;
+    submenuItems?: ContextMenuItem[];
+    icon?: string;
+    select?: boolean;
+}
