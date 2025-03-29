@@ -30,6 +30,8 @@
             <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
             <app-context-menu *ngIf="showContextMenu" [items]="MarkdownSettingsMenuItems" [x]="menuX" [y]="menuY" (close)="onMenuClose()"></app-context-menu>
         </div>
+        <button (click)="voice()">Озвучить</button>
+        <button (click)="voiceBreak()">Остановить</button>
     </div>
 </div>
 

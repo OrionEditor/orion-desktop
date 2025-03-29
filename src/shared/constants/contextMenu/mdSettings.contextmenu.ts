@@ -1,7 +1,7 @@
 import {ContextMenuItem} from "../../../interfaces/context-menu-item.interface";
 import {MarkdownSettingsContextMenuService} from "../../../services/Markdown/markdown-settings-context-menu.service";
 
-export const MdSettingsContextMenu = (filePath: string = ''): ContextMenuItem[] => [
+export const MdSettingsContextMenu = (filePath: string = '', content: string = '', fileName: string = ''): ContextMenuItem[] => [
     {
         id: 'view-code',
         text: 'Просмотр исходного кода',
@@ -39,13 +39,13 @@ export const MdSettingsContextMenu = (filePath: string = ''): ContextMenuItem[] 
             {
                 id: 'export-html',
                 text: 'Экспортировать в HTML',
-                action: () => MarkdownSettingsContextMenuService.exportToHtml,
+                action: () => MarkdownSettingsContextMenuService.exportToHtml(content, fileName),
                 icon: 'assets/icons/svg/contextMenu/export-html.svg',
             },
             {
                 id: 'export-pdf',
                 text: 'Экспортировать в PDF',
-                action: () => MarkdownSettingsContextMenuService.exportToPdf,
+                action: () => MarkdownSettingsContextMenuService.exportToPdf(content, fileName),
                 icon: 'assets/icons/svg/contextMenu/export-pdf.svg',
             },
         ],

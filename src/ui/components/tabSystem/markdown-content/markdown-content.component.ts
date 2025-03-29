@@ -13,6 +13,7 @@ import {MarkdownView} from "../../../../shared/enums/markdown-view.enum";
 import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
 import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
 import {MdSettingsContextMenu} from "../../../../shared/constants/contextMenu/mdSettings.contextmenu";
+import {TTSService} from "../../../../services/tts.service";
 
 @Component({
   selector: 'app-markdown-content',
@@ -55,7 +56,7 @@ export class MarkdownContentComponent {
   private lastFocusedLineIndex: number | null = null;
   private lastCursorPosition: number = 0;
   selectAllMode: boolean = false;
-  MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath);
+  MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName);
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
 
@@ -68,7 +69,7 @@ export class MarkdownContentComponent {
       this.updateStats();
       this.updateLines();
     });
-    this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath);
+    this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName);
   }
 
   private updateLines(): void {
@@ -376,6 +377,15 @@ export class MarkdownContentComponent {
     this.showContextMenu = false;
   }
 
+  voice(){
+    TTSService.speak(this.content, 'male');
+  }
+
+  voiceBreak(){
+    if(TTSService.isSpeaking()){
+      TTSService.stop();
+    }
+  }
   protected readonly MarkdownView = MarkdownView;
   protected readonly MdSettingsContextMenu = MdSettingsContextMenu;
 }

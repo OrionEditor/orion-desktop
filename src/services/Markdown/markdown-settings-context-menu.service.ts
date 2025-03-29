@@ -3,11 +3,13 @@ import {MdSettingsContextMenu} from "../../shared/constants/contextMenu/mdSettin
 import {DialogService} from "../dialog.service";
 import {MarkdownExportService} from "./markdown-export.service";
 import {OpenInExplorer} from "../../utils/open-explorer.utils";
+import {FILE_TYPES} from "../../shared/constants/FileSystem/files.types";
 
 @Injectable({
     providedIn: 'root'
 })
 export class MarkdownSettingsContextMenuService {
+    private static dialogService: DialogService;
     public static viewCode() {
         // @ts-ignore
         MdSettingsContextMenu[0].select = !MdSettingsContextMenu[0].select;
@@ -19,10 +21,22 @@ export class MarkdownSettingsContextMenuService {
     public static delete() {
     }
 
-    public static async exportToHtml() {
+    public static async exportToHtml(content: string, fileName:string) {
+        const selectedPath = await DialogService.StaticSelectPath(true);
+        if (selectedPath) {
+            const exportPath = `${selectedPath}/${fileName}.${FILE_TYPES.HTML}`;
+            try {
+                await MarkdownExportService.exportToHtml(content, exportPath, fileName);
+            } catch {}
+        }
     }
 
-    public static exportToPdf() {
+    public static async exportToPdf(content: string, fileName:string) {
+        const selectedPath = await DialogService.StaticSelectPath(true);
+        if (selectedPath) {
+            const exportPath = `${selectedPath}/${fileName}.${FILE_TYPES.PDF}`;
+            await MarkdownExportService.exportToPdf(content, exportPath);
+        }
     }
 
     public static translateText() {
