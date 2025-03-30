@@ -70,3 +70,48 @@
     color: #666;
     padding: 20px;
 }
+
+.panel-actions {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--text-color);
+}
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+}
+.action-btn:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.action-btn img {
+    width: 16px;
+    height: 16px;
+}
+
+.panel-search {
+    padding: 10px;
+    border-bottom: 1px solid var(--text-color);
+}
+.search-input {
+    width: 100%;
+    padding: 5px 8px;
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+    background-color: #212529;
+    color: var(--text-color);
+    font-size: 12px;
+    outline: none;
+}
+.search-input::placeholder {
+    color: #666;
+    opacity: 0.8;
+}

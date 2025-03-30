@@ -1,11 +1,34 @@
 <div class="version-panel" [class.collapsed]="isCollapsed">
     <div class="panel-header">
-        <span>Версии: </span>
+        <span>Версии({{filteredVersions.length}}):</span>
         <span>{{fileName}}</span>
+    </div>
+    <div class="panel-search">
+        <input
+                type="text"
+                [(ngModel)]="searchQuery"
+                (input)="filterVersions()"
+                placeholder="Поиск версий..."
+                class="search-input"
+        >
+    </div>
+    <div class="panel-actions">
+        <button class="action-btn" (click)="createNewVersion()" title="Создать новую версию">
+            <img src="assets/icons/svg/version-component/add.svg" alt="New">
+        </button>
+        <button class="action-btn" (click)="deleteVersion()" title="Удалить активную версию" [disabled]="!hasActiveVersion()">
+            <img src="assets/icons/svg/version-component/delete.svg" alt="Delete">
+        </button>
+        <button class="action-btn" (click)="restoreVersion()" title="Восстановить активную версию" [disabled]="!hasActiveVersion()">
+            <img src="assets/icons/svg/version-component/restore.svg" alt="Restore">
+        </button>
+        <button class="action-btn" (click)="exportVersion()" title="Экспорт активной версии" [disabled]="!hasActiveVersion()">
+            <img src="assets/icons/svg/version-component/export.svg" alt="Export">
+        </button>
     </div>
     <div class="version-list" *ngIf="!isCollapsed">
         <div
-                *ngFor="let version of versions"
+                *ngFor="let version of filteredVersions"
                 class="version-item"
                 [class.active]="version.isActive"
                 (click)="selectVersion(version.id)"
@@ -18,6 +41,9 @@
         </div>
         <div *ngIf="versions.length === 0" class="no-versions">
             Нет доступных версий
+        </div>
+        <div *ngIf="filteredVersions.length === 0" class="no-versions">
+            Нет версий, соответствующих запросу
         </div>
     </div>
 </div>
