@@ -22,6 +22,9 @@ export class FileTabComponent {
   @Output() unpinTabEvent = new EventEmitter<string>();
   @Output() closeOthersEvent = new EventEmitter<string>();
   @Output() closeAllEvent = new EventEmitter<void>();
+  @Output() dragStart = new EventEmitter<string>();
+  @Output() dragEnd = new EventEmitter<void>();
+  @Output() dropTab = new EventEmitter<{ draggedId: string; targetId: string }>();
 
   showContextMenu = false;
   contextMenuPosition = { x: 0, y: 0 };
@@ -69,6 +72,27 @@ export class FileTabComponent {
   closeAllTabs(): void {
     this.closeAllEvent.emit();
     this.showContextMenu = false;
+  }
+
+  // Обработка начала перетаскивания
+  onDragStart(event: DragEvent): void {
+    event.dataTransfer?.setData('text/plain', this.tab.id);
+    this.dragStart.emit(this.tab.id);
+  }
+
+  // Разрешаем сброс на вкладку
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  // Обработка сброса вкладки
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const draggedId = event.dataTransfer?.getData('text/plain');
+    if (draggedId && draggedId !== this.tab.id) {
+      this.dropTab.emit({ draggedId, targetId: this.tab.id });
+    }
+    this.dragEnd.emit();
   }
 
     protected readonly getFileIcon = getFileIcon;

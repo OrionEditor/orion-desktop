@@ -5,12 +5,14 @@ import {MarkdownExportService} from "./markdown-export.service";
 import {OpenInExplorer} from "../../utils/open-explorer.utils";
 import {FILE_TYPES} from "../../shared/constants/FileSystem/files.types";
 import {NetworkService} from "../network.service";
+import {LanguageTranslateService} from "../translate.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class MarkdownSettingsContextMenuService {
     private static dialogService: DialogService;
+    private static languageTranslateService: LanguageTranslateService;
     public static viewCode() {
         // @ts-ignore
         MdSettingsContextMenu[0].select = !MdSettingsContextMenu[0].select;
@@ -40,12 +42,14 @@ export class MarkdownSettingsContextMenuService {
         }
     }
 
-    public static async translateText() {
-        if (!NetworkService.getConnectionStatus()) {
-            return;
-        }
-        // const outputFileName = `${fileName.split('.')[0]}_translated.txt`;
-        // await translateService.translateAndSave(content, 'ru', 'en', outputFileName);
+    public static async translateText(content: string, fileName:string) {
+        // if (!NetworkService.getConnectionStatus()) {
+        //     return;
+        // }
+        const selectedPath = await DialogService.StaticSelectPath(true);
+        if(!selectedPath){return;}
+        const filePath = `${selectedPath}\\${fileName}.${FILE_TYPES.MD}`
+        await this.languageTranslateService.translateAndSave(content, filePath);
     }
 
     public static voiceMale() {

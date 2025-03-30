@@ -37,13 +37,11 @@ export class LanguageTranslateService {
 
     public async translateAndSave(
         text: string,
-        outputFileName: string = 'translated_text.txt',
+        filePath: string,
         sourceLang: string = 'auto',
         targetLang: string = 'en',
-    ): Promise<string> {
+    ) {
         const translatedText = await this.translateText(text, sourceLang, targetLang);
-        await writeTextFile(outputFileName, translatedText, { baseDir: BaseDirectory.Document });
-        console.log(`Переведённый текст сохранён в ${outputFileName}`);
-        return outputFileName;
+        await writeTextFile(filePath, translatedText);
     }
 }

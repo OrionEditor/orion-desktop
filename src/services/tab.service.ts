@@ -45,9 +45,9 @@ export class TabService {
         }
     }
 
-    setActiveTab(id: string): void {
+    setActiveTab(id: string, tabs: Tab[] = this.tabs): void {
         this.tabs.forEach(tab => tab.isActive = tab.id === id);
-        this.updateTabs();
+        this.updateTabs(tabs);
     }
 
     getTab(id: string): Tab | undefined {
@@ -62,8 +62,8 @@ export class TabService {
         return Math.random().toString(36).substr(2, 9);
     }
 
-    private updateTabs(): void {
-        this.tabsSubject.next([...this.tabs]);
+    private updateTabs(tabs: Tab[] = this.tabs): void {
+        this.tabsSubject.next([...tabs]);
     }
 
     pinTab(id: string): void {

@@ -13,7 +13,11 @@
                     (pinTabEvent)="pinTab($event)"
                     (unpinTabEvent)="unpinTab($event)"
                     (closeOthersEvent)="closeOtherTabs($event)"
-                    (closeAllEvent)="closeAllTabs()">
+                    (closeAllEvent)="closeAllTabs()"
+                    (dragStart)="onDragStart($event)"
+                    (dragEnd)="onDragEnd()"
+                    (dropTab)="onDropTab($event)"
+            >
             >
             </app-file-tab>
         </div>

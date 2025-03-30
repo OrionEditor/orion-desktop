@@ -75,7 +75,7 @@ export class ProjectPageComponent {
   }
 
   setActiveTab(tabId: string): void {
-    this.tabService.setActiveTab(tabId);
+    this.tabService.setActiveTab(tabId, this.tabs);
   }
 
   async onCreateNote() {
@@ -106,5 +106,25 @@ export class ProjectPageComponent {
 
   closeAllTabs(): void {
     this.tabService.closeAllTabs();
+  }
+
+  onDragStart(tabId: string): void {
+  }
+
+  onDragEnd(): void {
+  }
+
+  onDropTab(event: { draggedId: string; targetId: string }): void {
+    const { draggedId, targetId } = event;
+    const draggedIndex = this.tabs.findIndex(tab => tab.id === draggedId);
+    const targetIndex = this.tabs.findIndex(tab => tab.id === targetId);
+
+    if (draggedIndex === -1 || targetIndex === -1) return;
+
+    const newTabs = [...this.tabs];
+    const [draggedTab] = newTabs.splice(draggedIndex, 1);
+    newTabs.splice(targetIndex, 0, draggedTab);
+
+    this.tabs = newTabs;
   }
 }

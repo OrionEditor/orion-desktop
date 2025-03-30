@@ -10,6 +10,7 @@
     background-color: var(--background-color);
     color: var(--text-color);
     font-size: 1.1rem;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
 }
 .tab.active {
     background-color: var(--text-color);
@@ -19,6 +20,12 @@
 .tab.pinned {
     opacity: 0.6;
 }
+
+.tab.dragging {
+    opacity: 0.2;
+}
+
+
 .close-btn {
     border: none;
     background: none;

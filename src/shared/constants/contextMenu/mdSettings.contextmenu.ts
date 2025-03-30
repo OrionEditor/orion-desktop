@@ -59,7 +59,7 @@ export const MdSettingsContextMenu = (filePath: string = '', content: string = '
             {
                 id: 'ai-translate',
                 text: 'Перевести текст',
-                action: () => MarkdownSettingsContextMenuService.translateText,
+                action: () => MarkdownSettingsContextMenuService.translateText(content, fileName),
                 icon: 'assets/icons/svg/contextMenu/translate.svg',
             },
             {

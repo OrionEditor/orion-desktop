@@ -376,7 +376,8 @@ export class MarkdownContentComponent {
   async baseTranslate(){
     const selectedPath = await DialogService.StaticSelectPath(true);
     if(!selectedPath){return;}
-    await this.languageTranslateService.translateAndSave('Привет как дела?', selectedPath + 'translate.txt')
+    const filePath = `${selectedPath}\\${'translate.txt'}`
+    await this.languageTranslateService.translateAndSave('Привет как дела?', filePath);
   }
 
   protected readonly MarkdownView = MarkdownView;
