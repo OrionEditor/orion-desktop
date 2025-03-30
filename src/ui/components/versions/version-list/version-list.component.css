@@ -1,0 +1,72 @@
+.version-panel {
+    width: 250px;
+    height: 100%;
+    background-color: var(--background-color);
+    border-left: 1px solid var(--text-color); /* Граница слева, так как панель справа */
+    transition: width 0.3s ease;
+    overflow-y: auto;
+    flex-shrink: 0; /* Предотвращаем сжатие панели */
+}
+.version-panel.collapsed {
+    width: 0;
+}
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--text-color);
+    font-weight: bold;
+    color: var(--text-color);
+}
+.toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.toggle-btn img {
+    width: 16px;
+    height: 16px;
+}
+.version-list {
+    padding: 10px;
+}
+.version-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #212529;
+    color: #666;
+}
+.version-item.active {
+    background-color: #4CAF50;
+    color: white;
+}
+.version-item:hover {
+    opacity: 0.9;
+}
+.version-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+.version-details {
+    display: flex;
+    flex-direction: column;
+}
+.version-name {
+    font-size: 14px;
+}
+.version-meta {
+    font-size: 12px;
+    opacity: 0.8;
+}
+.no-versions {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}

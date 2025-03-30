@@ -208,12 +208,13 @@
     height: 25px;
     /*background-color: var(--text-color);*/
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: center;
     align-items: center;
     align-content: center;
     border-radius: 16px;
     cursor: pointer;
+    gap: 10px;
 }
 
 .parameters img{

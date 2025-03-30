@@ -17,6 +17,8 @@ import {AudioTrackComponent} from "../../audio/audio-track/audio-track.component
 import {Gender} from "../../../../shared/enums/gender.enum";
 import {LanguageTranslateService} from "../../../../services/translate.service";
 import {HttpClient} from "@angular/common/http";
+import {VersionListComponent} from "../../versions/version-list/version-list.component";
+import {Version} from "../../../../interfaces/version.interface";
 
 @Component({
   selector: 'app-markdown-content',
@@ -26,7 +28,8 @@ import {HttpClient} from "@angular/common/http";
     NgForOf,
     NgIf,
     ContextMenuComponent,
-    AudioTrackComponent
+    AudioTrackComponent,
+    VersionListComponent
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -67,6 +70,8 @@ export class MarkdownContentComponent {
 
   showAudioTrack: { value: boolean } = { value: false };
   currentGender: Gender= Gender.FEMALE;
+
+  isVersionPanelCollapsed: boolean = true;
 
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
@@ -378,6 +383,34 @@ export class MarkdownContentComponent {
     if(!selectedPath){return;}
     const filePath = `${selectedPath}\\${'translate.txt'}`
     await this.languageTranslateService.translateAndSave('Привет как дела?', filePath);
+  }
+
+  toggleVersionSidebar(){
+    this.isVersionPanelCollapsed = !this.isVersionPanelCollapsed;
+  }
+
+  // Данные для версий
+  versions: Version[] = [
+    { id: '1', fileName: 'file_v1.md', versionNumber: 'v1', size: '12 KB', createdAt: '2025-03-30 14:00', isActive: false },
+    { id: '2', fileName: 'file_v2.md', versionNumber: 'v2', size: '15 KB', createdAt: '2025-03-30 15:30', isActive: true },
+    { id: '3', fileName: 'file_v3.md', versionNumber: 'v3', size: '18 KB', createdAt: '2025-03-30 16:00', isActive: false }
+  ];
+
+  selectVersion(versionId: string): void {
+    this.versions = this.versions.map(version => ({
+      ...version,
+      isActive: version.id === versionId
+    }));
+    const activeVersion = this.versions.find(v => v.isActive);
+    if (activeVersion) {
+      this.content = `Содержимое версии ${activeVersion.versionNumber}`; // Заглушка, замените на загрузку реального контента
+      this.lines = this.content.split('\n');
+      this.updateStats();
+    }
+  }
+
+  toggleVersionPanel(isCollapsed: boolean): void {
+    this.isVersionPanelCollapsed = isCollapsed;
   }
 
   protected readonly MarkdownView = MarkdownView;

@@ -24,6 +24,9 @@
             <div class="view-item" [style.background]="view === MarkdownView.TWO_SIDE ? 'var(--text-color)' : 'transparent'">
                 <img src="assets/icons/svg/view/two-page.svg" (click)="onTwoSide()">
             </div>
+            <div class="view-item" [style.background]="!isVersionPanelCollapsed ? 'var(--text-color)' : 'transparent'">
+                <img src="assets/icons/svg/actions/version-history.svg" (click)="toggleVersionPanel(!isVersionPanelCollapsed)">
+            </div>
         </div>
         
         <div class="parameters">
@@ -81,6 +84,14 @@
             </ng-container>
         </div>
     </div>
+    <app-version-list
+            [versions]="versions"
+            [isCollapsed]="isVersionPanelCollapsed"
+            (versionSelected)="selectVersion($event)"
+            (collapseToggled)="toggleVersionPanel($event)"
+            [fileName]="fileName"
+            [filePath]="filePath"
+    ></app-version-list>
 </div>
 
 <div class="tab-controls-info">

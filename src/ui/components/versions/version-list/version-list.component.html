@@ -1,0 +1,23 @@
+<div class="version-panel" [class.collapsed]="isCollapsed">
+    <div class="panel-header">
+        <span>Версии: </span>
+        <span>{{fileName}}</span>
+    </div>
+    <div class="version-list" *ngIf="!isCollapsed">
+        <div
+                *ngFor="let version of versions"
+                class="version-item"
+                [class.active]="version.isActive"
+                (click)="selectVersion(version.id)"
+        >
+            <img class="version-icon" [src]="getFileIcon(fileName)" alt="File">
+            <div class="version-details">
+                <span class="version-name">[{{ version.versionNumber }}] {{ version.fileName }}</span>
+                <span class="version-meta">{{ version.size }} | {{ version.createdAt }}</span>
+            </div>
+        </div>
+        <div *ngIf="versions.length === 0" class="no-versions">
+            Нет доступных версий
+        </div>
+    </div>
+</div>
