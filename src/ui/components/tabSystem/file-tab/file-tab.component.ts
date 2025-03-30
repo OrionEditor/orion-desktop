@@ -2,6 +2,7 @@ import {Component, EventEmitter, HostListener, Input, Output} from '@angular/cor
 import {Tab} from "../../../../interfaces/components/tab.interface";
 import {TabContextMenuComponent} from "../../contextMenus/tab-context-menu/tab-context-menu.component";
 import {NgIf} from "@angular/common";
+import {getFileIcon} from "../../../../utils/file-icon.utils";
 
 @Component({
   selector: 'app-file-tab',
@@ -69,4 +70,6 @@ export class FileTabComponent {
     this.closeAllEvent.emit();
     this.showContextMenu = false;
   }
+
+    protected readonly getFileIcon = getFileIcon;
 }

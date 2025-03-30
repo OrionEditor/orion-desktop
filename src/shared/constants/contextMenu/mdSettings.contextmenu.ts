@@ -73,6 +73,7 @@ export const MdSettingsContextMenu = (filePath: string = '', content: string = '
                         text: 'Мужской голос',
                         action: () => MarkdownSettingsContextMenuService.voiceMale,
                         icon: 'assets/icons/svg/contextMenu/male.svg',
+                        unavailable: true
                     },
                     {
                         id: 'ai-voice-female',

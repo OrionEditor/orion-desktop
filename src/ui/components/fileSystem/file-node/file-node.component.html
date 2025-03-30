@@ -53,7 +53,7 @@
             <img [src]="DEFAULT_FOLDER_ICON">
         </span>
         <span *ngIf="!isDir" class="file-node-icon file-icon">
-            <img [src]="getFileIcon()">
+            <img [src]="getFileIcon(node.name, isDir)">
         </span>
 
         <span class="file-node-name">

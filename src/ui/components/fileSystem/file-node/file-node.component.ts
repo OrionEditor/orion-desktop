@@ -8,6 +8,7 @@ import {TranslatePipe} from "@ngx-translate/core";
 import { ChangeDetectorRef } from '@angular/core';
 import {TabService} from "../../../../services/tab.service";
 import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
+import {getFileIcon} from "../../../../utils/file-icon.utils";
 
 
 @Component({
@@ -116,41 +117,6 @@ export class FileNodeComponent {
     this.contextMenuVisible = false;
   }
 
-  // Получить иконку для файла
-  getFileIcon(): string {
-    // if (this.isDir) {
-    //   return DEFAULT_FOLDER_ICON;
-    // }
-    //
-    // const extension = this.node.name.split('.').pop()?.toLowerCase(); // Получаем расширение файла
-    // const fileIcon = FILE_ICONS.find(icon => icon.type === `.${extension}`);
-    // return fileIcon ? fileIcon.icon : DEFAULT_FILE_ICON;
-
-    if (this.isDir) {
-      return DEFAULT_FOLDER_ICON;
-    }
-
-    const extension = this.node.name.split('.').pop()?.toLowerCase();
-    if (!extension) {
-      return DEFAULT_FILE_ICON;
-    }
-
-    const fullExtension = `.${extension}`;
-
-    if (Object.values(FILE_TYPES.IMAGE).includes(extension)) {
-      const fileIcon = FILE_ICONS.find(icon => icon.type === fullExtension);
-      return fileIcon ? fileIcon.icon : 'image-icon.png';
-    }
-
-    if (Object.values(FILE_TYPES.VIDEO).includes(extension)) {
-      const fileIcon = FILE_ICONS.find(icon => icon.type === fullExtension);
-      return fileIcon ? fileIcon.icon : 'video-icon.png';
-    }
-
-    const fileIcon = FILE_ICONS.find(icon => icon.type === fullExtension);
-    return fileIcon ? fileIcon.icon : DEFAULT_FILE_ICON;
-  }
-
   countContents(node: FileSystemNode): { files: number; folders: number } {
     if (!node.children || node.children.length === 0) {
       return { files: node.type_id === "File" ? 1 : 0, folders: node.type_id === "Directory" ? 1 : 0 };
@@ -203,4 +169,5 @@ export class FileNodeComponent {
   }
 
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;
+  protected readonly getFileIcon = getFileIcon;
 }

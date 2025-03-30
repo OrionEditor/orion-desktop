@@ -30,7 +30,6 @@
             <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
             <app-context-menu *ngIf="showContextMenu" [items]="MarkdownSettingsMenuItems" [x]="menuX" [y]="menuY" (close)="onMenuClose()"></app-context-menu>
         </div>
-        <button (click)="speak('female')">Озвучить</button>
     </div>
 </div>
 

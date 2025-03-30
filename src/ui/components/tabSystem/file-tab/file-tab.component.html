@@ -1,4 +1,5 @@
 <div class="tab" [class.active]="tab.isActive" (click)="onTabClick()" (contextmenu)="onRightClick($event)">
+    <img class="tab-icon" [src]="getFileIcon(tab.fileName)">
     <span>{{ tab.fileName }}</span>
     <button *ngIf="!tab.isPinned" class="close-btn" (click)="onClose($event)">×</button>
 </div>
