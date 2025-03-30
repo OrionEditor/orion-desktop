@@ -4,6 +4,7 @@ import {DialogService} from "../dialog.service";
 import {MarkdownExportService} from "./markdown-export.service";
 import {OpenInExplorer} from "../../utils/open-explorer.utils";
 import {FILE_TYPES} from "../../shared/constants/FileSystem/files.types";
+import {NetworkService} from "../network.service";
 
 @Injectable({
     providedIn: 'root'
@@ -39,7 +40,12 @@ export class MarkdownSettingsContextMenuService {
         }
     }
 
-    public static translateText() {
+    public static async translateText() {
+        if (!NetworkService.getConnectionStatus()) {
+            return;
+        }
+        // const outputFileName = `${fileName.split('.')[0]}_translated.txt`;
+        // await translateService.translateAndSave(content, 'ru', 'en', outputFileName);
     }
 
     public static voiceMale() {

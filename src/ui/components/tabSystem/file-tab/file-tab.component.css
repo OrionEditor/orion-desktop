@@ -9,6 +9,7 @@
     opacity: 0.4;
     background-color: var(--background-color);
     color: var(--text-color);
+    font-size: 1.1rem;
 }
 .tab.active {
     background-color: var(--text-color);
@@ -17,7 +18,6 @@
 }
 .tab.pinned {
     opacity: 0.6;
-    border-left: 3px solid #4CAF50;
 }
 .close-btn {
     border: none;

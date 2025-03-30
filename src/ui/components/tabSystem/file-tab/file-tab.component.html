@@ -2,6 +2,7 @@
     <img class="tab-icon" [src]="getFileIcon(tab.fileName)">
     <span>{{ tab.fileName }}</span>
     <button *ngIf="!tab.isPinned" class="close-btn" (click)="onClose($event)">×</button>
+    <img *ngIf="tab.isPinned" class="tab-icon" src="assets/icons/svg/tab/pin.svg">
 </div>
 <app-tab-context-menu
         *ngIf="showContextMenu"
