@@ -13,6 +13,12 @@
     width: 80vw;
     border-radius: 20px;
 }
+
+.audio-track.minimized{
+    width: 40vw;
+    left: 30vw;
+}
+
 .progress-bar {
     width: 100%;
     height: 5px;
@@ -60,4 +66,16 @@ button:disabled {
 
 .info-data{
     color: #4CAF50;
+}
+
+.controls-item, .toggle-size{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.controls-item img, .toggle-size img{
+    width: 16px;
+    height: 16px;
 }

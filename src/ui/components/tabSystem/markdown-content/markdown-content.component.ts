@@ -13,8 +13,8 @@ import {MarkdownView} from "../../../../shared/enums/markdown-view.enum";
 import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
 import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
 import {MdSettingsContextMenu} from "../../../../shared/constants/contextMenu/mdSettings.contextmenu";
-import {TTSService} from "../../../../services/tts.service";
 import {AudioTrackComponent} from "../../audio/audio-track/audio-track.component";
+import {Gender} from "../../../../shared/enums/gender.enum";
 
 @Component({
   selector: 'app-markdown-content',
@@ -369,7 +369,7 @@ export class MarkdownContentComponent {
   menuY: number = 0;
 
   showAudioTrack: boolean = false;
-  currentGender: 'male' | 'female' = 'female';
+  currentGender: Gender= Gender.FEMALE;
 
   onRightClick(event: MouseEvent): void {
     event.preventDefault();
@@ -382,15 +382,16 @@ export class MarkdownContentComponent {
     this.showContextMenu = false;
   }
 
-  speak(gender: 'male' | 'female'): void {
+  speak(gender: Gender): void {
     this.currentGender = gender;
-    this.showAudioTrack = true; // Показываем дорожку
+    this.showAudioTrack = true;
   }
 
   hideAudioTrack(): void {
-    this.showAudioTrack = false; // Скрываем дорожку
+    this.showAudioTrack = false;
   }
 
   protected readonly MarkdownView = MarkdownView;
   protected readonly MdSettingsContextMenu = MdSettingsContextMenu;
+  protected readonly Gender = Gender;
 }

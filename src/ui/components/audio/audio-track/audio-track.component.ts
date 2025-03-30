@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TTSService} from "../../../../services/tts.service";
 import {NgIf} from "@angular/common";
+import {Gender} from "../../../../shared/enums/gender.enum";
 
 @Component({
   selector: 'app-audio-track',
@@ -13,7 +14,7 @@ import {NgIf} from "@angular/common";
 })
 export class AudioTrackComponent {
   @Input() text: string = '';
-  @Input() gender: 'male' | 'female' = 'female';
+  @Input() gender: Gender= Gender.FEMALE;
   @Input() fileName: string = '';
   @Output() closed = new EventEmitter<void>();
 

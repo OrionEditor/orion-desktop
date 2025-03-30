@@ -1,12 +1,18 @@
+import {Gender} from "../shared/enums/gender.enum";
+
 export class TTSService {
-    private static currentUtterance: SpeechSynthesisUtterance | null = null;
+    private static _currentUtterance: SpeechSynthesisUtterance | null = null;
+
+    public static get currentUtterance(): SpeechSynthesisUtterance | null {
+        return this.currentUtterance;
+    }
 
     /**
      * Озвучивает текст с выбором голоса.
      * @param text Текст для озвучки
      * @param gender Пол голоса ('male' или 'female')
      */
-    public static speak(text: string, gender: 'male' | 'female'): void {
+    public static speak(text: string, gender: Gender): void {
         this.stop();
 
         const utterance = new SpeechSynthesisUtterance(text);
@@ -15,15 +21,15 @@ export class TTSService {
         const voices = window.speechSynthesis.getVoices();
         utterance.voice = voices.find(v =>
             v.lang === 'ru-RU' &&
-            (gender === 'male' ? v.name.toLowerCase().includes('male') : v.name.toLowerCase().includes('female'))
+            (gender === Gender.MALE ? v.name.toLowerCase().includes(Gender.MALE) : v.name.toLowerCase().includes(Gender.FEMALE))
         ) || voices.find(v => v.lang === 'ru-RU') || voices[0];
 
-        this.currentUtterance = utterance;
+        this._currentUtterance = utterance;
 
         window.speechSynthesis.speak(utterance);
 
         utterance.onend = () => {
-            this.currentUtterance = null;
+            this._currentUtterance = null;
         };
     }
 
@@ -33,7 +39,7 @@ export class TTSService {
     public static stop(): void {
         if (window.speechSynthesis.speaking) {
             window.speechSynthesis.cancel();
-            this.currentUtterance = null;
+            this._currentUtterance = null;
         }
     }
 
