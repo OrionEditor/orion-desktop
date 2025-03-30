@@ -18,7 +18,7 @@ export class MarkdownInfoService {
     }
 
     getReadingTime(content: string): string {
-        const wordsPerMinute = 200;
+        const wordsPerMinute = 130;
         const wordCount = this.getWordCount(content);
         const minutes = Math.ceil(wordCount / wordsPerMinute);
         return minutes === 1 ? `${minutes} минута` : `${minutes} минут`;

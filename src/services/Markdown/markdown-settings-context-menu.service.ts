@@ -45,7 +45,8 @@ export class MarkdownSettingsContextMenuService {
     public static voiceMale() {
     }
 
-    public static voiceFemale() {
+    public static voiceFemale(showAudioTrack: { value: boolean }) {
+        showAudioTrack.value = true;
     }
 
     public static async openExplorer(filePath: string): Promise<void> {

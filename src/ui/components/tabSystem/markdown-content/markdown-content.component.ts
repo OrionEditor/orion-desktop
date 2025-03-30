@@ -15,6 +15,8 @@ import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu
 import {MdSettingsContextMenu} from "../../../../shared/constants/contextMenu/mdSettings.contextmenu";
 import {AudioTrackComponent} from "../../audio/audio-track/audio-track.component";
 import {Gender} from "../../../../shared/enums/gender.enum";
+import {LanguageTranslateService} from "../../../../services/translate.service";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-markdown-content',
@@ -58,9 +60,17 @@ export class MarkdownContentComponent {
   private lastFocusedLineIndex: number | null = null;
   private lastCursorPosition: number = 0;
   selectAllMode: boolean = false;
-  MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName);
 
-  constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService) {}
+  showContextMenu: boolean = false;
+  menuX: number = 0;
+  menuY: number = 0;
+
+  showAudioTrack: { value: boolean } = { value: false };
+  currentGender: Gender= Gender.FEMALE;
+
+  MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
+
+  constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService) {}
 
   async ngOnInit() {
     this.loadContent();
@@ -71,7 +81,7 @@ export class MarkdownContentComponent {
       this.updateStats();
       this.updateLines();
     });
-    this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName);
+    this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
   }
 
   private updateLines(): void {
@@ -139,21 +149,6 @@ export class MarkdownContentComponent {
     }
   }
 
-  async exportFile() {
-    const selectedPath = await this.dialogService.selectPath(true);
-    if (selectedPath) {
-      const exportPath = `${selectedPath}/${this.fileName}.${this.exportFormat}`;
-      try {
-        if (this.exportFormat === FILE_TYPES.HTML) {
-          await MarkdownExportService.exportToHtml(this.content, exportPath, this.fileName);
-        } else if (this.exportFormat === FILE_TYPES.PDF) {
-          await MarkdownExportService.exportToPdf(this.content, exportPath);
-        }
-      } catch (error) {
-      }
-    }
-  }
-
   async importFile() {
     const selectedPath = await this.dialogService.selectPath(false); // Выбор файла
     if (selectedPath && typeof selectedPath === 'string' && (selectedPath.endsWith(getExtensionWithDot(FILE_TYPES.HTML)))) {
@@ -190,11 +185,6 @@ export class MarkdownContentComponent {
 
   /*ONE-SIDE*/
   onInput(event: Event): void {
-    // const input = event.target as HTMLInputElement;
-    // this.lines[this.currentLineIndex!] = input.value;
-    // this.content = this.lines.join('\n');
-    // this.markdownService.saveMarkdownFile(this.filePath, this.content).then();
-    // this.updateLines();
   }
 
   onBlur(event: Event): void {
@@ -363,14 +353,6 @@ export class MarkdownContentComponent {
     return marked(line).toString();
   }
 
-
-  showContextMenu: boolean = false;
-  menuX: number = 0;
-  menuY: number = 0;
-
-  showAudioTrack: boolean = false;
-  currentGender: Gender= Gender.FEMALE;
-
   onRightClick(event: MouseEvent): void {
     event.preventDefault();
     this.menuX = event.clientX;
@@ -384,11 +366,17 @@ export class MarkdownContentComponent {
 
   speak(gender: Gender): void {
     this.currentGender = gender;
-    this.showAudioTrack = true;
+    this.showAudioTrack.value = true;
   }
 
   hideAudioTrack(): void {
-    this.showAudioTrack = false;
+    this.showAudioTrack.value = false;
+  }
+
+  async baseTranslate(){
+    const selectedPath = await DialogService.StaticSelectPath(true);
+    if(!selectedPath){return;}
+    await this.languageTranslateService.translateAndSave('Привет как дела?', selectedPath + 'translate.txt')
   }
 
   protected readonly MarkdownView = MarkdownView;

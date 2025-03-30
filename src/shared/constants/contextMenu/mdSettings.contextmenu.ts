@@ -1,7 +1,7 @@
 import {ContextMenuItem} from "../../../interfaces/context-menu-item.interface";
 import {MarkdownSettingsContextMenuService} from "../../../services/Markdown/markdown-settings-context-menu.service";
 
-export const MdSettingsContextMenu = (filePath: string = '', content: string = '', fileName: string = ''): ContextMenuItem[] => [
+export const MdSettingsContextMenu = (filePath: string = '', content: string = '', fileName: string = '', showAudioTrack: { value: boolean } = { value: false }): ContextMenuItem[] => [
     {
         id: 'view-code',
         text: 'Просмотр исходного кода',
@@ -79,7 +79,8 @@ export const MdSettingsContextMenu = (filePath: string = '', content: string = '
                         id: 'ai-voice-female',
                         text: 'Женский голос',
                         icon: 'assets/icons/svg/contextMenu/female.svg',
-                        action: () => MarkdownSettingsContextMenuService.voiceFemale,
+                        action: () => MarkdownSettingsContextMenuService.voiceFemale(showAudioTrack),
+                        select: false
                     },
                 ],
             },
