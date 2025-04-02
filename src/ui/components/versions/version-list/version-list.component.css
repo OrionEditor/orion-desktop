@@ -115,3 +115,25 @@
     color: #666;
     opacity: 0.8;
 }
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: #388E3C;
+}

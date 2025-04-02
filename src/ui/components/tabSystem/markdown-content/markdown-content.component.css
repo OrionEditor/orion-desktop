@@ -110,6 +110,9 @@
 
 .tab-controls-info {
     margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: end;
 }
 
 .file-path-link {
@@ -296,8 +299,30 @@
     color: #666;
 }
 
-.info span {
+.info span, .filepath {
     background-color: #212529;
     padding: 4px 8px;
     border-radius: 3px;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: #388E3C;
 }

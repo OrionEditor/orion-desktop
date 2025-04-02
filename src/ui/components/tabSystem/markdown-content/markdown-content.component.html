@@ -28,6 +28,10 @@
                 <img src="assets/icons/svg/actions/version-history.svg" (click)="toggleVersionPanel(!isVersionPanelCollapsed)">
             </div>
         </div>
+
+        <div class="filepath">
+            <span>{{ filePath }}</span>
+        </div>
         
         <div class="parameters">
             <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
@@ -95,9 +99,6 @@
 </div>
 
 <div class="tab-controls-info">
-    <div class="info">
-        <span>{{ filePath }}</span>
-    </div>
     <div class="info">
         <span>Символов: {{ statistics.characterCount }}</span>
         <span>Слов: {{ statistics.wordCount }}</span>
