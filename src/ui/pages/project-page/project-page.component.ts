@@ -13,6 +13,8 @@ import {Tab} from "../../../interfaces/components/tab.interface";
 import {TEXT_MODAL_TYPES} from "../../../shared/constants/modals/textModal/textModal.types";
 import {TextModalService} from "../../../services/Modals/TextModal/textModal.service";
 import {TranslateService} from "@ngx-translate/core";
+import {ModalBaseComponent} from "../../components/modals/modal-base/modal-base.component";
+import {SettingsModalComponent} from "../../components/modals/settings-modal/settings-modal.component";
 
 @Component({
   selector: 'app-project-page',
@@ -22,7 +24,9 @@ import {TranslateService} from "@ngx-translate/core";
     FileTabComponent,
     NgForOf,
     ContentTabComponent,
-    NgIf
+    NgIf,
+    ModalBaseComponent,
+    SettingsModalComponent
   ],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.css'

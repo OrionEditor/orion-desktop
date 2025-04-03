@@ -13,7 +13,7 @@ import {NgIf} from "@angular/common";
 export class ModalBaseComponent {
   @Input() isOpen: boolean = false;
   @Input() closeOnOverlayClick: boolean = true;
-  @Input() contentBackgroundColor: string = '#185010';
+  @Input() contentBackgroundColor: string = '#152713';
   @Input() contentBorderRadius: string = '8px';
   @Input() isDraggable: boolean = false;
   @Output() closed = new EventEmitter<void>();

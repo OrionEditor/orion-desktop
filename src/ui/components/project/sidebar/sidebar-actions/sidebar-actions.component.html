@@ -3,8 +3,18 @@
         <button class="vault-button" (click)="onCreateVaultPage()">
             <img src="assets/icons/svg/actions/vault.svg">
         </button>
-        <button class="setting-button">
+        <button class="setting-button" (click)="openSettingsModal()">
             <img src="assets/icons/svg/actions/settings.svg">
         </button>
     </div>
 </div>
+
+<app-modal-base
+        [isOpen]="modalsControls.settings.isModalOpen"
+        [closeOnOverlayClick]="true"
+        [contentBorderRadius]="'12px'"
+        (closed)="closeSettingsModal()"
+        [isDraggable]="true"
+>
+    <app-settings-modal/>
+</app-modal-base>
