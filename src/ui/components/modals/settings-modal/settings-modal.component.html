@@ -1,6 +1,78 @@
 <div class="settings-modal">
-    <div class="settings-help">
-        <app-fill-button buttonText="Помощь по программе" (click)="openTab(MarkdownFilesType.HELP)" />
-        <app-fill-button buttonText="Markdown синтаксис" (click)="openTab(MarkdownFilesType.SYNTAX)" />
+    <div class="chip-container">
+        <button
+                class="chip"
+                [class.active]="selectedChip === 'general'"
+                (click)="selectChip('general')"
+        >
+            Общие настройки
+        </button>
+        <button
+                class="chip"
+                [class.active]="selectedChip === 'editor'"
+                (click)="selectChip('editor')"
+        >
+            Настройки редактора
+        </button>
+        <button
+                class="chip"
+                [class.active]="selectedChip === 'account'"
+                (click)="selectChip('account')"
+        >
+            Учётная запись
+        </button>
+    </div>
+
+    <div class="settings-content">
+        <!-- Общие настройки -->
+        <div *ngIf="selectedChip === 'general'">
+            <h3>Общие настройки</h3>
+            <div class="general-settings">
+                <div class="setting-item">
+                    <label>Язык:</label>
+                    <app-language-selector
+                    ></app-language-selector>
+                </div>
+                <div class="setting-item">
+                    <app-theme-toggle/>
+                </div>
+            </div>
+            <div class="setting-help">
+                <app-fill-button buttonText="Помощь по программе" (click)="openTab(MarkdownFilesType.HELP)" />
+                <app-fill-button buttonText="Markdown синтаксис" (click)="openTab(MarkdownFilesType.SYNTAX)" />
+            </div>
+        </div>
+
+        <!-- Настройки редактора -->
+        <div *ngIf="selectedChip === 'editor'">
+            <h3>Настройки редактора</h3>
+            <div class="editor-settings">
+                <div class="setting-item">
+                    <label>Размер шрифта:</label>
+                    <input
+                            type="number"
+                            [value]="SettingsService.getFontSize()"
+                            min="8"
+                            max="24"
+                    />
+                </div>
+                <div class="setting-item">
+                    <label>Показывать номера строк:</label>
+                    <input
+                            type="checkbox"
+                            [checked]="SettingsService.getLineNumbers()"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <!-- Учётная запись -->
+        <div *ngIf="selectedChip === 'account'">
+            <h3>Учётная запись</h3>
+            <div class="login-section">
+                <p>Войдите, чтобы синхронизировать ваши данные</p>
+                <app-fill-button buttonText="Войти" (click)="login()" />
+            </div>
+        </div>
     </div>
 </div>

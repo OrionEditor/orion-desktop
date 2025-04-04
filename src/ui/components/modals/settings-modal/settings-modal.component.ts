@@ -1,49 +1,73 @@
 import {Component, Input} from '@angular/core';
 import {FillButtonComponent} from "../../buttons/fill-button/fill-button.component";
 import {TabService} from "../../../../services/tab.service";
-import {AppConstConfig} from "../../../../shared/constants/app/app.const";
 import {MarkdownFilesService} from "../../../../services/Markdown/markdown-files.service";
-import {MarkdownFiles, MarkdownFilesType} from "../../../../interfaces/markdown/markdownFiles.interface";
-import {Language} from "../../../../assets/localization/languages";
-import {ConfigService} from "../../../../services/configService";
-import {LanguageService} from "../../../../services/language.service";
+import {MarkdownFilesType} from "../../../../interfaces/markdown/markdownFiles.interface";
+import {SettingsService} from "../../../../services/settings.service";
+import {LanguageSelectorComponent} from "../../language-selector/language-selector.component";
+import {NgIf} from "@angular/common";
+import {ThemeToggleComponent} from "../../theme-toggle/theme-toggle.component";
+import {WindowService} from "../../../../services/window.service";
 
 @Component({
   selector: 'app-settings-modal',
   standalone: true,
   imports: [
-    FillButtonComponent
+    FillButtonComponent,
+    LanguageSelectorComponent,
+    NgIf,
+    ThemeToggleComponent
   ],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.css'
 })
 export class SettingsModalComponent {
   @Input() tabService!: TabService;
-  currentLang: string = 'ru';
-  content: string = '';
+  selectedChip: string = 'general'; // Текущий выбранный чип
 
-  async ngOnInit(){
-    if (!this.configService.getConfig()) {
-      await this.configService.loadConfig();
-    }
-    this.currentLang = this.configService.getLanguage().toString().toLowerCase();
-
-    this.languageService.setDefaultLang(this.currentLang);
-    this.languageService.useLang(this.currentLang);
-  }
-
-  constructor(private configService: ConfigService, private languageService: LanguageService) {
+  constructor(private windowService: WindowService) {
     MarkdownFilesService.initialize().then(() => this.loadInitialFiles());
   }
 
+  async ngOnInit(){
+    await SettingsService.loadSettings(); // Загружаем настройки при инициализации
+  }
+
   async openTab(type: MarkdownFilesType): Promise<void> {
-    const path = await MarkdownFilesService.getFilePath(type, this.currentLang);
-    const name = AppConstConfig.MARKDOWN[type][this.currentLang as Language].name;
+    const path = await MarkdownFilesService.getFilePath(type, SettingsService.getLanguage());
+    const name = path.split('/').pop() || path; // Используем имя файла из пути
     this.tabService.createTab(path, name);
   }
 
   private async loadInitialFiles(): Promise<void> {
+    // Можно добавить автозагрузку, если нужно
+  }
+
+  // Переключение чипов
+  selectChip(chip: string): void {
+    this.selectedChip = chip;
+  }
+
+  // Методы для работы с настройками
+  getLanguage(): string {
+    return SettingsService.getLanguage();
+  }
+  setLanguage(language: string): void {
+    SettingsService.setLanguage(language);
+  }
+
+  getTheme(): string {
+    return SettingsService.getTheme();
+  }
+  toggleTheme(): void {
+    const newTheme = this.getTheme() === 'dark' ? 'light' : 'dark';
+    SettingsService.setTheme(newTheme);
+  }
+
+  async login() {
+    await this.windowService.openLoginWindow();
   }
 
   protected readonly MarkdownFilesType = MarkdownFilesType;
+  protected readonly SettingsService = SettingsService;
 }

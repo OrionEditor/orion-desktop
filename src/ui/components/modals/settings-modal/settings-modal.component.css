@@ -3,3 +3,67 @@
     flex-direction: row;
     gap: 10px;
 }
+
+.settings-modal {
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+}
+
+.chip-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.chip {
+    padding: 8px 16px;
+    border: 1px solid var(--text-color);
+    border-radius: 20px;
+    background: none;
+    cursor: pointer;
+    color: var(--text-color);
+
+}
+
+.chip.active {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setting-help {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.login-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.general-settings, .editor-settings{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px auto;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
