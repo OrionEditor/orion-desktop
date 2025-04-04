@@ -43,7 +43,7 @@
 
 <div class="tab-controls-editor">
     <div class="editor-container" *ngIf="view === MarkdownView.TWO_SIDE">
-<!--        <div class="line-numbers">-->
+<!--        <div class="line-numbers" *ngIf="SettingsService.getLineNumbers()">-->
 <!--            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>-->
 <!--        </div>-->
         <textarea
@@ -58,7 +58,7 @@
     </div>
 
     <div class="editor-container" *ngIf="view === MarkdownView.ONE_SIDE">
-<!--        <div class="line-numbers">-->
+<!--        <div class="line-numbers" *ngIf="SettingsService.getLineNumbers()">-->
 <!--            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLineIndex + 1">{{ number }}</span>-->
 <!--        </div>-->
         <div #editorRef class="one-side-editor" tabindex="0">

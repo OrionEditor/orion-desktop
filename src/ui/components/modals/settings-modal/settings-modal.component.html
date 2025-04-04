@@ -28,10 +28,8 @@
         <div *ngIf="selectedChip === 'general'">
             <h3>Общие настройки</h3>
             <div class="general-settings">
-                <div class="setting-item">
-                    <label>Язык:</label>
-                    <app-language-selector
-                    ></app-language-selector>
+                <div id="language" class="setting-item">
+                    <app-language-selector/>
                 </div>
                 <div class="setting-item">
                     <app-theme-toggle/>
@@ -49,20 +47,21 @@
             <div class="editor-settings">
                 <div class="setting-item">
                     <label>Размер шрифта:</label>
-                    <input
+                    <app-input-text-field
+                            [value]="SettingsService.getFontSize().toString()"
                             type="number"
-                            [value]="SettingsService.getFontSize()"
-                            min="8"
-                            max="24"
+                            (valueChange)="onFontChange($event)"
+                            minValue="{{8}}}"
+                            maxValue="{{24}}}"
                     />
                 </div>
-                <div class="setting-item">
-                    <label>Показывать номера строк:</label>
-                    <input
-                            type="checkbox"
-                            [checked]="SettingsService.getLineNumbers()"
-                    />
-                </div>
+<!--                <div class="setting-item">-->
+<!--                    <label>Показывать номера строк:</label>-->
+<!--                    <app-checkbox-->
+<!--                            [checked]="SettingsService.getLineNumbers()"-->
+<!--                            (checkedChange)="onLineChange($event)"-->
+<!--                    />-->
+<!--                </div>-->
             </div>
         </div>
 

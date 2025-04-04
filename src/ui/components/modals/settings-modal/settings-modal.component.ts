@@ -12,6 +12,8 @@ import {ConfigService} from "../../../../services/configService";
 import {LanguageService} from "../../../../services/language.service";
 import {AppConstConfig} from "../../../../shared/constants/app/app.const";
 import {Language} from "../../../../assets/localization/languages";
+import {InputTextFieldComponent} from "../../inputs/input-text-field/input-text-field.component";
+import {CheckboxComponent} from "../../inputs/checkbox/checkbox.component";
 
 @Component({
   selector: 'app-settings-modal',
@@ -20,7 +22,9 @@ import {Language} from "../../../../assets/localization/languages";
     FillButtonComponent,
     LanguageSelectorComponent,
     NgIf,
-    ThemeToggleComponent
+    ThemeToggleComponent,
+    InputTextFieldComponent,
+    CheckboxComponent
   ],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.css'
@@ -76,6 +80,14 @@ export class SettingsModalComponent {
 
   async login() {
     await this.windowService.openLoginWindow();
+  }
+
+  onFontChange(event: string){
+    SettingsService.setFontSize(Number(event));
+  }
+
+  onLineChange(event: boolean){
+    SettingsService.setLineNumbers(event);
   }
 
   protected readonly MarkdownFilesType = MarkdownFilesType;

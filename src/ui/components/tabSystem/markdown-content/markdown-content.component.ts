@@ -21,6 +21,7 @@ import {VersionListComponent} from "../../versions/version-list/version-list.com
 import {Version} from "../../../../interfaces/version.interface";
 import {ModalBaseComponent} from "../../modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../modals/settings-modal/settings-modal.component";
+import {SettingsService} from "../../../../services/settings.service";
 
 @Component({
   selector: 'app-markdown-content',
@@ -419,4 +420,5 @@ export class MarkdownContentComponent {
   protected readonly MarkdownView = MarkdownView;
   protected readonly MdSettingsContextMenu = MdSettingsContextMenu;
   protected readonly Gender = Gender;
+  protected readonly SettingsService = SettingsService;
 }

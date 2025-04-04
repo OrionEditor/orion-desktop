@@ -37,6 +37,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    margin: 20px 0;
 }
 
 .setting-item {
@@ -63,7 +64,10 @@
     flex-wrap: wrap;
     gap: 10px;
     margin: 10px auto;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+}
+
+#language{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }

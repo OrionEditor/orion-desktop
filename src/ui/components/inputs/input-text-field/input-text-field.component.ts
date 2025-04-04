@@ -14,14 +14,17 @@ export class InputTextFieldComponent {
   @Input() id: string = '';
   @Input() label: string = '';
   @Input() placeholder: string = '';
-  @Input() value: string = '';  // Получаем значение от родителя
+  @Input() value: string = '';
   @Input() readonly: boolean = false;
-  @Input() type: string = 'text'; // По умолчанию текстовый ввод
+  @Input() type: string = 'text';
+  @Input() minValue: string | null = null;
+  @Input() maxValue: string | null = null;
 
-  @Output() valueChange = new EventEmitter<string>();  // Отправляем обновленное значение обратно родителю
+  @Output() valueChange = new EventEmitter<string>();
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.valueChange.emit(input.value);  // Вызываем eventEmitter для обновления значения
+    this.valueChange.emit(input.value);
   }
+
 }
