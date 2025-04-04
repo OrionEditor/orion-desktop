@@ -222,6 +222,7 @@ use serde::Serialize;
 use std::fs;
 use std::path::Path;
 use tauri_plugin_shell::process::Command;
+use crate::markdownfiles::MarkdownFiles;
 
 #[derive(Serialize)]
 struct FileSystemNode {
@@ -340,6 +341,18 @@ fn move_folder(source: String, destination: String) -> Result<(), String> {
     Ok(())
 }
 
+mod markdownfiles;
+
+#[tauri::command]
+fn initialize_markdown_files() -> MarkdownFiles {
+    MarkdownFiles::initialize()
+}
+
+#[tauri::command]
+fn get_markdown_file_content(file_path: String) -> Result<String, String> {
+    MarkdownFiles::get_file_content(&file_path)
+}
+
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -370,6 +383,8 @@ fn main() {
             create_directory,
             create_file,
             move_folder,
+            initialize_markdown_files,
+            get_markdown_file_content
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

@@ -15,6 +15,9 @@ import {ApiEndpointsService} from "../api/api.service";
 import {ToastComponent} from "../ui/components/toasts/toast/toast.component";
 import {WINDOWS_LABELS} from "../shared/enums/windows-labels.enum";
 import {ProfilePageComponent} from "../ui/pages/profile-page/profile-page.component";
+import {MarkdownFiles} from "../interfaces/markdown/markdownFiles.interface";
+import {invoke} from "@tauri-apps/api/core";
+import {MarkdownFilesService} from "../services/Markdown/markdown-files.service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/localization/i18n/', '.json');
@@ -30,11 +33,17 @@ export function HttpLoaderFactory(http: HttpClient) {
 export class AppComponent {
   windowLabel: string = '';
 
-  constructor(private configService: ConfigService, private windowService: WindowService, protected uploadService: UploadService, private apiEndpointsService: ApiEndpointsService) {}
+  constructor(private configService: ConfigService, private windowService: WindowService, protected uploadService: UploadService, private apiEndpointsService: ApiEndpointsService) {
+    this.initializeMarkdownFiles();
+  }
 
   async ngOnInit(): Promise<void> {
     await this.configService.loadConfig();
     this.windowLabel = await this.windowService.getWindowLabel();
+  }
+
+  async initializeMarkdownFiles(): Promise<void> {
+    await MarkdownFilesService.initialize();
   }
 
     protected readonly WINDOWS_LABELS = WINDOWS_LABELS;
