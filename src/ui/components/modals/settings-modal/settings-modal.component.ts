@@ -8,6 +8,10 @@ import {LanguageSelectorComponent} from "../../language-selector/language-select
 import {NgIf} from "@angular/common";
 import {ThemeToggleComponent} from "../../theme-toggle/theme-toggle.component";
 import {WindowService} from "../../../../services/window.service";
+import {ConfigService} from "../../../../services/configService";
+import {LanguageService} from "../../../../services/language.service";
+import {AppConstConfig} from "../../../../shared/constants/app/app.const";
+import {Language} from "../../../../assets/localization/languages";
 
 @Component({
   selector: 'app-settings-modal',
@@ -23,32 +27,38 @@ import {WindowService} from "../../../../services/window.service";
 })
 export class SettingsModalComponent {
   @Input() tabService!: TabService;
-  selectedChip: string = 'general'; // Текущий выбранный чип
+  selectedChip: string = 'general';
+  currentLang: string = Language.RU;
 
-  constructor(private windowService: WindowService) {
+  constructor(private windowService: WindowService, private configService: ConfigService, private languageService: LanguageService) {
     MarkdownFilesService.initialize().then(() => this.loadInitialFiles());
   }
 
   async ngOnInit(){
-    await SettingsService.loadSettings(); // Загружаем настройки при инициализации
+    await SettingsService.loadSettings();
+
+    if (!this.configService.getConfig()) {
+      await this.configService.loadConfig();
+    }
+    this.currentLang = this.configService.getLanguage().toString().toLowerCase();
+
+    this.languageService.setDefaultLang(this.currentLang);
+    this.languageService.useLang(this.currentLang);
   }
 
   async openTab(type: MarkdownFilesType): Promise<void> {
     const path = await MarkdownFilesService.getFilePath(type, SettingsService.getLanguage());
-    const name = path.split('/').pop() || path; // Используем имя файла из пути
+    const name = AppConstConfig.MARKDOWN[type][this.currentLang as Language].name;
     this.tabService.createTab(path, name);
   }
 
   private async loadInitialFiles(): Promise<void> {
-    // Можно добавить автозагрузку, если нужно
   }
 
-  // Переключение чипов
   selectChip(chip: string): void {
     this.selectedChip = chip;
   }
 
-  // Методы для работы с настройками
   getLanguage(): string {
     return SettingsService.getLanguage();
   }
