@@ -2,7 +2,7 @@
     <div class="resizer" (mousedown)="startResizing($event)"></div>
     <div class="left">
         <app-sidebar-toolbar (toggleSidebar)="toggleSidebar()"/>
-        <app-sidebar-actions/>
+        <app-sidebar-actions [tabService]="tabService"/>
     </div>
 
     <div class="right">

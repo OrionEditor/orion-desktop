@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FillButtonComponent} from "../../buttons/fill-button/fill-button.component";
 import {TabService} from "../../../../services/tab.service";
 import {AppConstConfig} from "../../../../shared/constants/app/app.const";
@@ -18,7 +18,9 @@ import {LanguageService} from "../../../../services/language.service";
   styleUrl: './settings-modal.component.css'
 })
 export class SettingsModalComponent {
+  @Input() tabService!: TabService;
   currentLang: string = 'ru';
+  content: string = '';
 
   async ngOnInit(){
     if (!this.configService.getConfig()) {
@@ -30,7 +32,7 @@ export class SettingsModalComponent {
     this.languageService.useLang(this.currentLang);
   }
 
-  constructor(private tabService: TabService, private configService: ConfigService, private languageService: LanguageService) {
+  constructor(private configService: ConfigService, private languageService: LanguageService) {
     MarkdownFilesService.initialize().then(() => this.loadInitialFiles());
   }
 

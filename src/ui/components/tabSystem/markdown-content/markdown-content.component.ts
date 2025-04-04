@@ -19,6 +19,8 @@ import {LanguageTranslateService} from "../../../../services/translate.service";
 import {HttpClient} from "@angular/common/http";
 import {VersionListComponent} from "../../versions/version-list/version-list.component";
 import {Version} from "../../../../interfaces/version.interface";
+import {ModalBaseComponent} from "../../modals/modal-base/modal-base.component";
+import {SettingsModalComponent} from "../../modals/settings-modal/settings-modal.component";
 
 @Component({
   selector: 'app-markdown-content',
@@ -29,7 +31,9 @@ import {Version} from "../../../../interfaces/version.interface";
     NgIf,
     ContextMenuComponent,
     AudioTrackComponent,
-    VersionListComponent
+    VersionListComponent,
+    ModalBaseComponent,
+    SettingsModalComponent
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -78,7 +82,7 @@ export class MarkdownContentComponent {
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService) {}
 
   async ngOnInit() {
-    this.loadContent();
+    await this.loadContent();
     this.markdownService.content$.subscribe(content => {
       this.content = content;
       this.updateRenderedContent();
@@ -88,15 +92,14 @@ export class MarkdownContentComponent {
     });
     this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
   }
-
   private updateLines(): void {
     this.lines = this.content.split('\n');
     this.updateStats();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges) {
     if (changes['filePath'] && !changes['filePath'].isFirstChange()) {
-      this.loadContent();
+      await this.loadContent();
     }
   }
 

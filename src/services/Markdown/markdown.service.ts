@@ -1,7 +1,8 @@
 // markdown.service.ts
-import { Injectable } from '@angular/core';
-import {readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
-import { BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BaseDirectory, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
+import {BehaviorSubject} from 'rxjs';
+import {appDataDir} from "@tauri-apps/api/path";
 
 @Injectable({
     providedIn: 'root'

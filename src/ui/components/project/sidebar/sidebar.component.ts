@@ -17,7 +17,7 @@ import {TabService} from "../../../../services/tab.service";
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
-
+  @Input() tabService!: TabService;
   @Input() sidebarWidth: string = "20vw";
   @Input() isSidebarHidden: boolean = false;
   @Input() projectPath: string | null = "";
@@ -25,7 +25,7 @@ export class SidebarComponent {
   @Output() isSidebarHiddenChange = new EventEmitter<boolean>();
   @Output() fileSelected = new EventEmitter<{path: string, name: string}>();
 
-  constructor(private tabService: TabService) {}
+  constructor() {}
 
   onFileSelected(fileInfo: {path: string, name: string}) {
     this.fileSelected.emit(fileInfo);

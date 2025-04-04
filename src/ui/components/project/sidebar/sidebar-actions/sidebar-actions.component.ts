@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {invoke} from "@tauri-apps/api/core";
 import {ModalBaseComponent} from "../../../modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../../modals/settings-modal/settings-modal.component";
+import {TabService} from "../../../../../services/tab.service";
 
 @Component({
   selector: 'app-sidebar-actions',
@@ -14,10 +15,14 @@ import {SettingsModalComponent} from "../../../modals/settings-modal/settings-mo
   styleUrl: './sidebar-actions.component.css'
 })
 export class SidebarActionsComponent {
+  @Input() tabService!: TabService;
   modalsControls = {
     settings: {
       isModalOpen: false
     }
+  }
+
+  constructor() {
   }
 
   async onCreateVaultPage() {

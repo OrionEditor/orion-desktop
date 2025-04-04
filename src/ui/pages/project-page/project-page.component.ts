@@ -46,7 +46,7 @@ export class ProjectPageComponent {
   tabs: Tab[] = [];
   activeTab: Tab | undefined;
 
-  constructor(private configService: ConfigService, private languageService: LanguageService, private tabService: TabService, protected textModalService: TextModalService, private translateService: TranslateService) {
+  constructor(private configService: ConfigService, private languageService: LanguageService, public tabService: TabService, protected textModalService: TextModalService, private translateService: TranslateService) {
     this.tabService.tabs$.subscribe(tabs => {
       this.tabs = tabs;
       this.activeTab = tabs.find(tab => tab.isActive);

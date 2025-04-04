@@ -1,5 +1,5 @@
 <div class="project-page">
-    <app-sidebar     [sidebarWidth]="sidebarWidth"
+    <app-sidebar    [tabService]="tabService" [sidebarWidth]="sidebarWidth"
                      [isSidebarHidden]="isSidebarHidden" [projectPath]="projectPath" (fileSelected)="openTab($event)"/>
 
     <div class="content" *ngIf="tabs.length > 0">

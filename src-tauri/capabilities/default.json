@@ -37,6 +37,122 @@
     "fs:allow-write-text-file",
     "opener:allow-open-path",
     "opener:allow-open-url",
-    "opener:allow-reveal-item-in-dir"
+    "opener:allow-reveal-item-in-dir",
+    "core:path:allow-basename",
+    "fs:allow-appdata-read",
+    "fs:allow-appdata-write",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPDATA/**"
+        },
+        {
+          "path": "$APPDATA/*"
+        },
+        {
+          "path": "$APPDATA/"
+        },
+        {
+          "path": "$DOCUMENT/**"
+        },
+        {
+          "path": "$DOCUMENT/*"
+        },
+        {
+          "path": "$DOCUMENT/"
+        },
+        {
+          "path": "$DOCUMENT"
+        },
+        {
+          "path": "$DOWNLOAD/**"
+        },
+        {
+          "path": "$DOWNLOAD/*"
+        },
+        {
+          "path": "$DOWNLOAD/"
+        },
+        {
+          "path": "$DOWNLOAD"
+        },
+        {
+          "path": "$AUDIO/**"
+        },
+        {
+          "path": "$AUDIO/*"
+        },
+        {
+          "path": "$AUDIO/"
+        },
+        {
+          "path": "$AUDIO"
+        },
+        {
+          "path": "$DESKTOP/**"
+        },
+        {
+          "path": "$DESKTOP/*"
+        },
+        {
+          "path": "$DESKTOP/"
+        },
+        {
+          "path": "$DESKTOP"
+        },
+        {
+          "path": "$HOME/**"
+        },
+        {
+          "path": "$HOME/*"
+        },
+        {
+          "path": "$HOME/"
+        },
+        {
+          "path": "$HOME"
+        },
+        {
+          "path": "$PICTURE/**"
+        },
+        {
+          "path": "$PICTURE/*"
+        },
+        {
+          "path": "$PICTURE/"
+        },
+        {
+          "path": "$PICTURE"
+        },
+        {
+          "path": "$PUBLIC/**"
+        },
+        {
+          "path": "$PUBLIC/*"
+        },
+        {
+          "path": "$PUBLIC/"
+        },
+        {
+          "path": "$PUBLIC"
+        },
+        {
+          "path": "$VIDEO/**"
+        },
+        {
+          "path": "$VIDEO/*"
+        },
+        {
+          "path": "$VIDEO/"
+        },
+        {
+          "path": "$VIDEO"
+        }
+      ]
+    }
   ]
 }
