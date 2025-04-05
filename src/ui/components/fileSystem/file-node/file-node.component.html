@@ -68,7 +68,7 @@
 
     <!-- Дочерние элементы -->
     <ul *ngIf="isExpanded && node.children" class="file-node-children">
-        <app-file-node *ngFor="let child of node.children" [node]="child"></app-file-node>
+        <app-file-node *ngFor="let child of node.children" [node]="child" (fileSelected)="onFileSelected($event)"></app-file-node>
     </ul>
 
     <app-context-menu-node

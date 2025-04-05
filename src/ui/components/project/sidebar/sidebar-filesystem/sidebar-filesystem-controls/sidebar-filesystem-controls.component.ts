@@ -46,8 +46,8 @@ export class SidebarFilesystemControlsComponent {
     const modalInput = this.textModalService.modalInput.trim();
     const modalType = this.textModalService.modalType;
 
-    if (!this.projectPath || this.validateService.validateFileFolderName(modalInput)) {
-      alert('');
+    if (!this.projectPath || modalInput.length === 0) {
+      alert('Не может быть пустым!');
       return;
     }
 

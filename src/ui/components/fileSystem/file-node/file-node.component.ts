@@ -168,6 +168,10 @@ export class FileNodeComponent {
     return `${(count + 1) * 24}px`; // 24px — это приблизительная высота одного элемента
   }
 
+  onFileSelected(fileInfo: {path: string, name: string}){
+    this.fileSelected.emit(fileInfo);
+  }
+
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;
   protected readonly getFileIcon = getFileIcon;
 }
