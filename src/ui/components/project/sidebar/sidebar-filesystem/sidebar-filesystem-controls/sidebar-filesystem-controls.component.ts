@@ -27,6 +27,7 @@ export class SidebarFilesystemControlsComponent {
 
   @Output() expandAllEvent = new EventEmitter<void>();
   @Output() collapseAllEvent = new EventEmitter<void>();
+  isExpanded = false;
 
   constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService) {}
 
@@ -74,11 +75,12 @@ export class SidebarFilesystemControlsComponent {
     this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.FOLDER, translatedPlaceholder);
   }
 
-  expandAll() {
-    this.expandAllEvent.emit();
-  }
-
-  collapseAll() {
-    this.collapseAllEvent.emit();
+  toggleExpandCollapse() {
+    if (this.isExpanded) {
+      this.collapseAllEvent.emit();
+    } else {
+      this.expandAllEvent.emit();
+    }
+    this.isExpanded = !this.isExpanded;
   }
 }

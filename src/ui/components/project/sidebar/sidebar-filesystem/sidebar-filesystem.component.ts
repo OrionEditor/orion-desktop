@@ -34,30 +34,6 @@ export class SidebarFilesystemComponent {
     this.fileSelected.emit(fileInfo);
   }
 
-  // onDragStart(node: FileSystemNode) {
-  //   this.draggedNode = node;
-  // }
-  //
-  // onDragOver(event: DragEvent) {
-  //   event.preventDefault(); // Разрешаем сброс (drop)
-  // }
-  //
-  // async onDrop(targetNode: FileSystemNode) {
-  //   if (this.draggedNode && this.draggedNode.path !== targetNode.path) {
-  //     const sourcePath = this.draggedNode.path;
-  //     const destinationPath = `${targetNode.path}/${this.draggedNode.name}`;
-  //
-  //     try {
-  //       await this.fileSystemService.moveFolder(sourcePath, destinationPath);
-  //       this.draggedNode = null;
-  //       // Перезагружаем структуру файлов
-  //       await this.fileSystemService.loadFileStructure(this.projectPath!);
-  //     } catch (error) {
-  //       console.error('Error while moving folder:', error);
-  //     }
-  //   }
-  // }
-
   onDragStart(event: DragEvent, node: FileSystemNode) {
     this.draggedNode = node;
   }
