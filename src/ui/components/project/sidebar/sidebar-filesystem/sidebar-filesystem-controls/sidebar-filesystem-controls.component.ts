@@ -30,18 +30,6 @@ export class SidebarFilesystemControlsComponent {
 
   constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService) {}
 
-  // onExpandAll() {
-  //   this.expandAllEvent.emit();
-  // }
-  //
-  // onCollapseAll() {
-  //   this.collapseAllEvent.emit();
-  // }
-
-  // toggleFileSystem() {
-  //   this.fileSystemService.toggleFileSystem();
-  // }
-
   async confirmModal() {
     const modalInput = this.textModalService.modalInput.trim();
     const modalType = this.textModalService.modalType;
@@ -84,5 +72,13 @@ export class SidebarFilesystemControlsComponent {
     const translatedPlaceholder = await this.translateService.get(`projectPage.modals.createFolderModal.placeholder`).toPromise();
 
     this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.FOLDER, translatedPlaceholder);
+  }
+
+  expandAll() {
+    this.expandAllEvent.emit();
+  }
+
+  collapseAll() {
+    this.collapseAllEvent.emit();
   }
 }

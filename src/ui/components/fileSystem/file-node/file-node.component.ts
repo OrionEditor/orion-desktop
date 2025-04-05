@@ -25,101 +25,80 @@ import {getFileIcon} from "../../../../utils/file-icon.utils";
   styleUrl: './file-node.component.css'
 })
 export class FileNodeComponent {
-  @Input() node!: FileSystemNode;
-  @Output() dragstart = new EventEmitter<void>();
-  @Output() dragover = new EventEmitter<DragEvent>();
-  @Output() drop = new EventEmitter<FileSystemNode>();
-  @Output() fileSelected = new EventEmitter<{path: string, name: string}>();
 
-  isExpanded = false;
-  isDir: boolean = false;
+  @Input() node!: FileSystemNode;
+  @Output() dragstart = new EventEmitter<DragEvent>();
+  @Output() dragover = new EventEmitter<DragEvent>();
+  @Output() drop = new EventEmitter<DragEvent>();
+  @Output() fileSelected = new EventEmitter<{ path: string; name: string }>();
+
   contextMenuVisible = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  constructor(private cdRef: ChangeDetectorRef, private tabService: TabService) { }
-
-    onDragStart(event: DragEvent, node: FileSystemNode) {
-    event.stopPropagation(); // Предотвращаем всплытие события
-    this.dragstart.emit(); // Передаем узел в событие
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault(); // Разрешаем сброс
-    event.stopPropagation(); // Предотвращаем всплытие события
-    this.dragover.emit(event); // Передаем событие
-  }
-
-  onDrop(event: DragEvent, node: FileSystemNode) {
-    event.stopPropagation(); // Предотвращаем всплытие события
-    this.drop.emit(node); // Передаем узел в событие
-  }
-
+  constructor() {}
 
   ngOnInit() {
-    this.isDir = this.isDirectory();
-
-    // Слушаем клик на документе
+    // Устанавливаем начальное состояние expanded, если оно не задано
+    if (this.node.expanded === undefined) {
+      this.node.expanded = false;
+    }
     document.addEventListener('click', this.onDocumentClick.bind(this));
   }
 
   ngOnDestroy() {
-    // Удаляем слушатель при уничтожении компонента
     document.removeEventListener('click', this.onDocumentClick.bind(this));
   }
 
   onDocumentClick(event: MouseEvent) {
     const targetElement = event.target as HTMLElement;
-
-    // Если кликнули не по контекстному меню и не по узлу, закрываем меню
     if (
         this.contextMenuVisible &&
-        !targetElement.closest('.file-node') && // Убедиться, что клик не внутри узла
-        !targetElement.closest('app-context-menu') // Убедиться, что клик не внутри меню
+        !targetElement.closest('.file-node') &&
+        !targetElement.closest('app-context-menu')
     ) {
       this.closeContextMenu();
     }
   }
 
   toggleExpand() {
-    if (this.isDirectory()) {
-      this.isExpanded = !this.isExpanded;
-      this.node.expanded = !this.node.expanded; // Переключение состояния узла
+    if (this.isDirectory() && this.node.children?.length) {
+      this.node.expanded = !this.node.expanded;
+    } else if (!this.isDirectory()) {
+      this.openFile();
     }
   }
 
-
-    isHiddenDirectory(): boolean {
+  isHiddenDirectory(): boolean {
     return this.node.name.startsWith('.');
   }
 
   isDirectory(): boolean {
-    return this.node.type_id === "Directory";
+    return this.node.type_id === 'Directory';
   }
 
-  // Метод для открытия файла
   openFile() {
-    if (!this.isDir) {
+    if (!this.isDirectory()) {
       this.fileSelected.emit({
         path: this.node.path,
         name: this.node.name
       });
       console.log('Файл открыт:', this.node.name);
-    }  }
+    }
+  }
 
   onRightClick(event: MouseEvent) {
-    event.preventDefault(); // Останавливаем стандартное контекстное меню
+    event.preventDefault();
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
     this.contextMenuVisible = true;
   }
 
-  // Закрыть контекстное меню при клике вне
   closeContextMenu() {
     this.contextMenuVisible = false;
   }
 
   countContents(node: FileSystemNode): { files: number; folders: number } {
     if (!node.children || node.children.length === 0) {
-      return { files: node.type_id === "File" ? 1 : 0, folders: node.type_id === "Directory" ? 1 : 0 };
+      return { files: node.type_id === 'File' ? 1 : 0, folders: node.type_id === 'Directory' ? 1 : 0 };
     }
 
     return node.children.reduce(
@@ -127,49 +106,52 @@ export class FileNodeComponent {
           const childCount = this.countContents(child);
           return {
             files: acc.files + childCount.files,
-            folders: acc.folders + childCount.folders,
+            folders: acc.folders + childCount.folders
           };
         },
-        { files: 0, folders: node.type_id === "Directory" ? 1 : 0 } // Текущий узел считается как папка
+        { files: 0, folders: node.type_id === 'Directory' ? 1 : 0 }
     );
   }
 
   getNodeName(): string {
-    if (this.isDir) {
-      return this.node.name; // Если это директория, возвращаем имя без изменений
+    if (this.isDirectory()) {
+      return this.node.name;
     }
-
-    // Если это файл, убираем расширение
     const dotIndex = this.node.name.lastIndexOf('.');
-    if (dotIndex !== -1) {
-      return this.node.name.substring(0, dotIndex);
-    }
-
-    return this.node.name; // Если у файла нет расширения, возвращаем имя как есть
+    return dotIndex !== -1 ? this.node.name.substring(0, dotIndex) : this.node.name;
   }
 
   getExpandedChildrenCount(node: FileSystemNode): number {
     if (!node.children || !node.expanded) {
       return 0;
     }
-
     let count = 0;
-
     for (const child of node.children) {
-      count++; // сам дочерний элемент
-      count += this.getExpandedChildrenCount(child); // рекурсивно считаем его детей, если он раскрыт
+      count++;
+      count += this.getExpandedChildrenCount(child);
     }
-
     return count;
   }
 
   getIndentLineHeight(): string {
     const count = this.getExpandedChildrenCount(this.node);
-    return `${(count + 1) * 24}px`; // 24px — это приблизительная высота одного элемента
+    return `${(count + 1) * 24}px`; // 24px — высота одного элемента
   }
 
-  onFileSelected(fileInfo: {path: string, name: string}){
-    this.fileSelected.emit(fileInfo);
+  onDragStart(event: DragEvent, node: FileSystemNode) {
+    event.stopPropagation();
+    this.dragstart.emit();
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragover.emit(event);
+  }
+
+  onDrop(event: DragEvent, node: FileSystemNode) {
+    event.stopPropagation();
+    this.drop.emit(event);
   }
 
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;

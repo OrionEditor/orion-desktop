@@ -6,9 +6,9 @@
     </div>
     <ul>
         <ng-container *ngFor="let node of filteredFileStructure">
-            <app-file-node [node]="node"         (dragstart)="onDragStart(node)"
+            <app-file-node [node]="node"         (dragstart)="onDragStart($event,node)"
                            (dragover)="onDragOver($event)"
-                           (drop)="onDrop(node)" draggable="true"
+                           (drop)="onDrop($event,node)" draggable="true"
                            (fileSelected)="onFileSelected($event)"
             ></app-file-node>
         </ng-container>

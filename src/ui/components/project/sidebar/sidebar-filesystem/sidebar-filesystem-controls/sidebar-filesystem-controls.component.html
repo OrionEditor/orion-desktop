@@ -5,6 +5,12 @@
     <div class="sidebar-filesystem-controls-item" (click)="onCreateFolder()">
         <img src="assets/icons/svg/filesystem/controls/new-folder.svg">
     </div>
+    <div class="sidebar-filesystem-controls-item" (click)="expandAll()">
+        <img src="assets/icons/svg/filesystem/controls/expand.svg" />
+    </div>
+    <div class="sidebar-filesystem-controls-item" (click)="collapseAll()">
+        <img src="assets/icons/svg/filesystem/controls/collapse.svg" />
+    </div>
 </div>
 <app-text-modal
         *ngIf="textModalService.isModalOpenStatus()"
