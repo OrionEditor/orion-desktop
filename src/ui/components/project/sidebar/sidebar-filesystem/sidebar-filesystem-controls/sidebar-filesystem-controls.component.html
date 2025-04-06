@@ -5,13 +5,13 @@
     <div class="sidebar-filesystem-controls-item" (click)="onCreateFolder()">
         <img src="assets/icons/svg/filesystem/controls/new-folder.svg" title="Создать папку">
     </div>
-    <div class="sidebar-filesystem-controls-item" (click)="toggleExpandCollapse()">
+    <div *ngIf="fileStructureLength != 1" class="sidebar-filesystem-controls-item" (click)="toggleExpandCollapse()">
         <img
                 [src]="isExpanded ? 'assets/icons/svg/filesystem/controls/collapse.svg' : 'assets/icons/svg/filesystem/controls/expand.svg'"
                 [title]="isExpanded ? 'Свернуть все': 'Развернуть все'"
         />
     </div>
-    <div class="sidebar-filesystem-controls-item" (click)="onRightClick($event)">
+    <div *ngIf="fileStructureLength != 1" class="sidebar-filesystem-controls-item" (click)="onRightClick($event)">
         <img src="assets/icons/svg/filesystem/controls/sort.svg" title="Порядок сортировки">
     </div>
 </div>

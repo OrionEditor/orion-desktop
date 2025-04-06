@@ -93,7 +93,8 @@
     "labels": {
       "noResultsFound": "No results found",
       "nodeFileCountContents": "Files:",
-      "nodeDirectoryCountContents": "Folders:"
+      "nodeDirectoryCountContents": "Folders:",
+      "emptyProject": "Project is empty"
     },
     "modals": {
       "createFolderModal": {

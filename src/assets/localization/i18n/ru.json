@@ -94,7 +94,8 @@
     "labels": {
       "noResultsFound": "Результаты не найдены",
       "nodeFileCountContents": "Файлы:",
-      "nodeDirectoryCountContents": "Папки:"
+      "nodeDirectoryCountContents": "Папки:",
+      "emptyProject": "Проект пока пуст"
     },
     "modals": {
       "createFolderModal": {

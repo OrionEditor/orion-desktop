@@ -30,6 +30,7 @@ import {PositionEnum} from "../../../../../../shared/enums/position.enum";
 })
 export class SidebarFilesystemControlsComponent {
   @Input() projectPath: string | null = null;
+  @Input() fileStructureLength: number = 1;
 
   @Output() expandAllEvent = new EventEmitter<void>();
   @Output() collapseAllEvent = new EventEmitter<void>();

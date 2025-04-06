@@ -1,7 +1,9 @@
 <div class="sidebar-filesystem">
     <div class="sidebar-filesystem-controls">
         <app-sidebar-filesystem-controls [projectPath]="projectPath"       (expandAllEvent)="expandAllNodes()"
-                                         (collapseAllEvent)="collapseAllNodes()" (sortChange)="onSortChange($event)"/>
+                                         (collapseAllEvent)="collapseAllNodes()" (sortChange)="onSortChange($event)"
+                                         [fileStructureLength]="fileStructure.length"
+        />
         <app-sidebar-filesystem-search (searchQuery)="onSearch($event)"/>
     </div>
     <ul>
@@ -14,6 +16,11 @@
         </ng-container>
         <div *ngIf="filteredFileStructure.length === 0" class="no-results">
             {{'projectPage.labels.noResultsFound' | translate}}
+        </div>
+        <div *ngIf="fileStructure.length === 1" class="no-results">
+            <div class="empty-project-content">
+                {{'projectPage.labels.emptyProject' | translate}}
+            </div>
         </div>
     </ul>
 </div>
