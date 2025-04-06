@@ -90,7 +90,7 @@
     >
         <!-- Линия вложенности -->
         <div
-                *ngIf="node.expanded"
+                *ngIf="node.expanded && isDirectory() && node.children && node.children.length > 0"
                 class="indent-line"
                 [ngStyle]="{ height: getIndentLineHeight() }"
         ></div>
