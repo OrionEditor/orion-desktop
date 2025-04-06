@@ -95,14 +95,12 @@
                 [ngStyle]="{ height: getIndentLineHeight() }"
         ></div>
 
-        <!-- Иконка и стрелка -->
         <span *ngIf="isDirectory()" class="file-node-icon folder-icon">
       <img [src]="DEFAULT_FOLDER_ICON" />
     </span>
         <span *ngIf="!isDirectory()" class="file-node-icon file-icon">
       <img [src]="getFileIcon(node.name, isDirectory())" />
     </span>
-
         <!-- Название и содержимое -->
         <span class="file-node-name">
       {{ getNodeName() }}

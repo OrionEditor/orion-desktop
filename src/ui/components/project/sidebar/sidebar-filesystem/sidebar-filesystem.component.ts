@@ -1,12 +1,14 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {ConfigService} from "../../../../../services/configService";
-import {FileSystemNode, FileSystemService} from "../../../../../services/FileSystem/fileSystem.service";
+import {FileSystemService} from "../../../../../services/FileSystem/fileSystem.service";
+import {FileSystemNode} from "../../../../../interfaces/filesystem/filesystem-node.interface";
 import {NgForOf, NgIf} from "@angular/common";
 import {FileNodeComponent} from "../../../fileSystem/file-node/file-node.component";
 import {SidebarFilesystemSearchComponent} from "./sidebar-filesystem-search/sidebar-filesystem-search.component";
 import {SidebarFilesystemControlsComponent} from "./sidebar-filesystem-controls/sidebar-filesystem-controls.component";
 import {TranslatePipe} from "@ngx-translate/core";
 import {TabService} from "../../../../../services/tab.service";
+import {FileSystemSortingService} from "../../../../../services/FileSystem/file-system-sorting.service";
 
 @Component({
   selector: 'app-sidebar-filesystem',
@@ -65,7 +67,7 @@ export class SidebarFilesystemComponent {
     return <FileSystemNode>this.draggedNode;
   }
 
-  constructor(private configService: ConfigService, private fileSystemService: FileSystemService) {
+  constructor(private configService: ConfigService, private fileSystemService: FileSystemService, private sortingService: FileSystemSortingService) {
   }
 
   private initializeExpandedState(nodes: FileSystemNode[]): FileSystemNode[] {
@@ -77,37 +79,30 @@ export class SidebarFilesystemComponent {
   }
 
   async ngOnInit(){
-    // this.projectPath = this.configService.getLastOpened();
-    //
-    // this.fileSystemService.fileStructure$.subscribe((structure) => {
-    //   this.fileStructure = structure;
-    //   this.applyFilter();
-    // });
-    //
-    // this.fileSystemService.fileStructure$.subscribe((structure) => {
-    //   this.fileStructure = this.initializeExpandedState(structure);
-    //   this.fileStructure = structure;
-    //   this.applyFilter();
-    // });
-    //
-    // // Загрузка структуры
-    // if (this.projectPath) {
-    //   await this.fileSystemService.loadFileStructure(this.projectPath);
-    //   await this.fileSystemService.watchFileChanges(this.projectPath);
-    // }
-
     this.projectPath = this.configService.getLastOpened();
 
     // Единая подписка на fileStructure$
     this.fileSystemService.fileStructure$.subscribe((structure) => {
       this.fileStructure = this.deepCopy(structure); // Глубокая копия для реактивности
       this.applyFilter();
+      this.sortAndApplyFilter();
     });
 
     // Загрузка структуры
     if (this.projectPath) {
       await this.fileSystemService.loadFileStructure(this.projectPath);
       await this.fileSystemService.watchFileChanges(this.projectPath);
+    }
+  }
+
+  sortAndApplyFilter() {
+    // Сначала сортируем
+    this.fileStructure = this.sortingService.sort(this.fileStructure);
+    // Затем применяем фильтр
+    if (this.searchQuery === '') {
+      this.filteredFileStructure = this.deepCopy(this.fileStructure);
+    } else {
+      this.filteredFileStructure = this.filterNodes(this.fileStructure, this.searchQuery.toLowerCase());
     }
   }
 
@@ -125,6 +120,7 @@ export class SidebarFilesystemComponent {
     this.traverseNodes(this.fileStructure, true);
     this.fileStructure = this.deepCopy(this.fileStructure); // Обновляем ссылку
     this.applyFilter();
+    this.sortAndApplyFilter();
   }
 
   collapseAllNodes() {
@@ -132,6 +128,7 @@ export class SidebarFilesystemComponent {
     this.traverseNodes(this.fileStructure, false);
     this.fileStructure = this.deepCopy(this.fileStructure); // Обновляем ссылку
     this.applyFilter();
+    this.sortAndApplyFilter();
   }
 
   private traverseNodes(nodes: FileSystemNode[], expanded: boolean) {
@@ -142,27 +139,6 @@ export class SidebarFilesystemComponent {
       }
     });
   }
-
-  // expandAllNodes() {
-  //   console.log("expand");
-  //   this.traverseNodes(this.fileStructure, true);
-  //   this.applyFilter(); // Обновляем отфильтрованную структуру
-  // }
-  //
-  // collapseAllNodes() {
-  //   console.log("collapse");
-  //   this.traverseNodes(this.fileStructure, false);
-  //   this.applyFilter(); // Обновляем отфильтрованную структуру
-  // }
-  //
-  // private traverseNodes(nodes: FileSystemNode[], expanded: boolean) {
-  //   nodes.forEach((node) => {
-  //     node.expanded = expanded;
-  //     if (node.children && node.children.length > 0) {
-  //       this.traverseNodes(node.children, expanded);
-  //     }
-  //   });
-  // }
 
   onSearch(query: string) {
     this.searchQuery = query;
@@ -191,24 +167,8 @@ export class SidebarFilesystemComponent {
         .filter(node => node !== null) as FileSystemNode[];
   }
 
-  // applyFilter() {
-  //   if (this.searchQuery === '') {
-  //     this.filteredFileStructure = [...this.fileStructure]; // Копируем структуру
-  //   } else {
-  //     this.filteredFileStructure = this.filterNodes(this.fileStructure, this.searchQuery.toLowerCase());
-  //   }
-  // }
-  //
-  // filterNodes(nodes: FileSystemNode[], query: string): FileSystemNode[] {
-  //   return nodes
-  //       .map(node => {
-  //         const children = node.children ? this.filterNodes(node.children, query) : [];
-  //         const matches = node.name.toLowerCase().includes(query);
-  //         if (matches || children.length > 0) {
-  //           return { ...node, children }; // Сохраняем состояние expanded
-  //         }
-  //         return null;
-  //       })
-  //       .filter(node => node !== null) as FileSystemNode[];
-  // }
+  onSortChange(sortId: string) {
+    this.sortingService.setSortCriteria(sortId);
+    this.sortAndApplyFilter();
+  }
 }

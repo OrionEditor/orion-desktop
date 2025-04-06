@@ -11,6 +11,9 @@
                 [title]="isExpanded ? 'Свернуть все': 'Развернуть все'"
         />
     </div>
+    <div class="sidebar-filesystem-controls-item" (click)="onRightClick($event)">
+        <img src="assets/icons/svg/filesystem/controls/sort.svg" title="Порядок сортировки">
+    </div>
 </div>
 <app-text-modal
         *ngIf="textModalService.isModalOpenStatus()"
@@ -21,3 +24,4 @@
         (inputValueChange)="textModalService.updateModalInput($event)"
         [placeholderInput]="textModalService.getModalInputPlaceholder()"
 ></app-text-modal>
+<app-context-menu *ngIf="showSortContextMenu" [items]="(sortingContextMenuService.menu$ | async) || []" [position]="PositionEnum.FIXED" [x]="menuX" [y]="menuY" (close)="onMenuClose()" (itemSelected)="onSortSelect($event)"/>

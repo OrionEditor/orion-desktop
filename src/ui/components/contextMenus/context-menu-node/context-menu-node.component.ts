@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FileSystemNode} from "../../../../services/FileSystem/fileSystem.service";
+import {FileSystemNode} from "../../../../interfaces/filesystem/filesystem-node.interface";
 import {NgIf} from "@angular/common";
 import {TranslatePipe} from "@ngx-translate/core";
 

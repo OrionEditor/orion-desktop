@@ -1,13 +1,9 @@
-import {Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild} from '@angular/core';
-import {FileSystemNode} from "../../../../services/FileSystem/fileSystem.service";
+import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {FileSystemNode} from "../../../../interfaces/filesystem/filesystem-node.interface";
 import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {ContextMenuNodeComponent} from "../../contextMenus/context-menu-node/context-menu-node.component";
-import {DEFAULT_FILE_ICON, FILE_ICONS} from "../../../../shared/constants/FileSystem/fileIcons";
 import {DEFAULT_FOLDER_ICON} from "../../../../shared/constants/FileSystem/folder";
 import {TranslatePipe} from "@ngx-translate/core";
-import { ChangeDetectorRef } from '@angular/core';
-import {TabService} from "../../../../services/tab.service";
-import {FILE_TYPES} from "../../../../shared/constants/FileSystem/files.types";
 import {getFileIcon} from "../../../../utils/file-icon.utils";
 
 
@@ -38,7 +34,6 @@ export class FileNodeComponent {
   constructor() {}
 
   ngOnInit() {
-    // Устанавливаем начальное состояние expanded, если оно не задано
     if (this.node.expanded === undefined) {
       this.node.expanded = false;
     }

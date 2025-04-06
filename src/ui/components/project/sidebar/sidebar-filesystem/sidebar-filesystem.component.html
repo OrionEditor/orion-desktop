@@ -1,7 +1,7 @@
 <div class="sidebar-filesystem">
     <div class="sidebar-filesystem-controls">
         <app-sidebar-filesystem-controls [projectPath]="projectPath"       (expandAllEvent)="expandAllNodes()"
-                                         (collapseAllEvent)="collapseAllNodes()"/>
+                                         (collapseAllEvent)="collapseAllNodes()" (sortChange)="onSortChange($event)"/>
         <app-sidebar-filesystem-search (searchQuery)="onSearch($event)"/>
     </div>
     <ul>

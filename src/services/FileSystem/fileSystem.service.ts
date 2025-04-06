@@ -2,15 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
 import {invoke} from "@tauri-apps/api/core";
-
-export interface FileSystemNode {
-    expanded: boolean;
-    type_id: string,
-    name: string;
-    path: string;
-    isDirectory: boolean;
-    children?: FileSystemNode[];
-}
+import {FileSystemNode} from "../../interfaces/filesystem/filesystem-node.interface";
 
 @Injectable({
     providedIn: 'root',

@@ -1,6 +1,7 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
+import {PositionEnum} from "../../../../shared/enums/position.enum";
 
 @Component({
   selector: 'app-context-menu',
@@ -19,11 +20,14 @@ export class ContextMenuComponent {
   @Input() y: number = 0;
   @Output() close = new EventEmitter<void>();
   @Input() submenuDirection: 'left' | 'right' = 'right';
+  @Input() position: PositionEnum = PositionEnum.ABSOLUTE;
 
   activeSubmenu: string | null = null;
   submenuPosition: 'left' | 'right' = 'right';
 
   private isInitialClick: boolean = true;
+
+  @Output() itemSelected = new EventEmitter<string>();
 
   constructor(private elementRef: ElementRef) {
     this.submenuPosition = this.submenuDirection;
@@ -49,6 +53,7 @@ export class ContextMenuComponent {
   }
 
   onItemClick(item: ContextMenuItem): void {
+    this.itemSelected.emit(item.id);
     if (item.action && !item.isSubmenu) {
       if(item.possibleSelect){
         item.select = !item.select;

@@ -221,6 +221,7 @@ fn clear_auth_token() {
 use serde::Serialize;
 use std::fs;
 use std::path::Path;
+use std::time::SystemTime;
 use tauri_plugin_shell::process::Command;
 use crate::markdownfiles::MarkdownFiles;
 
@@ -231,6 +232,8 @@ struct FileSystemNode {
     path: String,
     is_directory: bool,
     children: Option<Vec<FileSystemNode>>,
+    created: Option<u64>,
+    last_modified: Option<u64>,
 }
 
 #[tauri::command]
@@ -257,6 +260,17 @@ fn get_file_structure(path: String) -> Result<Vec<FileSystemNode>, String> {
                         // Используем вашу функцию `is_directory` для проверки
                         let is_directory = is_directory(path_str.clone());
 
+                        // Получаем метаданные файла
+                        let metadata = fs::metadata(&path).ok();
+                        let created = metadata
+                            .as_ref()
+                            .and_then(|m| m.created().ok())
+                            .map(|t| t.duration_since(SystemTime::UNIX_EPOCH).unwrap_or_default().as_millis() as u64);
+                        let last_modified = metadata
+                            .as_ref()
+                            .and_then(|m| m.modified().ok())
+                            .map(|t| t.duration_since(SystemTime::UNIX_EPOCH).unwrap_or_default().as_millis() as u64);
+
                         // println!("Это: {}", is_directory);
 
                         nodes.push(FileSystemNode {
@@ -273,6 +287,8 @@ fn get_file_structure(path: String) -> Result<Vec<FileSystemNode>, String> {
                             } else {
                                 None
                             },
+                            created,
+                            last_modified
                         });
                     }
                     Err(err) => {

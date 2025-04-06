@@ -8,6 +8,11 @@ import {FILE_TYPES, getExtensionWithDot} from "../../../../../../shared/constant
 import {TextModalService} from "../../../../../../services/Modals/TextModal/textModal.service";
 import {ValidationService} from "../../../../../../services/validation.service";
 import {TranslateService} from "@ngx-translate/core";
+import {ContextMenuComponent} from "../../../../contextMenus/context-menu/context-menu.component";
+import {
+  FileSystemSortingContextMenuService
+} from "../../../../../../services/FileSystem/file-system-sorting.context-menu.service";
+import {PositionEnum} from "../../../../../../shared/enums/position.enum";
 
 @Component({
   selector: 'app-sidebar-filesystem-controls',
@@ -17,7 +22,8 @@ import {TranslateService} from "@ngx-translate/core";
     NgIf,
     NgStyle,
     TextModalComponent,
-    AsyncPipe
+    AsyncPipe,
+    ContextMenuComponent
   ],
   templateUrl: './sidebar-filesystem-controls.component.html',
   styleUrl: './sidebar-filesystem-controls.component.css'
@@ -27,9 +33,24 @@ export class SidebarFilesystemControlsComponent {
 
   @Output() expandAllEvent = new EventEmitter<void>();
   @Output() collapseAllEvent = new EventEmitter<void>();
+  @Output() sortChange = new EventEmitter<string>();
   isExpanded = false;
+  showSortContextMenu = false;
+  menuX: number = 0;
+  menuY: number = 0
 
-  constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService) {}
+  onRightClick(event: MouseEvent): void {
+    event.preventDefault();
+    this.menuX = event.clientX;
+    this.menuY = event.clientY;
+    this.showSortContextMenu = true;
+  }
+
+  onMenuClose(): void {
+    this.showSortContextMenu = false;
+  }
+
+  constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService, protected sortingContextMenuService: FileSystemSortingContextMenuService) {}
 
   async confirmModal() {
     const modalInput = this.textModalService.modalInput.trim();
@@ -83,4 +104,15 @@ export class SidebarFilesystemControlsComponent {
     }
     this.isExpanded = !this.isExpanded;
   }
+
+  onSortSelect(sortId: string): void {
+    const index = this.sortingContextMenuService.menuSubject.value.findIndex(item => item.id === sortId);
+    if (index !== -1) {
+      this.sortingContextMenuService.setActive(index);
+      this.sortChange.emit(sortId);
+    }
+    this.showSortContextMenu = false;
+  }
+
+  protected readonly PositionEnum = PositionEnum;
 }
