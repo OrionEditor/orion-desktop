@@ -3,7 +3,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import { invoke } from "@tauri-apps/api/core";
 import {ConfigService} from "../../../services/configService";
 import  {Renderer2} from "@angular/core";
-import {observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
+import {applyTheme, observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
 import {deleteOverflowWindow} from "../../../utils/overflow.utils";
 import {gapRightSection} from "../../../utils/startPage.utils";
 import {ThemeToggleComponent} from "../../components/theme-toggle/theme-toggle.component";
@@ -40,24 +40,31 @@ export class StartPageComponent {
   async ngOnInit() {
     await this.loadRecentProjects();
 
-    // Загружаем конфигурацию при старте приложения, если она еще не загружена
     if (!this.configService.getConfig()) {
       await this.configService.loadConfig();
     }
 
-    // Получаем значение темы
     this.currentTheme = this.configService.getTheme();
     this.currentLang = this.configService.getLanguage();
-
-    deleteOverflowWindow();
 
     this.languageService.setDefaultLang(this.currentLang);
     this.languageService.useLang(this.currentLang);
 
-    if(this.currentTheme === 'dark'){
-      setDarkTheme();
-    }
-    observeThemeChanges()
+    deleteOverflowWindow();
+
+    // Применяем тему при загрузке
+    document.body.classList.toggle('dark', this.currentTheme === 'dark');
+    applyTheme(this.currentTheme === 'dark');
+    observeThemeChanges();
+
+    // Слушаем события изменения темы
+    await listen('theme-changed', (event) => {
+      const newTheme = event.payload as string;
+      this.currentTheme = newTheme;
+      document.body.classList.toggle('dark', newTheme === 'dark');
+      applyTheme(newTheme === 'dark');
+    });
+
     if(this.recentProjects.length <= 0){
       gapRightSection();
     }

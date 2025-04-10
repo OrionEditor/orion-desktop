@@ -1,7 +1,8 @@
 /* theme.css */
 :root {
-    --background-color: white;
+    --background-color: #e2ede2;
     --text-color: black;
+    --base-container-color: #fff;
     --green-color: green;
     --text-description-color: #888;
     --text-header-gray-color: #333;
@@ -16,6 +17,7 @@ body.dark {
     --background-color: #222020;
     --sidebar-color: #333;
     --text-color: #ffffff;
+    --base-container-color: #fff;
     --green-color: green;
     --text-description-color: #888;
     --text-header-gray-color: #333;

@@ -21,6 +21,8 @@
     overflow-y: auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: left 0.1s ease-out, top 0.1s ease-out;
+    background-color: var(--modal-background-color);
+    color: var(--text-color);
 }
 
 .drag-handle {

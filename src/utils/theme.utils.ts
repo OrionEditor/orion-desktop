@@ -1,18 +1,29 @@
-// theme-observer.ts
-
 export function observeThemeChanges() {
     const observer = new MutationObserver(() => {
         const isDark = document.body.classList.contains('dark');
-        document.documentElement.style.setProperty('--background-color', isDark ? '#222020' : 'white');
-        document.documentElement.style.setProperty('--text-color', isDark ? '#ffffff' : 'black');
+        applyTheme(isDark);
     });
 
-    // Наблюдаем за изменениями атрибутов body
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 }
 
-export function setDarkTheme(){
-    document.body.classList.add("dark");
-    document.documentElement.style.setProperty('--background-color','#121212');
-    document.documentElement.style.setProperty('--text-color','#ffffff');
+export function setDarkTheme() {
+    document.body.classList.add('dark');
+    applyTheme(true);
+}
+
+export function applyTheme(isDark: boolean) {
+    if (isDark) {
+        document.documentElement.style.setProperty('--background-color', '#112211');
+        document.documentElement.style.setProperty('--text-color', '#E0E0E0');
+        document.documentElement.style.setProperty('--base-container-color', '#E0E0E0');
+        document.documentElement.style.setProperty('--base-hover-color', '#2F75337F');
+        document.documentElement.style.setProperty('--modal-background-color', '#152713');
+    } else {
+        document.documentElement.style.setProperty('--background-color', '#e2ede2');
+        document.documentElement.style.setProperty('--text-color', '#222020');
+        document.documentElement.style.setProperty('--base-container-color', '#11300d');
+        document.documentElement.style.setProperty('--base-hover-color', 'rgba(47,117,51,0.7)');
+        document.documentElement.style.setProperty('--modal-background-color', '#b9e4b3');
+    }
 }

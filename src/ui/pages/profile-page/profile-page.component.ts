@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './profile-page.component.css'
 })
 export class ProfilePageComponent {
-
 }

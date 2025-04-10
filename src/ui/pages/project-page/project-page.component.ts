@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {deleteOverflowWindow} from "../../../utils/overflow.utils";
-import {observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
+import {applyTheme, observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
 import {ConfigService} from "../../../services/configService";
 import {LanguageService} from "../../../services/language.service";
 import {invoke} from "@tauri-apps/api/core";
@@ -15,6 +15,7 @@ import {TextModalService} from "../../../services/Modals/TextModal/textModal.ser
 import {TranslateService} from "@ngx-translate/core";
 import {ModalBaseComponent} from "../../components/modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../components/modals/settings-modal/settings-modal.component";
+import {listen} from "@tauri-apps/api/event";
 
 @Component({
   selector: 'app-project-page',
@@ -53,7 +54,11 @@ export class ProjectPageComponent {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (!this.configService.getConfig()) {
+      await this.configService.loadConfig();
+    }
+
     this.currentTheme = this.configService.getTheme();
     this.currentLang = this.configService.getLanguage();
 
@@ -62,10 +67,20 @@ export class ProjectPageComponent {
 
     deleteOverflowWindow();
 
-    if (this.currentTheme === 'dark') {
-      setDarkTheme();
-    }
+    // Применяем тему при загрузке
+    document.body.classList.toggle('dark', this.currentTheme === 'dark');
+    applyTheme(this.currentTheme === 'dark');
     observeThemeChanges();
+
+    this.projectPath = this.configService.getLastOpened();
+
+    // Слушаем события изменения темы
+    await listen('theme-changed', (event) => {
+      const newTheme = event.payload as string;
+      this.currentTheme = newTheme;
+      document.body.classList.toggle('dark', newTheme === 'dark');
+      applyTheme(newTheme === 'dark');
+    });
 
     this.projectPath = this.configService.getLastOpened();
   }

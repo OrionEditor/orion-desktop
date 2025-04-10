@@ -38,7 +38,8 @@
     align-content: center;
     align-items: center;
     cursor: pointer;
-    background-color: var(--text-color);
+    /*background-color: var(--text-color);*/
+    background-color: var(--base-container-color);
 }
 
 .sidebar-filesystem-controls-item img{

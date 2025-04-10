@@ -5,7 +5,7 @@ import {TranslatePipe} from "@ngx-translate/core";
 import {ConfigService} from "../../../services/configService";
 import {LanguageService} from "../../../services/language.service";
 import {deleteOverflowWindow} from "../../../utils/overflow.utils";
-import {observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
+import {applyTheme, observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
 import {FillButtonComponent} from "../../components/buttons/fill-button/fill-button.component";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {ValidationService} from "../../../services/validation.service";
@@ -43,7 +43,6 @@ export class LoginPageComponent {
 
   async ngOnInit(){
 
-    // Загружаем конфигурацию при старте приложения, если она еще не загружена
     if (!this.configService.getConfig()) {
       await this.configService.loadConfig();
     }
@@ -56,10 +55,18 @@ export class LoginPageComponent {
 
     deleteOverflowWindow();
 
-    if(this.currentTheme === themes.DARK){
-      setDarkTheme();
-    }
+    // Применяем тему при загрузке
+    document.body.classList.toggle('dark', this.currentTheme === 'dark');
+    applyTheme(this.currentTheme === 'dark');
     observeThemeChanges();
+
+    // Слушаем события изменения темы
+    await listen('theme-changed', (event) => {
+      const newTheme = event.payload as string;
+      this.currentTheme = newTheme;
+      document.body.classList.toggle('dark', newTheme === 'dark');
+      applyTheme(newTheme === 'dark');
+    });
   }
 
   login(event: { username: string; password: string }){

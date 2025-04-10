@@ -3,7 +3,7 @@ import {NgClass, NgForOf} from "@angular/common";
 import {FillButtonComponent} from "../../components/buttons/fill-button/fill-button.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {deleteOverflowWindow} from "../../../utils/overflow.utils";
-import {observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
+import {applyTheme, observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
 import {ConfigService} from "../../../services/configService";
 import {LanguageService} from "../../../services/language.service";
 import {AuthService} from "../../../services/Routes/auth.service";
@@ -11,6 +11,7 @@ import {ToastService} from "../../../services/Toasts/toast.service";
 import {TOASTS_TYPES} from "../../../shared/constants/toasts/toasts.types";
 import {AUTH_SUCCESS} from "../../../shared/constants/messages/success/auth.success";
 import {AUTH_ERRORS} from "../../../shared/constants/messages/errors/auth.errors";
+import {listen} from "@tauri-apps/api/event";
 
 @Component({
   selector: 'app-codeconfirm-page',
@@ -49,7 +50,6 @@ export class CodeconfirmPageComponent {
 
   async ngOnInit(){
 
-    // Загружаем конфигурацию при старте приложения, если она еще не загружена
     if (!this.configService.getConfig()) {
       await this.configService.loadConfig();
     }
@@ -62,10 +62,18 @@ export class CodeconfirmPageComponent {
 
     deleteOverflowWindow();
 
-    if(this.currentTheme === 'dark'){
-      setDarkTheme();
-    }
-    observeThemeChanges()
+    // Применяем тему при загрузке
+    document.body.classList.toggle('dark', this.currentTheme === 'dark');
+    applyTheme(this.currentTheme === 'dark');
+    observeThemeChanges();
+
+    // Слушаем события изменения темы
+    await listen('theme-changed', (event) => {
+      const newTheme = event.payload as string;
+      this.currentTheme = newTheme;
+      document.body.classList.toggle('dark', newTheme === 'dark');
+      applyTheme(newTheme === 'dark');
+    });
 
   }
 

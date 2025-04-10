@@ -6,7 +6,7 @@ import {DialogService} from "../../../services/dialog.service";
 import {FillButtonComponent} from "../../components/buttons/fill-button/fill-button.component";
 import {InputTextFieldComponent} from "../../components/inputs/input-text-field/input-text-field.component";
 import {CheckboxComponent} from "../../components/inputs/checkbox/checkbox.component";
-import {observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
+import {applyTheme, observeThemeChanges, setDarkTheme} from "../../../utils/theme.utils";
 import {ConfigService} from "../../../services/configService";
 import {LanguageService} from "../../../services/language.service";
 import {deleteMarginWindow, deleteOverflowWindow} from "../../../utils/overflow.utils";
@@ -46,13 +46,10 @@ export class CreateProjectPageComponent {
   }
 
   async ngOnInit() {
-
-    // Загружаем конфигурацию при старте приложения, если она еще не загружена
     if (!this.configService.getConfig()) {
       await this.configService.loadConfig();
     }
 
-    // Получаем значение темы
     this.currentTheme = this.configService.getTheme();
     this.currentLang = this.configService.getLanguage();
 
@@ -61,10 +58,18 @@ export class CreateProjectPageComponent {
 
     deleteOverflowWindow();
 
-    if(this.currentTheme === 'dark'){
-      setDarkTheme();
-    }
-    observeThemeChanges()
+    // Применяем тему при загрузке
+    document.body.classList.toggle('dark', this.currentTheme === 'dark');
+    applyTheme(this.currentTheme === 'dark');
+    observeThemeChanges();
+
+    // Слушаем события изменения темы
+    await listen('theme-changed', (event) => {
+      const newTheme = event.payload as string;
+      this.currentTheme = newTheme;
+      document.body.classList.toggle('dark', newTheme === 'dark');
+      applyTheme(newTheme === 'dark');
+    });
 
     // Загрузка переводов и формирование локализованных пресетов
     await this.loadPresets(); // Загружаем переводы для пресетов
