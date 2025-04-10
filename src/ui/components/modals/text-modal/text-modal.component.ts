@@ -23,11 +23,11 @@ export class TextModalComponent {
   @Input() inputValue: string = '';
   @Input() placeholderInput: string = '';
   @Output() inputValueChange = new EventEmitter<string>();
-  @Output() confirm = new EventEmitter<void>();
+  @Output() confirm = new EventEmitter<string>();
   @Output() close = new EventEmitter<void>();
 
   onConfirm() {
-    this.confirm.emit();
+    this.confirm.emit(this.inputValue);
   }
 
   onClose() {

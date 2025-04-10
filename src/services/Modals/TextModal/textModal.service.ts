@@ -11,14 +11,16 @@ export class TextModalService {
     modalType: TEXT_MODAL_TYPES | null = null;
     modalInputPlaceholder: string = '';
     path: string = ''
+    name: string = ''
 
-    openModal(title: string, type: TEXT_MODAL_TYPES, placeholder: string = '', path: string = '') {
+    openModal(title: string, type: TEXT_MODAL_TYPES, placeholder: string = '', path: string = '', name: string = '') {
         this.modalTitle = title;
         this.modalType = type;
-        this.modalInput = '';
+        this.modalInput = name;
         this.isModalOpen = true;
         this.modalInputPlaceholder = placeholder;
         this.path = path;
+        this.name = name;
     }
 
     closeModal() {

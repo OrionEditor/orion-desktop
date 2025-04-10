@@ -19,7 +19,7 @@
         *ngIf="textModalService.isModalOpenStatus()"
         [title]="textModalService.getModalTitle()"
         [inputValue]="textModalService.getModalInput()"
-        (confirm)="confirmModal()"
+        (confirm)="confirmModal($event)"
         (close)="closeModal()"
         (inputValueChange)="textModalService.updateModalInput($event)"
         [placeholderInput]="textModalService.getModalInputPlaceholder()"

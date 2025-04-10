@@ -45,6 +45,10 @@ export class FileSystemService {
         await invoke(TauriCommands.DELETE_FILE, {filePath});
     }
 
+    static async renameFile(filePath: string, newName: string) {
+        await invoke(TauriCommands.RENAME_FILE, {oldPath: filePath, newName});
+    }
+
 
     /**
      * Moves a folder from one path to another.

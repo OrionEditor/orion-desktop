@@ -343,6 +343,26 @@ fn delete_file(filePath: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn rename_file(oldPath: String, newName: String) -> Result<(), String> {
+    let old_path = Path::new(&oldPath);
+
+    if !old_path.exists() {
+        return Err("Path does not exist".into());
+    }
+
+    let parent_dir = old_path.parent()
+        .ok_or("Cannot determine parent directory".to_string())?
+        .to_string_lossy()
+        .to_string();
+
+    let new_path = format!("{}/{}", parent_dir, newName);
+
+    fs::rename(&oldPath, &new_path).map_err(|e| format!("Failed to rename: {}", e))?;
+
+    Ok(())
+}
+
+#[tauri::command]
 fn move_folder(source: String, destination: String) -> Result<(), String> {
     let source_path = Path::new(&source);
     let destination_path = Path::new(&destination);
@@ -418,7 +438,8 @@ fn main() {
             move_folder,
             initialize_markdown_files,
             get_markdown_file_content,
-            delete_file
+            delete_file,
+            rename_file
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

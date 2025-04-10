@@ -13,6 +13,7 @@ import {
   FileSystemSortingContextMenuService
 } from "../../../../../../services/FileSystem/file-system-sorting.context-menu.service";
 import {PositionEnum} from "../../../../../../shared/enums/position.enum";
+import {getFileExtension} from "../../../../../../utils/file.utils";
 
 @Component({
   selector: 'app-sidebar-filesystem-controls',
@@ -53,7 +54,7 @@ export class SidebarFilesystemControlsComponent {
 
   constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService, protected sortingContextMenuService: FileSystemSortingContextMenuService) {}
 
-  async confirmModal() {
+  async confirmModal(inputValue: string) {
     const modalInput = this.textModalService.modalInput.trim();
     const modalType = this.textModalService.modalType;
 
@@ -77,6 +78,15 @@ export class SidebarFilesystemControlsComponent {
           await this.fileSystemService.createDirectory(
               this.textModalService.path === '' ? this.projectPath : this.textModalService.path,
               modalInput
+          );
+          await this.fileSystemService.loadFileStructure(this.projectPath!);
+        } catch (e) {}
+      } else if(modalType === TEXT_MODAL_TYPES.RENAME){
+
+        try {
+          await FileSystemService.renameFile(
+              this.textModalService.path === '' ? this.projectPath : this.textModalService.path,
+              modalInput + `.${getFileExtension(this.textModalService.name)}`
           );
           await this.fileSystemService.loadFileStructure(this.projectPath!);
         } catch (e) {}

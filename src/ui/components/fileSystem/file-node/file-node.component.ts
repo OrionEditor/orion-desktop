@@ -40,7 +40,7 @@ export class FileNodeComponent {
   showContextMenu = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this));
+  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this), this.onRename.bind(this));
 
   constructor(private fileSystemService: FileSystemService, private configService: ConfigService, private translateService: TranslateService, private textModalService: TextModalService) {}
 
@@ -50,7 +50,7 @@ export class FileNodeComponent {
       this.node.expanded = false;
     }
     document.addEventListener('click', this.onDocumentClick.bind(this));
-    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this));
+    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this), this.onRename.bind(this));
   }
 
   ngOnDestroy() {
@@ -183,6 +183,14 @@ export class FileNodeComponent {
     const translatedPlaceholder = await this.translateService.get(`projectPage.modals.createFolderModal.placeholder`).toPromise();
 
     this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.FOLDER, translatedPlaceholder, this.node.path);
+  }
+
+  async onRename() {
+    const translatedHeader = await this.translateService.get(`projectPage.modals.renameNodeModal.header`).toPromise();
+    const translatedPlaceholder = await this.translateService.get(`projectPage.modals.renameNodeModal.placeholder`).toPromise();
+
+    this.textModalService.setModalInput(this.node.name);
+    this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.RENAME, translatedPlaceholder, this.node.path, this.node.name);
   }
 
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;

@@ -3,5 +3,6 @@ export enum TauriCommands{
     FILE_CHANGED = 'file-changed',
     CREATE_DIRECTORY = 'create_directory',
     CREATE_FILE = 'create_file',
-    DELETE_FILE = 'delete_file'
+    DELETE_FILE = 'delete_file',
+    RENAME_FILE = 'rename_file'
 }

@@ -85,7 +85,7 @@
   },
   "projectPage": {
     "buttons": {
-      "createButton": "Создать",
+      "createButton": "Подтвердить",
       "cancelButton": "Отмена"
     },
     "placeholders": {
@@ -107,6 +107,11 @@
         "header": "Создать заметку",
         "description": "",
         "placeholder": "Введите имя заметки..."
+      },
+      "renameNodeModal": {
+        "header": "Переименовать элемент",
+        "description": "",
+        "placeholder": "Введите новое имя элемент..."
       }
     },
     "contextMenus": {
