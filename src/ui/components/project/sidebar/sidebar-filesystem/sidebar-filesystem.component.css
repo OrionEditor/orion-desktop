@@ -12,6 +12,17 @@
     padding: 0;
 }
 
+.sidebar-filesystem-project-name{
+    left: 21%;
+    top: 1%;
+    position: absolute;
+    margin-left: 50px;
+    color: #0c780c;
+    background-color: var(--text-color);
+    padding: 3px;
+    border-radius: 6px;
+}
+
 .empty-project {
     display: flex;
     background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);

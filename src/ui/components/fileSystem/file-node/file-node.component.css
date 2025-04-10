@@ -48,7 +48,7 @@
 
 /* При наведении на элемент меняем фон */
 .file-node-content:hover {
-    background-color: grey;
+    background-color: rgba(47, 117, 51, 0.5);
 }
 
 /* Стили для дочерних элементов (если они есть) */

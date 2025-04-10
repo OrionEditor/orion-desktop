@@ -326,6 +326,23 @@ fn create_directory(path: String, name: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn delete_file(filePath: String) -> Result<(), String> {
+    let path = Path::new(&filePath);
+
+    if !path.exists() {
+        return Err("Path does not exist".into());
+    }
+
+    if path.is_dir() {
+        fs::remove_dir_all(&filePath).map_err(|e| format!("Failed to delete directory: {}", e))?;
+    } else {
+        fs::remove_file(&filePath).map_err(|e| format!("Failed to delete file: {}", e))?;
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
 fn move_folder(source: String, destination: String) -> Result<(), String> {
     let source_path = Path::new(&source);
     let destination_path = Path::new(&destination);
@@ -400,7 +417,8 @@ fn main() {
             create_file,
             move_folder,
             initialize_markdown_files,
-            get_markdown_file_content
+            get_markdown_file_content,
+            delete_file
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

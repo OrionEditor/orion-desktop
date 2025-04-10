@@ -5,6 +5,11 @@ import {ContextMenuNodeComponent} from "../../contextMenus/context-menu-node/con
 import {DEFAULT_FOLDER_ICON} from "../../../../shared/constants/FileSystem/folder";
 import {TranslatePipe} from "@ngx-translate/core";
 import {getFileIcon} from "../../../../utils/file-icon.utils";
+import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
+import {FileNodeContextmenu} from "../../../../shared/constants/contextMenu/filenode.contextmenu";
+import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
+import {FileSystemService} from "../../../../services/FileSystem/fileSystem.service";
+import {ConfigService} from "../../../../services/configService";
 
 
 @Component({
@@ -15,7 +20,8 @@ import {getFileIcon} from "../../../../utils/file-icon.utils";
     NgForOf,
     ContextMenuNodeComponent,
     NgStyle,
-    TranslatePipe
+    TranslatePipe,
+    ContextMenuComponent
   ],
   templateUrl: './file-node.component.html',
   styleUrl: './file-node.component.css'
@@ -23,21 +29,26 @@ import {getFileIcon} from "../../../../utils/file-icon.utils";
 export class FileNodeComponent {
 
   @Input() node!: FileSystemNode;
+  projectPath: string | null = '';
   @Output() dragstart = new EventEmitter<DragEvent>();
   @Output() dragover = new EventEmitter<DragEvent>();
   @Output() drop = new EventEmitter<DragEvent>();
   @Output() fileSelected = new EventEmitter<{ path: string; name: string }>();
 
-  contextMenuVisible = false;
+  showContextMenu = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  constructor() {}
+  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this));
+
+  constructor(private fileSystemService: FileSystemService, private configService: ConfigService) {}
 
   ngOnInit() {
+    this.projectPath = this.configService.getLastOpened();
     if (this.node.expanded === undefined) {
       this.node.expanded = false;
     }
     document.addEventListener('click', this.onDocumentClick.bind(this));
+    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this));
   }
 
   ngOnDestroy() {
@@ -47,11 +58,11 @@ export class FileNodeComponent {
   onDocumentClick(event: MouseEvent) {
     const targetElement = event.target as HTMLElement;
     if (
-        this.contextMenuVisible &&
+        this.showContextMenu &&
         !targetElement.closest('.file-node') &&
         !targetElement.closest('app-context-menu')
     ) {
-      this.closeContextMenu();
+      this.onMenuClose();
     }
   }
 
@@ -84,11 +95,7 @@ export class FileNodeComponent {
   onRightClick(event: MouseEvent) {
     event.preventDefault();
     this.contextMenuPosition = { x: event.clientX, y: event.clientY };
-    this.contextMenuVisible = true;
-  }
-
-  closeContextMenu() {
-    this.contextMenuVisible = false;
+    this.showContextMenu = true;
   }
 
   countContents(node: FileSystemNode): { files: number; folders: number } {
@@ -149,6 +156,20 @@ export class FileNodeComponent {
     this.drop.emit(event);
   }
 
+  onMenuClose(){
+    this.showContextMenu = false;
+  }
+
+  async deleteFile(){
+    try {
+      await FileSystemService.deleteFile(this.node.path);
+      await this.fileSystemService.loadFileStructure(this.projectPath!);
+    } catch (error) {
+      console.error('Error deleting file:', error);
+    }
+  }
+
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;
   protected readonly getFileIcon = getFileIcon;
+  protected readonly FileNodeContextmenu = FileNodeContextmenu;
 }
