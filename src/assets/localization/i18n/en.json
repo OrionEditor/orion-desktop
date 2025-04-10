@@ -57,9 +57,11 @@
     },
     "presets": {
       "preset0": "None",
-      "preset1": "Preset for learn language",
-      "preset2": "Preset for web-develop",
-      "preset3": "Preset for college"
+      "preset1": "Template for learn language",
+      "preset3": "Template for college",
+      "preset4": "Template for cooking",
+      "preset5": "Template for a personal diary and self-development",
+      "preset6": "Template for travel and trips"
     }
   },
   "loginPage": {

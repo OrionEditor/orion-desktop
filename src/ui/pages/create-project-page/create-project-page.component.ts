@@ -22,6 +22,7 @@ import {UploadService} from "../../../services/upload.service";
 import {listen} from "@tauri-apps/api/event";
 import {SelectionCardsComponent} from "../../components/selection/selection-cards/selection-cards.component";
 import {PROJECT_TYPES} from "../../../shared/constants/cards/project-types.cards";
+import {FolderStructure} from "../../../interfaces/preset.interface";
 
 @Component({
   selector: 'app-create-project-page',
@@ -232,45 +233,45 @@ export class CreateProjectPageComponent {
     }
   }
 
-  // async createProjectStructure(structure: any, currentPath: string) {
-  //   // Создание папок
-  //   for (const folder of structure.folders) {
+  // async createPresetStructure(structure: any, currentPath: string) {
+  //   if(structure.folders.length <= 0){
+  //     return;
+  //   }
+  //   // Создание всех папок параллельно и ожидание их завершения
+  //   await Promise.all(structure.folders.map(async (folder: string) => {
   //     const folderPath = `${currentPath}/${folder}`;
   //     const folderExists = await exists(folderPath);
   //     if (!folderExists) {
   //       await mkdir(folderPath);
   //     }
-  //   }
+  //   }));
   //
-  //   // Создание файлов
-  //   for (const file of structure.files) {
+  //   // Создание всех файлов параллельно и ожидание их завершения
+  //   await Promise.all(structure.files.map(async (file: string) => {
   //     const filePath = `${currentPath}/${file}`;
   //     const fileExists = await exists(filePath);
   //     if (!fileExists) {
   //       await writeTextFile(filePath, `# ${file}`);
   //     }
-  //   }
+  //   }));
   //
-  //   // Рекурсивное создание подкаталогов и файлов
+  //   // Рекурсивное создание подкаталогов и их содержимого
   //   for (const folderName of Object.keys(structure.subfolders)) {
   //     const subfolderStructure = structure.subfolders[folderName];
   //     const subfolderPath = `${currentPath}/${folderName}`;
-  //     // // Создание подкаталогов
+  //
   //     const subfolderExists = await exists(subfolderPath);
   //     if (!subfolderExists) {
   //       await mkdir(subfolderPath);
   //     }
   //
-  //     await this.createProjectStructure(subfolderStructure, subfolderPath);
-  //     // Рекурсивно создаем структуру внутри подкаталога
+  //     // Дождаться завершения рекурсивного вызова для подпапки
+  //     await this.createPresetStructure(subfolderStructure, subfolderPath);
   //   }
   // }
 
-  async createPresetStructure(structure: any, currentPath: string) {
-    if(structure.folder.length <= 0){
-      return;
-    }
-    // Создание всех папок параллельно и ожидание их завершения
+  async createPresetStructure(structure: FolderStructure, currentPath: string) {
+    // Создание всех папок параллельно
     await Promise.all(structure.folders.map(async (folder: string) => {
       const folderPath = `${currentPath}/${folder}`;
       const folderExists = await exists(folderPath);
@@ -279,7 +280,7 @@ export class CreateProjectPageComponent {
       }
     }));
 
-    // Создание всех файлов параллельно и ожидание их завершения
+    // Создание всех файлов параллельно
     await Promise.all(structure.files.map(async (file: string) => {
       const filePath = `${currentPath}/${file}`;
       const fileExists = await exists(filePath);
@@ -298,7 +299,7 @@ export class CreateProjectPageComponent {
         await mkdir(subfolderPath);
       }
 
-      // Дождаться завершения рекурсивного вызова для подпапки
+      // Рекурсивно обрабатываем вложенную структуру
       await this.createPresetStructure(subfolderStructure, subfolderPath);
     }
   }

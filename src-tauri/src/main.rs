@@ -72,7 +72,7 @@ async fn create_project_window(handle: AppHandle) {
     )
     .title("Create New Project")
     .resizable(false)
-    .inner_size(750.0, 550.0)
+    .inner_size(750.0, 350.0)
     .fullscreen(false)
     .maximized(false)
     .maximizable(false)
