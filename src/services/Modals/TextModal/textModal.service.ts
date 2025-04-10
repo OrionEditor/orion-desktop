@@ -10,13 +10,15 @@ export class TextModalService {
     private isModalOpen: boolean = false;
     modalType: TEXT_MODAL_TYPES | null = null;
     modalInputPlaceholder: string = '';
+    path: string = ''
 
-    openModal(title: string, type: TEXT_MODAL_TYPES, placeholder: string = '') {
+    openModal(title: string, type: TEXT_MODAL_TYPES, placeholder: string = '', path: string = '') {
         this.modalTitle = title;
         this.modalType = type;
         this.modalInput = '';
         this.isModalOpen = true;
         this.modalInputPlaceholder = placeholder;
+        this.path = path;
     }
 
     closeModal() {

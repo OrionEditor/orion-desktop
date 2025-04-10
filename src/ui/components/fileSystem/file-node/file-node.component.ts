@@ -3,13 +3,15 @@ import {FileSystemNode} from "../../../../interfaces/filesystem/filesystem-node.
 import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {ContextMenuNodeComponent} from "../../contextMenus/context-menu-node/context-menu-node.component";
 import {DEFAULT_FOLDER_ICON} from "../../../../shared/constants/FileSystem/folder";
-import {TranslatePipe} from "@ngx-translate/core";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {getFileIcon} from "../../../../utils/file-icon.utils";
 import {ContextMenuComponent} from "../../contextMenus/context-menu/context-menu.component";
 import {FileNodeContextmenu} from "../../../../shared/constants/contextMenu/filenode.contextmenu";
 import {ContextMenuItem} from "../../../../interfaces/context-menu-item.interface";
 import {FileSystemService} from "../../../../services/FileSystem/fileSystem.service";
 import {ConfigService} from "../../../../services/configService";
+import {TEXT_MODAL_TYPES} from "../../../../shared/constants/modals/textModal/textModal.types";
+import {TextModalService} from "../../../../services/Modals/TextModal/textModal.service";
 
 
 @Component({
@@ -38,9 +40,9 @@ export class FileNodeComponent {
   showContextMenu = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this));
+  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this));
 
-  constructor(private fileSystemService: FileSystemService, private configService: ConfigService) {}
+  constructor(private fileSystemService: FileSystemService, private configService: ConfigService, private translateService: TranslateService, private textModalService: TextModalService) {}
 
   ngOnInit() {
     this.projectPath = this.configService.getLastOpened();
@@ -48,7 +50,7 @@ export class FileNodeComponent {
       this.node.expanded = false;
     }
     document.addEventListener('click', this.onDocumentClick.bind(this));
-    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this));
+    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this));
   }
 
   ngOnDestroy() {
@@ -167,6 +169,20 @@ export class FileNodeComponent {
     } catch (error) {
       console.error('Error deleting file:', error);
     }
+  }
+
+  async onCreateNote() {
+    const translatedHeader = await this.translateService.get(`projectPage.modals.createNoteModal.header`).toPromise();
+    const translatedPlaceholder = await this.translateService.get(`projectPage.modals.createNoteModal.placeholder`).toPromise();
+
+    this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.NOTE, translatedPlaceholder, this.node.path);
+  }
+
+  async onCreateFolder() {
+    const translatedHeader = await this.translateService.get(`projectPage.modals.createFolderModal.header`).toPromise();
+    const translatedPlaceholder = await this.translateService.get(`projectPage.modals.createFolderModal.placeholder`).toPromise();
+
+    this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.FOLDER, translatedPlaceholder, this.node.path);
   }
 
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;

@@ -66,7 +66,7 @@ export class SidebarFilesystemControlsComponent {
       if (modalType === TEXT_MODAL_TYPES.NOTE) {
         try {
           await this.fileSystemService.createFile(
-              this.projectPath,
+              this.textModalService.path === '' ? this.projectPath : this.textModalService.path,
               modalInput + getExtensionWithDot(FILE_TYPES.MD)
           );
           await this.fileSystemService.loadFileStructure(this.projectPath!);
@@ -75,7 +75,7 @@ export class SidebarFilesystemControlsComponent {
       } else if (modalType === TEXT_MODAL_TYPES.FOLDER) {
         try {
           await this.fileSystemService.createDirectory(
-              this.projectPath,
+              this.textModalService.path === '' ? this.projectPath : this.textModalService.path,
               modalInput
           );
           await this.fileSystemService.loadFileStructure(this.projectPath!);
