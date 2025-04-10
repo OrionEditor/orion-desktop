@@ -19,6 +19,7 @@ export const FileNodeContextmenu = (node: FileSystemNode, deleteFile: () => void
                 icon: 'assets/icons/svg/filesystem/folder.svg',
             },
         ],
+        isShow: !!(node && node.type_id && node.type_id === 'Directory')
     },
     {
         id: 'rename',

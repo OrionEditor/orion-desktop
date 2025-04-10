@@ -40,6 +40,7 @@ export class ContextMenuComponent {
     requestAnimationFrame(() => {
       this.isInitialClick = false;
     });
+    console.log(this.items);
   }
 
   @HostListener('document:click', ['$event'])

@@ -1,40 +1,43 @@
 <div class="context-menu" [style.left.px]="x" [style.top.px]="y" [style.position]="position">
-    <div
-            *ngFor="let item of items"
-            [id]="'item-' + item.id"
-            class="menu-item"
-            [ngClass]="item.unavailable ? 'unavailable-item' : null"
-            (click)="!item.unavailable ? onItemClick(item) : null"
-            (mouseenter)="onMouseEnter(item)"
-            (mouseleave)="onMouseLeave()"
-    >
-        <ng-container *ngIf="submenuDirection === 'left'">
-            <span *ngIf="item.isSubmenu" class="submenu-indicator">◀</span>
-            <span>{{ item.text }}</span>
-            <img *ngIf="item.icon" class="icon-menu" [src]="item.icon" />
-        </ng-container>
+    <ng-container *ngFor="let item of items">
+        <div
+                *ngIf="item.isShow !== false"
+                [id]="'item-' + item.id"
+                class="menu-item"
+                [ngClass]="item.unavailable ? 'unavailable-item' : null"
+                (click)="!item.unavailable ? onItemClick(item) : null"
+                (mouseenter)="onMouseEnter(item)"
+                (mouseleave)="onMouseLeave()"
+        >
 
-        <ng-container *ngIf="submenuDirection === 'right'">
-            <img *ngIf="item.icon" class="icon-menu" [src]="item.icon" />
-            <span>{{ item.text }}</span>
-            <span *ngIf="item.isSubmenu" class="submenu-indicator">▶</span>
-        </ng-container>
+            <ng-container *ngIf="submenuDirection === 'left'">
+                <span *ngIf="item.isSubmenu" class="submenu-indicator">◀</span>
+                <span>{{ item.text }}</span>
+                <img *ngIf="item.icon" class="icon-menu" [src]="item.icon" />
+            </ng-container>
 
-        <img class="check" *ngIf="item.select && item.possibleSelect" src="assets/icons/svg/contextMenu/check.svg" />
-        <div class="premium-container">
-            <span class="premium" *ngIf="item.premium">ПРЕМИУМ</span>
+            <ng-container *ngIf="submenuDirection === 'right'">
+                <img *ngIf="item.icon" class="icon-menu" [src]="item.icon" />
+                <span>{{ item.text }}</span>
+                <span *ngIf="item.isSubmenu" class="submenu-indicator">▶</span>
+            </ng-container>
+
+            <img class="check" *ngIf="item.select && item.possibleSelect" src="assets/icons/svg/contextMenu/check.svg" />
+            <div class="premium-container">
+                <span class="premium" *ngIf="item.premium">ПРЕМИУМ</span>
+            </div>
+
+            <ng-container *ngIf="item.isSubmenu && item.submenuItems && activeSubmenu === item.id">
+                <app-context-menu
+                        [items]="item.submenuItems"
+                        [x]="submenuPosition === 'right' ? 0 : -0"
+                        [y]="0"
+                        [submenuDirection]="submenuDirection"
+                        class="submenu"
+                        [ngClass]="submenuPosition"
+                        (close)="onSubmenuClose()"
+                ></app-context-menu>
+            </ng-container>
         </div>
-
-        <ng-container *ngIf="item.isSubmenu && item.submenuItems && activeSubmenu === item.id">
-            <app-context-menu
-                    [items]="item.submenuItems"
-                    [x]="submenuPosition === 'right' ? 0 : -0"
-                    [y]="0"
-                    [submenuDirection]="submenuDirection"
-                    class="submenu"
-                    [ngClass]="submenuPosition"
-                    (close)="onSubmenuClose()"
-            ></app-context-menu>
-        </ng-container>
-    </div>
+    </ng-container>
 </div>

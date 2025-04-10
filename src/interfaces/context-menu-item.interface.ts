@@ -9,4 +9,5 @@ export interface ContextMenuItem {
     possibleSelect?: boolean;
     unavailable?: boolean;
     premium?: boolean;
+    isShow?:boolean;
 }

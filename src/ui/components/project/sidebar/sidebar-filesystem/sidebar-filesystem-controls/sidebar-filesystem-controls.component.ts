@@ -64,15 +64,22 @@ export class SidebarFilesystemControlsComponent {
 
     try {
       if (modalType === TEXT_MODAL_TYPES.NOTE) {
-        await this.fileSystemService.createFile(
-            this.projectPath,
-            modalInput + getExtensionWithDot(FILE_TYPES.MD)
-        );
+        try {
+          await this.fileSystemService.createFile(
+              this.projectPath,
+              modalInput + getExtensionWithDot(FILE_TYPES.MD)
+          );
+          await this.fileSystemService.loadFileStructure(this.projectPath!);
+        } catch (e){}
+
       } else if (modalType === TEXT_MODAL_TYPES.FOLDER) {
-        await this.fileSystemService.createDirectory(
-            this.projectPath,
-            modalInput
-        );
+        try {
+          await this.fileSystemService.createDirectory(
+              this.projectPath,
+              modalInput
+          );
+          await this.fileSystemService.loadFileStructure(this.projectPath!);
+        } catch (e) {}
       }
       this.closeModal();
     } catch (error) {
