@@ -326,3 +326,14 @@
 ::-webkit-scrollbar-thumb:active {
     background: #388E3C;
 }
+
+/**/
+:host ::ng-deep .rendered-content a, :host ::ng-deep .rendered a {
+    /*text-decoration: none !important;*/
+    color: #4CAF50 !important;
+}
+
+.rendered a{
+    /*text-decoration: none!important;*/
+    color: #4CAF50!important;
+}

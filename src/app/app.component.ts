@@ -18,6 +18,7 @@ import {ProfilePageComponent} from "../ui/pages/profile-page/profile-page.compon
 import {MarkdownFiles} from "../interfaces/markdown/markdownFiles.interface";
 import {invoke} from "@tauri-apps/api/core";
 import {MarkdownFilesService} from "../services/Markdown/markdown-files.service";
+import {cleanupLinkHandler, initializeLinkHandler} from "../utils/markown/link/link.utils";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/localization/i18n/', '.json');
@@ -37,13 +38,17 @@ export class AppComponent {
     this.initializeMarkdownFiles();
   }
 
+  async initializeMarkdownFiles(): Promise<void> {
+    await MarkdownFilesService.initialize();
+  }
+
   async ngOnInit(): Promise<void> {
+    initializeLinkHandler(document.body);
     await this.configService.loadConfig();
     this.windowLabel = await this.windowService.getWindowLabel();
   }
-
-  async initializeMarkdownFiles(): Promise<void> {
-    await MarkdownFilesService.initialize();
+  ngOnDestroy() {
+    cleanupLinkHandler(document.body);
   }
 
     protected readonly WINDOWS_LABELS = WINDOWS_LABELS;

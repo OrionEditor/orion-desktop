@@ -38,6 +38,7 @@
     "opener:allow-open-path",
     "opener:allow-open-url",
     "opener:allow-reveal-item-in-dir",
+    "opener:allow-default-urls",
     "core:path:allow-basename",
     "fs:allow-appdata-read",
     "fs:allow-appdata-write",

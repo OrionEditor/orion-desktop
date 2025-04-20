@@ -22,6 +22,7 @@ import {Version} from "../../../../interfaces/version.interface";
 import {ModalBaseComponent} from "../../modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../modals/settings-modal/settings-modal.component";
 import {SettingsService} from "../../../../services/settings.service";
+import {cleanupLinkHandler, initializeLinkHandler} from "../../../../utils/markown/link/link.utils";
 
 @Component({
   selector: 'app-markdown-content',
@@ -45,6 +46,7 @@ export class MarkdownContentComponent {
 
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
+
   content: string = '';
   renderedContent: string = '';
   lineNumbers: number[] = [];
@@ -81,6 +83,10 @@ export class MarkdownContentComponent {
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService) {}
+
+  ngAfterViewInit(): void {
+    this.updateTextareaHighlight();
+  }
 
   async ngOnInit() {
     await this.loadContent();
@@ -146,10 +152,6 @@ export class MarkdownContentComponent {
     this.statistics.lineCount = this.markdownInfoService.getLineCount(this.content);
     this.statistics.readingTime = this.markdownInfoService.getReadingTime(this.content);
     this.statistics.headingCount = this.markdownInfoService.getHeadingCount(this.content);
-  }
-
-  ngAfterViewInit(): void {
-    this.updateTextareaHighlight();
   }
 
   private updateTextareaHighlight(): void {

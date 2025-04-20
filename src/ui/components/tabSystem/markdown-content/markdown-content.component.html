@@ -1,21 +1,4 @@
 <div class="tab-controls-actions">
-<!--    <div class="export-import-section">-->
-<!--        <div class="export-section">-->
-<!--            <select [(ngModel)]="exportFormat" class="export-select">-->
-<!--                <option value="html">Экспорт в HTML</option>-->
-<!--                <option value="pdf">Экспорт в PDF</option>-->
-<!--            </select>-->
-<!--            <button (click)="exportFile()" class="export-btn">Экспортировать</button>-->
-<!--        </div>-->
-<!--        <div class="import-section">-->
-<!--            <select [(ngModel)]="importFormat" class="import-select">-->
-<!--                <option value="html">Импорт из HTML</option>-->
-<!--                <option value="pdf">Импорт из PDF</option>-->
-<!--            </select>-->
-<!--            <button (click)="importFile()" class="import-btn">Импортировать</button>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <div class="actions">
         <div class="view-list">
             <div class="view-item" [style.background]="view === MarkdownView.ONE_SIDE ? 'var(--text-color)' : 'transparent'">
@@ -37,7 +20,6 @@
             <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
             <app-context-menu *ngIf="showContextMenu" [items]="MarkdownSettingsMenuItems" [x]="menuX" [y]="menuY" (close)="onMenuClose()"></app-context-menu>
         </div>
-<!--        <button (click)="baseTranslate()">Перевести</button>-->
     </div>
 </div>
 
