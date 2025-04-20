@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, SecurityContext, SimpleChanges, ViewChild} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {MarkdownStatistics} from "../../../../interfaces/markdown/markdown-statisctics.interface";
@@ -22,7 +22,10 @@ import {Version} from "../../../../interfaces/version.interface";
 import {ModalBaseComponent} from "../../modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../modals/settings-modal/settings-modal.component";
 import {SettingsService} from "../../../../services/settings.service";
-import {cleanupLinkHandler, initializeLinkHandler} from "../../../../utils/markown/link/link.utils";
+import {LinkType} from "../../../../shared/enums/link-type.enum";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {MarkdownLinkParserService} from "../../../../services/Markdown/markdown-link-parser.service";
+import {ImageMarkdownTemplate} from "../../../../shared/constants/templates/image-markdown.template";
 
 @Component({
   selector: 'app-markdown-content',
@@ -46,9 +49,10 @@ export class MarkdownContentComponent {
 
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('renderedContentRef', { static: false }) renderedContentRef!: ElementRef<HTMLDivElement>;
 
   content: string = '';
-  renderedContent: string = '';
+  renderedContent: SafeHtml | string = '';
   lineNumbers: number[] = [];
   currentLine: number = 1;
 
@@ -82,7 +86,40 @@ export class MarkdownContentComponent {
 
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
-  constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService) {}
+  constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
+              private sanitizer: DomSanitizer) {}
+
+  private updateRenderedContent(): void {
+    const links = this.linkParserService.extractLinksAndImages(this.content);
+    let html = marked(this.content).toString();
+
+    links.forEach((link, index) => {
+      let url = link.url;
+      // if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        const basePath = this.filePath.substring(0, this.filePath.lastIndexOf('/'));
+        url = `${basePath}/${url}`.replace(/\\/g, '/');
+      // }
+
+      if (link.isImage && link.type === LinkType.IMAGE) {
+        html = html.replace(
+            `[<img src="${link.url}" alt="${link.text}">]`,
+            ImageMarkdownTemplate(link.url, `image-${index}`)
+        );
+      } else if (link.type === LinkType.VIDEO) {
+        html = html.replace(
+            `<a href="${link.url}">${link.text}</a>`,
+            `<div appDynamicMedia mediaType="video" src="${url}"></div>`
+        );
+      } else if (link.type === LinkType.AUDIO) {
+        html = html.replace(
+            `<a href="${link.url}">${link.text}</a>`,
+            `<div appDynamicMedia mediaType="audio" src="${url}"></div>`
+        );
+      }
+    });
+
+    this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
+  }
 
   ngAfterViewInit(): void {
     this.updateTextareaHighlight();
@@ -124,10 +161,6 @@ export class MarkdownContentComponent {
     this.updateStats();
     this.updateLineNumbers();
     this.updateCurrentLine(textarea);
-  }
-
-  private updateRenderedContent(): void {
-    this.renderedContent = marked(this.content).toString();
   }
 
   private updateLineNumbers(): void {

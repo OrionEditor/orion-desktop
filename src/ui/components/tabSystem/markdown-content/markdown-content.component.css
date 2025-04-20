@@ -333,7 +333,9 @@
     color: #4CAF50 !important;
 }
 
-.rendered a{
-    /*text-decoration: none!important;*/
-    color: #4CAF50!important;
+:host ::ng-deep .rendered-content app-image-markdown,
+:host ::ng-deep .rendered-content app-video-markdown,
+:host ::ng-deep .rendered-content app-audio-markdown {
+    display: block;
+    margin: 10px 0;
 }

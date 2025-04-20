@@ -36,7 +36,7 @@
                 (click)="onCursorMove($event)"
                 [value]="MarkdownSettingsMenuItems[0].select ? renderedContent : content"
                 placeholder="Введите Markdown здесь..."></textarea>
-        <div class="rendered-content" [innerHTML]="renderedContent"></div>
+        <div #renderedContentRef class="rendered-content" [innerHTML]="renderedContent"></div>
     </div>
 
     <div class="editor-container" *ngIf="view === MarkdownView.ONE_SIDE">

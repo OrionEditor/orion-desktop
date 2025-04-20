@@ -12,11 +12,6 @@ export function handleExternalLinks(event: Event): void {
         openUrl(url).catch((error) => {
             console.error('Failed to open URL:', error);
         });
-
-        // // Проверяем, что это внешняя ссылка (http или https)
-        // if (url.startsWith('http://') || url.startsWith('https://')) {
-        //
-        // }
     }
 }
 
