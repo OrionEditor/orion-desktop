@@ -27,6 +27,8 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 import {MarkdownLinkParserService} from "../../../../services/Markdown/markdown-link-parser.service";
 import {ImageMarkdownTemplate} from "../../../../shared/constants/templates/image-markdown.template";
 import {VideoMarkdownTemplate} from "../../../../shared/constants/templates/video-markdown.template";
+import {AudioMarkdownTemplate} from "../../../../shared/constants/templates/audio-markdown.template";
+import {resolveResource} from "@tauri-apps/api/path";
 
 @Component({
   selector: 'app-markdown-content',
@@ -90,43 +92,62 @@ export class MarkdownContentComponent {
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
               private sanitizer: DomSanitizer) {}
 
-  private updateRenderedContent(): void {
+  private async updateRenderedContent(): Promise<void> {
     const links = this.linkParserService.extractLinksAndImages(this.content);
     let html = marked(this.content).toString();
-    console.log(html);
+    console.log('Parsed HTML:', html);
+    console.log('Links:', links);
 
-    links.forEach((link, index) => {
+    for (const [index, link] of links.entries()) {
       let url = link.url;
-      // if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        const basePath = this.filePath.substring(0, this.filePath.lastIndexOf('/'));
-        url = `${basePath}/${url}`.replace(/\\/g, '/');
-      // }
 
-      if (link.isImage && link.type === LinkType.IMAGE) {
-        html = html.replace(
-            `[<img src="${link.url}" alt="${link.text}">]`,
-            ImageMarkdownTemplate(link.url, `image-${index}`)
-        );
-        html = html.replace(
-            `<img src="${link.url}" alt="${link.text}">`,
-            ImageMarkdownTemplate(link.url, `image-${index}`)
-        );
-      } else if (link.type === LinkType.VIDEO) {
-        html = html.replace(
-            `[<img src="${link.url}" alt="${link.text}">]`,
-            VideoMarkdownTemplate(link.url, `video-${index}`)
-        );
-        html = html.replace(
-            `<img src="${link.url}" alt="${link.text}">`,
-            VideoMarkdownTemplate(link.url, `video-${index}`)
-        );
-      } else if (link.type === LinkType.AUDIO) {
-        html = html.replace(
-            `<a href="${link.url}">${link.text}</a>`,
-            `<div appDynamicMedia mediaType="audio" src="${url}"></div>`
-        );
+      try {
+        link.url = decodeURI(link.url);
+      } catch (e) {
       }
-    });
+
+      // Если это локальный путь, преобразуем его в file:///
+      if (!link.url.startsWith('http://') && !link.url.startsWith('https://')) {
+        const basePath = this.filePath.substring(0, this.filePath.lastIndexOf('/'));
+        try {
+          // Формируем абсолютный путь
+          const localPath = `${basePath}/${link.url}`.replace(/\\/g, '/');
+          const encodedPath = encodeURI(localPath);
+          link.url = `file:///${encodedPath}`;
+        } catch (e) {
+        }
+      }
+
+          if (link.isImage && link.type === LinkType.IMAGE) {
+            html = html.replace(
+
+            `[<img src="${link.url}" alt="${link.text}">]`,
+                ImageMarkdownTemplate(link.url, `image-${index}`)
+            );
+            html = html.replace(
+                `<img src="${link.url}" alt="${link.text}">`,
+                ImageMarkdownTemplate(link.url, `image-${index}`)
+            );
+          } else if (link.type === LinkType.VIDEO) {
+            html = html.replace(
+                `[<img src="${link.url}" alt="${link.text}">]`,
+                VideoMarkdownTemplate(link.url, `video-${index}`)
+            );
+            html = html.replace(
+                `<img src="${link.url}" alt="${link.text}">`,
+                VideoMarkdownTemplate(link.url, `video-${index}`)
+            );
+          } else if (link.type === LinkType.AUDIO) {
+            html = html.replace(
+                `[![${link.text}](${url})]`,
+              AudioMarkdownTemplate(link.url, `audio-${index}`)
+            );
+            html = html.replace(
+                `[![${link.text}](${link.url})]`,
+                AudioMarkdownTemplate(link.url, `audio-${index}`)
+            );
+          }
+    }
 
     this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
   }
