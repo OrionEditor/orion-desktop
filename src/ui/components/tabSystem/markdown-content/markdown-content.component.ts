@@ -26,6 +26,7 @@ import {LinkType} from "../../../../shared/enums/link-type.enum";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 import {MarkdownLinkParserService} from "../../../../services/Markdown/markdown-link-parser.service";
 import {ImageMarkdownTemplate} from "../../../../shared/constants/templates/image-markdown.template";
+import {VideoMarkdownTemplate} from "../../../../shared/constants/templates/video-markdown.template";
 
 @Component({
   selector: 'app-markdown-content',
@@ -92,6 +93,7 @@ export class MarkdownContentComponent {
   private updateRenderedContent(): void {
     const links = this.linkParserService.extractLinksAndImages(this.content);
     let html = marked(this.content).toString();
+    console.log(html);
 
     links.forEach((link, index) => {
       let url = link.url;
@@ -105,10 +107,18 @@ export class MarkdownContentComponent {
             `[<img src="${link.url}" alt="${link.text}">]`,
             ImageMarkdownTemplate(link.url, `image-${index}`)
         );
+        html = html.replace(
+            `<img src="${link.url}" alt="${link.text}">`,
+            ImageMarkdownTemplate(link.url, `image-${index}`)
+        );
       } else if (link.type === LinkType.VIDEO) {
         html = html.replace(
-            `<a href="${link.url}">${link.text}</a>`,
-            `<div appDynamicMedia mediaType="video" src="${url}"></div>`
+            `[<img src="${link.url}" alt="${link.text}">]`,
+            VideoMarkdownTemplate(link.url, `video-${index}`)
+        );
+        html = html.replace(
+            `<img src="${link.url}" alt="${link.text}">`,
+            VideoMarkdownTemplate(link.url, `video-${index}`)
         );
       } else if (link.type === LinkType.AUDIO) {
         html = html.replace(
