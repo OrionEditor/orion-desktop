@@ -29,6 +29,10 @@ import {ImageMarkdownTemplate} from "../../../../shared/constants/templates/imag
 import {VideoMarkdownTemplate} from "../../../../shared/constants/templates/video-markdown.template";
 import {AudioMarkdownTemplate} from "../../../../shared/constants/templates/audio-markdown.template";
 import {resolveResource} from "@tauri-apps/api/path";
+import {CodeMarkdownTemplate} from "../../../../shared/constants/templates/code-markdown.template";
+import {MarkdownCodeParserService} from "../../../../services/Parsers/md-code.parser.service";
+import {initializeLinkHandler} from "../../../../utils/markown/link/link.utils";
+import hljs from 'highlight.js';
 
 @Component({
   selector: 'app-markdown-content',
@@ -90,70 +94,170 @@ export class MarkdownContentComponent {
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
-              private sanitizer: DomSanitizer) {}
+              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService) {}
+
+  // private async updateRenderedContent(): Promise<void> {
+  //   const links = this.linkParserService.extractLinksAndImages(this.content);
+  //   let html = marked(this.content).toString();
+  //   console.log('Parsed HTML:', html);
+  //   console.log('Links:', links);
+  //
+  //   for (const [index, link] of links.entries()) {
+  //     let url = link.url;
+  //
+  //     try {
+  //       link.url = decodeURI(link.url);
+  //     } catch (e) {
+  //     }
+  //
+  //     // Если это локальный путь, преобразуем его в file:///
+  //     if (!link.url.startsWith('http://') && !link.url.startsWith('https://')) {
+  //       const basePath = this.filePath.substring(0, this.filePath.lastIndexOf('/'));
+  //       try {
+  //         // Формируем абсолютный путь
+  //         const localPath = `${basePath}/${link.url}`.replace(/\\/g, '/');
+  //         const encodedPath = encodeURI(localPath);
+  //         link.url = `file:///${encodedPath}`;
+  //       } catch (e) {
+  //       }
+  //     }
+  //
+  //         if (link.isImage && link.type === LinkType.IMAGE) {
+  //           html = html.replace(
+  //
+  //           `[<img src="${link.url}" alt="${link.text}">]`,
+  //               ImageMarkdownTemplate(link.url, `image-${index}`)
+  //           );
+  //           html = html.replace(
+  //               `<img src="${link.url}" alt="${link.text}">`,
+  //               ImageMarkdownTemplate(link.url, `image-${index}`)
+  //           );
+  //         } else if (link.type === LinkType.VIDEO) {
+  //           html = html.replace(
+  //               `[<img src="${link.url}" alt="${link.text}">]`,
+  //               VideoMarkdownTemplate(link.url, `video-${index}`)
+  //           );
+  //           html = html.replace(
+  //               `<img src="${link.url}" alt="${link.text}">`,
+  //               VideoMarkdownTemplate(link.url, `video-${index}`)
+  //           );
+  //         } else if (link.type === LinkType.AUDIO) {
+  //           html = html.replace(
+  //               `[![${link.text}](${url})]`,
+  //             AudioMarkdownTemplate(link.url, `audio-${index}`)
+  //           );
+  //           html = html.replace(
+  //               `[![${link.text}](${link.url})]`,
+  //               AudioMarkdownTemplate(link.url, `audio-${index}`)
+  //           );
+  //         }
+  //   }
+  //
+  //   this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
+  // }
+  //
+  // ngAfterViewInit(): void {
+  //   this.updateTextareaHighlight();
+  // }
 
   private async updateRenderedContent(): Promise<void> {
-    const links = this.linkParserService.extractLinksAndImages(this.content);
     let html = marked(this.content).toString();
     console.log('Parsed HTML:', html);
+
+    // Обработка ссылок и медиа
+    const links = this.linkParserService.extractLinksAndImages(this.content);
     console.log('Links:', links);
 
     for (const [index, link] of links.entries()) {
       let url = link.url;
 
       try {
-        link.url = decodeURI(link.url);
+        url = decodeURI(url);
       } catch (e) {
+        console.error(`Failed to decode URL: ${url}`, e);
       }
 
-      // Если это локальный путь, преобразуем его в file:///
-      if (!link.url.startsWith('http://') && !link.url.startsWith('https://')) {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
         const basePath = this.filePath.substring(0, this.filePath.lastIndexOf('/'));
         try {
-          // Формируем абсолютный путь
-          const localPath = `${basePath}/${link.url}`.replace(/\\/g, '/');
+          const localPath = `${basePath}/${url}`.replace(/\\/g, '/');
           const encodedPath = encodeURI(localPath);
-          link.url = `file:///${encodedPath}`;
+          url = `file:///${encodedPath}`;
+          console.log(`Transformed local path: ${link.url} -> ${url}`);
         } catch (e) {
+          console.error(`Failed to transform path for ${url}`, e);
         }
       }
 
-          if (link.isImage && link.type === LinkType.IMAGE) {
-            html = html.replace(
+              if (link.isImage && link.type === LinkType.IMAGE) {
+                html = html.replace(
 
-            `[<img src="${link.url}" alt="${link.text}">]`,
-                ImageMarkdownTemplate(link.url, `image-${index}`)
-            );
-            html = html.replace(
-                `<img src="${link.url}" alt="${link.text}">`,
-                ImageMarkdownTemplate(link.url, `image-${index}`)
-            );
-          } else if (link.type === LinkType.VIDEO) {
-            html = html.replace(
                 `[<img src="${link.url}" alt="${link.text}">]`,
-                VideoMarkdownTemplate(link.url, `video-${index}`)
-            );
-            html = html.replace(
-                `<img src="${link.url}" alt="${link.text}">`,
-                VideoMarkdownTemplate(link.url, `video-${index}`)
-            );
-          } else if (link.type === LinkType.AUDIO) {
-            html = html.replace(
-                `[![${link.text}](${url})]`,
-              AudioMarkdownTemplate(link.url, `audio-${index}`)
-            );
-            html = html.replace(
-                `[![${link.text}](${link.url})]`,
-                AudioMarkdownTemplate(link.url, `audio-${index}`)
-            );
-          }
+                    ImageMarkdownTemplate(link.url, `image-${index}`)
+                );
+                html = html.replace(
+                    `<img src="${link.url}" alt="${link.text}">`,
+                    ImageMarkdownTemplate(link.url, `image-${index}`)
+                );
+              } else if (link.type === LinkType.VIDEO) {
+                html = html.replace(
+                    `[<img src="${link.url}" alt="${link.text}">]`,
+                    VideoMarkdownTemplate(link.url, `video-${index}`)
+                );
+                html = html.replace(
+                    `<img src="${link.url}" alt="${link.text}">`,
+                    VideoMarkdownTemplate(link.url, `video-${index}`)
+                );
+              } else if (link.type === LinkType.AUDIO) {
+                html = html.replace(
+                    `[![${link.text}](${url})]`,
+                  AudioMarkdownTemplate(link.url, `audio-${index}`)
+                );
+                html = html.replace(
+                    `[![${link.text}](${link.url})]`,
+                    AudioMarkdownTemplate(link.url, `audio-${index}`)
+                );
+              }
     }
 
+
+    // Обработка блоков кода
+    const codeBlocks = this.codeParserService.extractCodeBlocks(this.content);
+
+    codeBlocks.forEach((block, index) => {
+      const codeBlockHtml = marked(`\`\`\`${block.language}\n${block.code}\n\`\`\``).toString();
+      const escapedCode = block.code.replace(/[&<>"']/g, (match) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[match]!));
+      html = html.replace(
+          codeBlockHtml,
+          CodeMarkdownTemplate(escapedCode, block.language, `code-${index}`)
+      );
+    });
     this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   ngAfterViewInit(): void {
     this.updateTextareaHighlight();
+    if (this.renderedContentRef) {
+      initializeLinkHandler(this.renderedContentRef.nativeElement);
+      // Применяем подсветку Highlight.js
+      hljs.highlightAll();
+
+      // Отладка: проверяем контейнеры
+      const imageContainers = this.renderedContentRef.nativeElement.querySelectorAll('.image-container');
+      const videoContainers = this.renderedContentRef.nativeElement.querySelectorAll('.video-container');
+      const audioContainers = this.renderedContentRef.nativeElement.querySelectorAll('.audio-container');
+      const codeContainers = this.renderedContentRef.nativeElement.querySelectorAll('.code-container');
+      console.log('Image containers found:', imageContainers.length);
+      console.log('Video containers found:', videoContainers.length);
+      console.log('Audio containers found:', audioContainers.length);
+      console.log('Code containers found:', codeContainers.length);
+    }
   }
 
   async ngOnInit() {
@@ -161,6 +265,7 @@ export class MarkdownContentComponent {
     this.markdownService.content$.subscribe(content => {
       this.content = content;
       this.updateRenderedContent();
+      hljs.highlightAll();
       this.updateLineNumbers();
       this.updateStats();
       this.updateLines();
@@ -184,11 +289,11 @@ export class MarkdownContentComponent {
     }
   }
 
-  onContentChange(event: Event): void {
+  async onContentChange(event: Event){
     const textarea = event.target as HTMLTextAreaElement;
     this.content = textarea.value;
     this.markdownService.saveMarkdownFile(this.filePath, this.content).then();
-    this.updateRenderedContent();
+    await this.updateRenderedContent();
     this.updateStats();
     this.updateLineNumbers();
     this.updateCurrentLine(textarea);
