@@ -223,7 +223,6 @@ export class MarkdownContentComponent {
 
     // Обработка блоков кода
     const codeBlocks = this.codeParserService.extractCodeBlocks(this.content);
-
     codeBlocks.forEach((block, index) => {
       const codeBlockHtml = marked(`\`\`\`${block.language}\n${block.code}\n\`\`\``).toString();
       const escapedCode = block.code.replace(/[&<>"']/g, (match) => ({
@@ -233,12 +232,15 @@ export class MarkdownContentComponent {
         '"': '&quot;',
         "'": '&#39;'
       }[match]!));
-      html = html.replace(
+      html =  html.replace(
           codeBlockHtml,
           CodeMarkdownTemplate(escapedCode, block.language, `code-${index}`)
       );
     });
     this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
+    setTimeout(() => {
+      hljs.highlightAll();
+    }, 100)
   }
 
   ngAfterViewInit(): void {
@@ -247,7 +249,6 @@ export class MarkdownContentComponent {
       initializeLinkHandler(this.renderedContentRef.nativeElement);
       // Применяем подсветку Highlight.js
       hljs.highlightAll();
-
       // Отладка: проверяем контейнеры
       const imageContainers = this.renderedContentRef.nativeElement.querySelectorAll('.image-container');
       const videoContainers = this.renderedContentRef.nativeElement.querySelectorAll('.video-container');
@@ -265,7 +266,6 @@ export class MarkdownContentComponent {
     this.markdownService.content$.subscribe(content => {
       this.content = content;
       this.updateRenderedContent();
-      hljs.highlightAll();
       this.updateLineNumbers();
       this.updateStats();
       this.updateLines();

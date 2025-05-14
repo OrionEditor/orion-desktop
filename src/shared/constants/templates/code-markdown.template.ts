@@ -15,7 +15,7 @@ return `
         </button>
         </div>
       <div class="line-numbers">${lineNumbers}</div>
-      <pre><code class="hljs ${hljsLanguage}">${code}</code></pre>
+      <pre><code class="language-${hljsLanguage}">${code}</code></pre>
       <style>
         .code-container#${id} {
           position: relative;
@@ -42,7 +42,7 @@ return `
           user-select: none;
           display: flex;
           flex-direction: column;
-          line-height: 1.5em;
+          line-height: 1.6em;
         }
         .code-container#${id} .line-numbers span {
           display: block;
