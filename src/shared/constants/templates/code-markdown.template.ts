@@ -1,18 +1,15 @@
-import {copyToClipboard} from "../../../utils/clipboard.utils";
 export const CodeMarkdownTemplate = (code: string, language: string | null, id: string) => {
   const lines = code.split('\n');
   const lineNumbers = lines.map((_, i) => `<span>${i + 1}</span>`).join('');
 const hljsLanguage = language ? language : 'plaintext';
 
-console.log(hljsLanguage);
-
 return `
     <div class="code-container" id="${id}">
         <div class="code-header">
         <span class="code-lang">${hljsLanguage}</span>
-        <button class="copy-button" onclick="copyToClipboard('${code.replace(/'/g, "\\'")}')">
-            <img src="assets/icons/svg/md-templates/copy.svg" alt="copy">
-        </button>
+<!--        <button class="copy-button" onclick="navigator.clipboard.writeText(code)">-->
+<!--            <img src="assets/icons/svg/md-templates/copy.svg" alt="copy">-->
+<!--        </button>-->
         </div>
       <div class="line-numbers">${lineNumbers}</div>
       <pre><code class="language-${hljsLanguage}">${code}</code></pre>
@@ -105,6 +102,7 @@ return `
         }
         
         .code-container#${id} .copy-button {
+        background: transparent;
           /*background: #4CAF50;*/
           /*color: #ffffff;*/
           border: none;
