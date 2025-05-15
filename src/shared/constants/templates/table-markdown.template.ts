@@ -29,23 +29,21 @@ return `
         .table-container#${id} {
           position: relative;
           display: block;
-          margin: 20px 0;
-          max-width: 100%;
+          margin: 5px 0;
           overflow-x: auto;
           border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          background: #1a1a1a;
-          padding: 8px;
+          /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);*/
+          background: transparent;
+          padding: 4px;
           font-family: 'Fira Code', monospace;
         }
         .table-container#${id} table {
-          width: 100%;
           border-collapse: collapse;
           color: #ffffff;
         }
         .table-container#${id} th,
         .table-container#${id} td {
-          padding: 12px;
+          padding: 5px;
           text-align: left;
           border-bottom: 1px solid rgba(76, 175, 80, 0.3);
         }

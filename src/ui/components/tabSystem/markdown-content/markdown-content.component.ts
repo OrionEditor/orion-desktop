@@ -33,6 +33,8 @@ import {CodeMarkdownTemplate} from "../../../../shared/constants/templates/code-
 import {MarkdownCodeParserService} from "../../../../services/Parsers/md-code.parser.service";
 import {initializeLinkHandler} from "../../../../utils/markown/link/link.utils";
 import hljs from 'highlight.js';
+import {TableMarkdownTemplate} from "../../../../shared/constants/templates/table-markdown.template";
+import {MarkdownTableParserService} from "../../../../services/Parsers/md-table.parser.service";
 
 @Component({
   selector: 'app-markdown-content',
@@ -94,7 +96,7 @@ export class MarkdownContentComponent {
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
-              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService) {}
+              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService) {}
 
   // private async updateRenderedContent(): Promise<void> {
   //   const links = this.linkParserService.extractLinksAndImages(this.content);
@@ -237,6 +239,17 @@ export class MarkdownContentComponent {
           CodeMarkdownTemplate(escapedCode, block.language, `code-${index}`)
       );
     });
+
+      // Обработка таблиц
+      const tableBlocks = this.tableParserService.extractTableBlocks(this.content);
+      tableBlocks.forEach((block, index) => {
+          const tableBlockHtml = marked(this.content.slice(block.startIndex, block.endIndex)).toString();
+          html = html.replace(
+              tableBlockHtml,
+              TableMarkdownTemplate(block.headers, block.rows, `table-${index}`)
+          );
+      });
+
     this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
     setTimeout(() => {
       hljs.highlightAll();
@@ -249,15 +262,17 @@ export class MarkdownContentComponent {
       initializeLinkHandler(this.renderedContentRef.nativeElement);
       // Применяем подсветку Highlight.js
       hljs.highlightAll();
-      // Отладка: проверяем контейнеры
-      const imageContainers = this.renderedContentRef.nativeElement.querySelectorAll('.image-container');
-      const videoContainers = this.renderedContentRef.nativeElement.querySelectorAll('.video-container');
-      const audioContainers = this.renderedContentRef.nativeElement.querySelectorAll('.audio-container');
-      const codeContainers = this.renderedContentRef.nativeElement.querySelectorAll('.code-container');
-      console.log('Image containers found:', imageContainers.length);
-      console.log('Video containers found:', videoContainers.length);
-      console.log('Audio containers found:', audioContainers.length);
-      console.log('Code containers found:', codeContainers.length);
+
+        const imageContainers = this.renderedContentRef.nativeElement.querySelectorAll('.image-container');
+        const videoContainers = this.renderedContentRef.nativeElement.querySelectorAll('.video-container');
+        const audioContainers = this.renderedContentRef.nativeElement.querySelectorAll('.audio-container');
+        const codeContainers = this.renderedContentRef.nativeElement.querySelectorAll('.code-container');
+        const tableContainers = this.renderedContentRef.nativeElement.querySelectorAll('.table-container');
+        console.log('Image containers found:', imageContainers.length);
+        console.log('Video containers found:', videoContainers.length);
+        console.log('Audio containers found:', audioContainers.length);
+        console.log('Code containers found:', codeContainers.length);
+        console.log('Table containers found:', tableContainers.length);
     }
   }
 
