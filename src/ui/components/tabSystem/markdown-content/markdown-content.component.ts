@@ -240,15 +240,20 @@ export class MarkdownContentComponent {
       );
     });
 
-      // Обработка таблиц
-      const tableBlocks = this.tableParserService.extractTableBlocks(this.content);
-      tableBlocks.forEach((block, index) => {
-          const tableBlockHtml = marked(this.content.slice(block.startIndex, block.endIndex)).toString();
-          html = html.replace(
-              tableBlockHtml,
-              TableMarkdownTemplate(block.headers, block.rows, `table-${index}`)
-          );
-      });
+    // Обработка таблиц
+    const tableBlocks = this.tableParserService.extractTableBlocks(this.content);
+    console.log('Table Blocks:', tableBlocks);
+    tableBlocks.forEach((block, index) => {
+      const tableMarkdown = this.content.slice(block.startIndex, block.endIndex);
+      console.log('Table Markdown:', tableMarkdown);
+      const tableBlockHtml = marked(tableMarkdown).toString();
+      console.log('Table HTML:', tableBlockHtml);
+      html = html.replace(
+          tableBlockHtml,
+          TableMarkdownTemplate(block.headers, block.rows, `table-${index}`)
+      );
+    });
+
 
     this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
     setTimeout(() => {

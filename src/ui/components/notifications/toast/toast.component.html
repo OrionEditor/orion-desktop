@@ -1,0 +1,6 @@
+<div class="toast" [ngClass]="type" *ngIf="isVisible">
+    <div class="toast-content">
+        <h3 *ngIf="title">{{ title }}</h3>
+        <p *ngIf="description">{{ description }}</p>
+    </div>
+</div>
