@@ -20,8 +20,8 @@
                 <app-logo-container width="150px" height="150px"/>
                 <h1 class="editor-title">{{'app.name' | translate}}</h1>
                 <app-language-selector id="start-lang-selector"/>
-                <app-avatar *ngIf="hasAuth" id="start-avatar"/>
-                <app-fill-button *ngIf="!hasAuth" id="open-login-page" [buttonText]="'startPage.buttons.login' | translate" [colorBtn]="success" (click)="openLoginPage()"/>
+                <app-avatar *ngIf="hasAuth && hasAuth.length > 0" id="start-avatar"/>
+                <app-fill-button *ngIf="!hasAuth || hasAuth.length === 0" id="open-login-page" [buttonText]="'startPage.buttons.login' | translate" [colorBtn]="success" (click)="openLoginPage()"/>
             </div>
             <div class="action-buttons">
                 <div class="action-item">

@@ -69,8 +69,13 @@
         <div *ngIf="selectedChip === 'account'">
             <h3>Учётная запись</h3>
             <div class="login-section">
-                <p>Войдите, чтобы синхронизировать ваши данные</p>
-                <app-fill-button buttonText="Войти" (click)="login()" />
+                <ng-container *ngIf="hasAuth && hasAuth.length > 0">
+                    <p>Войдите, чтобы синхронизировать ваши данные</p>
+                    <app-fill-button buttonText="Войти" (click)="login()" />
+                </ng-container>
+                <ng-container *ngIf="!hasAuth">
+                    <app-avatar [isTextID]="true"/>
+                </ng-container>
             </div>
         </div>
     </div>

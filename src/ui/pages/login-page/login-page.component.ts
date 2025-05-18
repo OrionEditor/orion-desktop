@@ -22,6 +22,8 @@ import {ToastService} from "../../../services/Toasts/toast.service";
 import {WINDOWS_LABELS} from "../../../shared/enums/windows-labels.enum";
 import {WindowService} from "../../../services/window.service";
 import {listen} from "@tauri-apps/api/event";
+import {StoreService} from "../../../services/Store/store.service";
+import {StoreKeys} from "../../../shared/constants/vault/store.keys";
 
 @Component({
   selector: 'app-login-page',
@@ -79,6 +81,7 @@ export class LoginPageComponent {
     this.authService.login(loginData).subscribe({
       next: async (response) => {
         if(response.token){
+          await StoreService.save(StoreKeys.ACCESS_TOKEN, response.token);
           await this.saveToken(response.token);
 
           await this.reloadStartPage();

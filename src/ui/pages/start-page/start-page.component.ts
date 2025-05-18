@@ -22,7 +22,8 @@ import {WindowService} from "../../../services/window.service";
 import {listen} from "@tauri-apps/api/event";
 import {TokenService} from "../../../services/Token/token.service";
 import {AvatarComponent} from "../../components/avatar/avatar.component";
-
+import {StoreKeys} from "../../../shared/constants/vault/store.keys";
+import {StoreService} from "../../../services/Store/store.service";
 @Component({
   selector: 'app-start-page',
   standalone: true,
@@ -34,7 +35,7 @@ export class StartPageComponent {
   recentProjects: { name: string, path: string }[] = [];
   currentTheme: string = "";
   currentLang: string = "";
-  hasAuth: boolean = false;
+  hasAuth: string | null = null;
   constructor(protected configService: ConfigService, private renderer: Renderer2, private languageService: LanguageService, private router: Router, private dialogService: DialogService, private translateService: TranslateService, private windowService: WindowService) {}
 
   async ngOnInit() {
@@ -69,12 +70,15 @@ export class StartPageComponent {
       gapRightSection();
     }
 
-    this.hasAuth = await TokenService.hasAuthToken();
-
     await listen('reload-window', () => {
       // Выполняем перезагрузку содержимого
       location.reload();
     });
+
+    const token = await TokenService.getAuthToken();
+    this.hasAuth = token;
+    await StoreService.save(StoreKeys.ACCESS_TOKEN, token ? token : '');
+
   }
 
   async loadRecentProjects() {
@@ -132,4 +136,5 @@ export class StartPageComponent {
 
 
   protected readonly success = success;
+  protected readonly StoreService = StoreService;
 }

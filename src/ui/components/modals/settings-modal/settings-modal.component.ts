@@ -14,6 +14,9 @@ import {AppConstConfig} from "../../../../shared/constants/app/app.const";
 import {Language} from "../../../../assets/localization/languages";
 import {InputTextFieldComponent} from "../../inputs/input-text-field/input-text-field.component";
 import {CheckboxComponent} from "../../inputs/checkbox/checkbox.component";
+import {StoreService} from "../../../../services/Store/store.service";
+import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
+import {AvatarComponent} from "../../avatar/avatar.component";
 
 @Component({
   selector: 'app-settings-modal',
@@ -24,7 +27,8 @@ import {CheckboxComponent} from "../../inputs/checkbox/checkbox.component";
     NgIf,
     ThemeToggleComponent,
     InputTextFieldComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    AvatarComponent
   ],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.css'
@@ -33,6 +37,7 @@ export class SettingsModalComponent {
   @Input() tabService!: TabService;
   selectedChip: string = 'general';
   currentLang: string = Language.RU;
+  hasAuth: string | null = null;
 
   constructor(private windowService: WindowService, private configService: ConfigService, private languageService: LanguageService) {
     MarkdownFilesService.initialize().then(() => this.loadInitialFiles());
@@ -48,6 +53,8 @@ export class SettingsModalComponent {
 
     this.languageService.setDefaultLang(this.currentLang);
     this.languageService.useLang(this.currentLang);
+
+    this.hasAuth = await StoreService.get(StoreKeys.ACCESS_TOKEN);
   }
 
   async openTab(type: MarkdownFilesType): Promise<void> {

@@ -19,6 +19,9 @@ import {MarkdownFiles} from "../interfaces/markdown/markdownFiles.interface";
 import {invoke} from "@tauri-apps/api/core";
 import {MarkdownFilesService} from "../services/Markdown/markdown-files.service";
 import {cleanupLinkHandler, initializeLinkHandler} from "../utils/markown/link/link.utils";
+import {StoreService} from "../services/Store/store.service";
+import {StoreKeys} from "../shared/constants/vault/store.keys";
+import {TokenService} from "../services/Token/token.service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/localization/i18n/', '.json');
@@ -46,6 +49,9 @@ export class AppComponent {
     initializeLinkHandler(document.body);
     await this.configService.loadConfig();
     this.windowLabel = await this.windowService.getWindowLabel();
+
+    const token = await TokenService.getAuthToken();
+    await StoreService.save(StoreKeys.ACCESS_TOKEN, token ? token : '');
   }
   ngOnDestroy() {
     cleanupLinkHandler(document.body);
