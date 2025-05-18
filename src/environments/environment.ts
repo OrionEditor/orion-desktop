@@ -7,6 +7,12 @@ export const environment = {
             verifyEmail: 'verify-email',
             login: 'login',
             register: 'register',
+        },
+        refreshToken: {
+            refresh: 'refresh'
+        },
+        user: {
+            get_profile: 'user/profile'
         }
     }
 };

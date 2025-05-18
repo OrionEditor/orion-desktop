@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import {StartPageComponent} from "../ui/pages/start-page/start-page.component";
 import {ConfigService} from "../services/configService";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {WindowService} from "../services/window.service";
 import {CreateProjectPageComponent} from "../ui/pages/create-project-page/create-project-page.component";
@@ -22,6 +22,7 @@ import {cleanupLinkHandler, initializeLinkHandler} from "../utils/markown/link/l
 import {StoreService} from "../services/Store/store.service";
 import {StoreKeys} from "../shared/constants/vault/store.keys";
 import {TokenService} from "../services/Token/token.service";
+import {ProfileService} from "../services/Routes/profile/profile.service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/localization/i18n/', '.json');
@@ -30,16 +31,18 @@ export function HttpLoaderFactory(http: HttpClient) {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartPageComponent, CreateProjectPageComponent, ProjectPageComponent, LoginPageComponent, UploadModalComponent, ToastComponent, ProfilePageComponent],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, CreateProjectPageComponent, ProjectPageComponent, LoginPageComponent, UploadModalComponent, ToastComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   windowLabel: string = '';
 
-  constructor(private configService: ConfigService, private windowService: WindowService, protected uploadService: UploadService, private apiEndpointsService: ApiEndpointsService) {
+  constructor(private configService: ConfigService, private windowService: WindowService, protected uploadService: UploadService, private apiEndpointsService: ApiEndpointsService, private http: HttpClient) {
     this.initializeMarkdownFiles();
   }
+
+  private profileService = new ProfileService(this.http);
 
   async initializeMarkdownFiles(): Promise<void> {
     await MarkdownFilesService.initialize();
@@ -52,6 +55,9 @@ export class AppComponent {
 
     const token = await TokenService.getAuthToken();
     await StoreService.save(StoreKeys.ACCESS_TOKEN, token ? token : '');
+
+    await this.profileService.getProfile();
+
   }
   ngOnDestroy() {
     cleanupLinkHandler(document.body);

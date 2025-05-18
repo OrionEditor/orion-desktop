@@ -5,6 +5,12 @@ export let API_V1_ENDPOINTS: any = {
         verifyEmail: environment.endpoints.auth.verifyEmail,
         login: environment.endpoints.auth.login,
         register: environment.endpoints.auth.register
+    },
+    REFRESH_TOKEN: {
+        REFRESH:environment.endpoints.refreshToken.refresh
+    },
+    USER: {
+        GET_PROFILE: environment.endpoints.user.get_profile
     }
 };
 
