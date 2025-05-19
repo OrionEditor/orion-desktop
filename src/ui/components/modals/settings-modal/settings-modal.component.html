@@ -76,6 +76,9 @@
                 <ng-container *ngIf="hasAuth && hasAuth.length > 0">
                     <app-avatar [isTextID]="true"/>
                 </ng-container>
+                <ng-container *ngIf="hasAuth && hasAuth.length > 0">
+                    <app-fill-button buttonText="Выйти из аккаунта" [colorBtn]="danger" (click)="logout()"/>
+                </ng-container>
             </div>
         </div>
     </div>

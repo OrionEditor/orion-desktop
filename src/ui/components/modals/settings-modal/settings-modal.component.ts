@@ -17,6 +17,8 @@ import {CheckboxComponent} from "../../inputs/checkbox/checkbox.component";
 import {StoreService} from "../../../../services/Store/store.service";
 import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
 import {AvatarComponent} from "../../avatar/avatar.component";
+import {danger} from "../../../../styles/var/globalColors";
+import {TokenService} from "../../../../services/Token/token.service";
 
 @Component({
   selector: 'app-settings-modal',
@@ -97,6 +99,13 @@ export class SettingsModalComponent {
     SettingsService.setLineNumbers(event);
   }
 
+  async logout(){
+    this.hasAuth = null;
+    await TokenService.clearAuthToken();
+    await StoreService.remove(StoreKeys.ACCESS_TOKEN);
+  }
+
   protected readonly MarkdownFilesType = MarkdownFilesType;
   protected readonly SettingsService = SettingsService;
+    protected readonly danger = danger;
 }
