@@ -31,7 +31,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, StartPageComponent, CreateProjectPageComponent, ProjectPageComponent, LoginPageComponent, UploadModalComponent, ToastComponent, HttpClientModule],
+  imports: [CommonModule, RouterOutlet, StartPageComponent, CreateProjectPageComponent, ProjectPageComponent, LoginPageComponent, UploadModalComponent, ToastComponent, HttpClientModule, ProfilePageComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -59,6 +59,11 @@ export class AppComponent {
     await this.profileService.getProfile();
 
   }
+
+  async ngOnChanges(){
+    await this.profileService.getProfile();
+  }
+
   ngOnDestroy() {
     cleanupLinkHandler(document.body);
   }

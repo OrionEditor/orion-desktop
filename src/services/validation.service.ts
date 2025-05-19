@@ -16,8 +16,8 @@ export class ValidationService {
     validatePassword(password: string): boolean {
         const minLength = 8;
         const hasUpperCase = /[A-Z]/.test(password); // Проверка на заглавную букву
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Проверка на спецсимвол
-        return !!(password && password.length >= minLength && hasUpperCase && hasSpecialChar);
+        // const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password); // Проверка на спецсимвол
+        return !!(password && password.length >= minLength && hasUpperCase);
     }
 
     validateFileFolderName(fileName: string): boolean {

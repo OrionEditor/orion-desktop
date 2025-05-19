@@ -68,7 +68,7 @@ export class StoreService {
         this.store = await load('auth.store', { autoSave: false });
     }
 
-    static async save(key: string, value: string): Promise<void> {
+    static async save(key: string, value: string | any): Promise<void> {
         if (!this.store) await this.initialize();
         try {
             const encrypted = await encryptData(value, this.encryptionKey!);

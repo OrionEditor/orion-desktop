@@ -1,1 +1,34 @@
-<p>profile-page works!</p>
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Градиентный заголовок -->
+        <div class="card-header"></div>
+
+        <!-- Контент -->
+        <div class="card-content">
+            <!-- Аватар -->
+            <div class="avatar-container">
+                <div class="avatar">
+                    <span>{{username ? username.slice(0, 1) : ''}}</span>
+                </div>
+            </div>
+
+            <!-- Информация -->
+            <div class="user-info">
+                <h1 class="username">{{ username }}</h1>
+                <p class="user-role">Пользователь</p>
+            </div>
+
+            <!-- Поля данных -->
+            <div class="data-fields">
+                <div class="data-field">
+                    <label class="field-label">Имя пользователя</label>
+                    <p class="field-value">{{ username }}</p>
+                </div>
+                <div class="data-field">
+                    <label class="field-label">Email</label>
+                    <p class="field-value">{{ email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

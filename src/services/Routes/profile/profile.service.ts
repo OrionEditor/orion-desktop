@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import {Profile} from "../../../interfaces/data/profile.interface";
 import {AuthHeadersService} from "../auth-headers.service";
@@ -31,6 +31,10 @@ export class ProfileService {
                 map(async(response: any) => {
                     if (response.id && response.email) {
                         await StoreService.save(StoreKeys.PROFILE_DATA, response);
+                        await StoreService.save(StoreKeys.USER_ID, response.uuid);
+                        await StoreService.save(StoreKeys.USERNAME, response.username);
+                        await StoreService.save(StoreKeys.EMAIL, response.email);
+
                         return response as Profile;
                     } else if (response.error) {
                         throw new Error(response.error);
