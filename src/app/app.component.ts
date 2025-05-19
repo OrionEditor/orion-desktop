@@ -23,6 +23,8 @@ import {StoreService} from "../services/Store/store.service";
 import {StoreKeys} from "../shared/constants/vault/store.keys";
 import {TokenService} from "../services/Token/token.service";
 import {ProfileService} from "../services/Routes/profile/profile.service";
+import {NetworkService} from "../services/Network/network.service";
+import {listen} from "@tauri-apps/api/event";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/localization/i18n/', '.json');
@@ -58,6 +60,14 @@ export class AppComponent {
 
     await this.profileService.getProfile();
 
+    NetworkService.initialize();
+
+    listen('reload-windows', () => {
+      console.log('Получено событие перезагрузки, перезагружаем окно');
+      window.location.reload();
+    }).catch((err) => {
+      console.error('Ошибка при установке слушателя события:', err);
+    });
   }
 
   async ngOnChanges(){

@@ -103,6 +103,7 @@ export class SettingsModalComponent {
     this.hasAuth = null;
     await TokenService.clearAuthToken();
     await StoreService.remove(StoreKeys.ACCESS_TOKEN);
+    await WindowService.reloadAllWindows();
   }
 
   protected readonly MarkdownFilesType = MarkdownFilesType;

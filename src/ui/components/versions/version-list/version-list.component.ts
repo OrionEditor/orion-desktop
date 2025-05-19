@@ -3,6 +3,12 @@ import {Version} from "../../../../interfaces/version.interface";
 import {NgForOf, NgIf} from "@angular/common";
 import {getFileIcon} from "../../../../utils/file-icon.utils";
 import {FormsModule} from "@angular/forms";
+import {StoreService} from "../../../../services/Store/store.service";
+import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
+import {NetworkService} from "../../../../services/Network/network.service";
+import {FillButtonComponent} from "../../buttons/fill-button/fill-button.component";
+import {success} from "../../../../styles/var/globalColors";
+import {WindowService} from "../../../../services/window.service";
 
 @Component({
   selector: 'app-version-list',
@@ -10,7 +16,8 @@ import {FormsModule} from "@angular/forms";
   imports: [
     NgForOf,
     NgIf,
-    FormsModule
+    FormsModule,
+    FillButtonComponent
   ],
   templateUrl: './version-list.component.html',
   styleUrl: './version-list.component.css'
@@ -26,8 +33,22 @@ export class VersionListComponent {
   searchQuery: string = '';
   filteredVersions: Version[] = [];
 
-  ngOnChanges(): void {
+  hasAuth: string | null = '';
+
+  constructor(private windowService: WindowService) {
+  }
+
+  async ngOnInit(){
+    this.hasAuth = await StoreService.get(StoreKeys.ACCESS_TOKEN);
+  }
+
+  async ngOnChanges() {
+    this.hasAuth = await StoreService.get(StoreKeys.ACCESS_TOKEN);
     this.filterVersions();
+  }
+
+  async openLoginPage(){
+    await this.windowService.openLoginWindow();
   }
 
   selectVersion(versionId: string): void {
@@ -82,4 +103,6 @@ export class VersionListComponent {
   }
 
   protected readonly getFileIcon = getFileIcon;
+  protected readonly NetworkService = NetworkService;
+  protected readonly success = success;
 }

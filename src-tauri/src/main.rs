@@ -9,7 +9,7 @@ mod config_global;
 
 use crate::config::Project;
 use config::Config;
-use tauri::Builder;
+use tauri::{Builder, Emitter};
 
 #[tauri::command]
 fn get_config() -> Config {
@@ -181,6 +181,20 @@ fn close_window_by_label(app: AppHandle, label: String) {
         });
     } else {
         eprintln!("Окно с меткой {} не найдено.", label);
+    }
+}
+
+#[tauri::command]
+async fn reload_all_windows(app: tauri::AppHandle) {
+    let windows = app.windows(); // Получаем все окна приложения
+
+    for (label, window) in windows {
+        // Отправляем событие фронтенду для перезагрузки
+        if let Err(err) = window.emit("reload-windows", ()) {
+            eprintln!("Ошибка при отправке события для окна {}: {:?}", label, err);
+        } else {
+            println!("Событие перезагрузки отправлено для окна {}", label);
+        }
     }
 }
 
@@ -440,7 +454,8 @@ fn main() {
             initialize_markdown_files,
             get_markdown_file_content,
             delete_file,
-            rename_file
+            rename_file,
+            reload_all_windows
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

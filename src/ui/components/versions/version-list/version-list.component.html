@@ -1,49 +1,58 @@
 <div class="version-panel" [class.collapsed]="isCollapsed">
-    <div class="panel-header">
-        <span>Версии({{filteredVersions.length}}):</span>
-        <span>{{fileName}}</span>
-    </div>
-    <div class="panel-search">
-        <input
-                type="text"
-                [(ngModel)]="searchQuery"
-                (input)="filterVersions()"
-                placeholder="Поиск версий..."
-                class="search-input"
-        >
-    </div>
-    <div class="panel-actions">
-        <button class="action-btn" (click)="createNewVersion()" title="Создать новую версию">
-            <img src="assets/icons/svg/version-component/add.svg" alt="New">
-        </button>
-        <button class="action-btn" (click)="deleteVersion()" title="Удалить активную версию" [disabled]="!hasActiveVersion()">
-            <img src="assets/icons/svg/version-component/delete.svg" alt="Delete">
-        </button>
-        <button class="action-btn" (click)="restoreVersion()" title="Восстановить активную версию" [disabled]="!hasActiveVersion()">
-            <img src="assets/icons/svg/version-component/restore.svg" alt="Restore">
-        </button>
-        <button class="action-btn" (click)="exportVersion()" title="Экспорт активной версии" [disabled]="!hasActiveVersion()">
-            <img src="assets/icons/svg/version-component/export.svg" alt="Export">
-        </button>
-    </div>
-    <div class="version-list" *ngIf="!isCollapsed">
-        <div
-                *ngFor="let version of filteredVersions"
-                class="version-item"
-                [class.active]="version.isActive"
-                (click)="selectVersion(version.id)"
-        >
-            <img class="version-icon" [src]="getFileIcon(fileName)" alt="File">
-            <div class="version-details">
-                <span class="version-name">[{{ version.versionNumber }}] {{ version.fileName }}</span>
-                <span class="version-meta">{{ version.size }} | {{ version.createdAt }}</span>
+    <ng-container *ngIf="hasAuth && hasAuth.length > 0 && NetworkService.getConnectionStatus()">
+        <div class="panel-header">
+            <span>Версии({{filteredVersions.length}}):</span>
+            <span>{{fileName}}</span>
+        </div>
+        <div class="panel-search">
+            <input
+                    type="text"
+                    [(ngModel)]="searchQuery"
+                    (input)="filterVersions()"
+                    placeholder="Поиск версий..."
+                    class="search-input"
+            >
+        </div>
+        <div class="panel-actions">
+            <button class="action-btn" (click)="createNewVersion()" title="Создать новую версию">
+                <img src="assets/icons/svg/version-component/add.svg" alt="New">
+            </button>
+            <button class="action-btn" (click)="deleteVersion()" title="Удалить активную версию" [disabled]="!hasActiveVersion()">
+                <img src="assets/icons/svg/version-component/delete.svg" alt="Delete">
+            </button>
+<!--            <button class="action-btn" (click)="restoreVersion()" title="Восстановить активную версию" [disabled]="!hasActiveVersion()">-->
+<!--                <img src="assets/icons/svg/version-component/restore.svg" alt="Restore">-->
+<!--            </button>-->
+<!--            <button class="action-btn" (click)="exportVersion()" title="Экспорт активной версии" [disabled]="!hasActiveVersion()">-->
+<!--                <img src="assets/icons/svg/version-component/export.svg" alt="Export">-->
+<!--            </button>-->
+        </div>
+        <div class="version-list" *ngIf="!isCollapsed">
+            <div
+                    *ngFor="let version of filteredVersions"
+                    class="version-item"
+                    [class.active]="version.isActive"
+                    (click)="selectVersion(version.id)"
+            >
+                <img class="version-icon" [src]="getFileIcon(fileName)" alt="File">
+                <div class="version-details">
+                    <span class="version-name">[{{ version.versionNumber }}] {{ version.fileName }}</span>
+                    <span class="version-meta">{{ version.size }} | {{ version.createdAt }}</span>
+                </div>
+            </div>
+            <div *ngIf="versions.length === 0" class="no-versions">
+                Нет доступных версий
+            </div>
+            <div *ngIf="filteredVersions.length === 0" class="no-versions">
+                Нет версий, соответствующих запросу
             </div>
         </div>
-        <div *ngIf="versions.length === 0" class="no-versions">
-            Нет доступных версий
-        </div>
-        <div *ngIf="filteredVersions.length === 0" class="no-versions">
-            Нет версий, соответствующих запросу
-        </div>
+    </ng-container>
+    <div class="no-auth" *ngIf="!hasAuth &&  NetworkService.getConnectionStatus()">
+        <p>Вы не вошли в свой аккаунт! Пожалуйста войдите в аккаунт, чтобы взаимодействовать с версиями.</p>
+        <app-fill-button buttonText="Войти" [colorBtn]="success" (click)="openLoginPage()"/>
+    </div>
+    <div class="no-auth" *ngIf="!NetworkService.getConnectionStatus()">
+        <p>Нет соединения с интернетом! Как только соединение будет восстановлено, версии появятся автоматически.</p>
     </div>
 </div>

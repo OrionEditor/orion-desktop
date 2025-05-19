@@ -86,6 +86,8 @@ export class LoginPageComponent {
 
           await this.reloadStartPage();
 
+          await WindowService.reloadAllWindows();
+
           const translatedSuccess = await this.translateService.get(AUTH_SUCCESS.SUCCESS_LOGIN.message).toPromise();
           this.toastService.showToast(translatedSuccess, TOASTS_TYPES.SUCCESS);
 

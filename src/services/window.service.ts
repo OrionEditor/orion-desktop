@@ -59,4 +59,13 @@ export class WindowService {
             throw error;
         }
     }
+
+    static async reloadAllWindows() {
+        try {
+            await invoke('reload_all_windows');
+            console.log('Команда перезагрузки всех окон отправлена');
+        } catch (error) {
+            console.error('Ошибка при вызове reload_all_windows:', error);
+        }
+    }
 }

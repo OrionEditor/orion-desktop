@@ -8,6 +8,7 @@
     flex-shrink: 0; /* Предотвращаем сжатие панели */
 }
 .version-panel.collapsed {
+    border-left: 0px;
     width: 0;
 }
 .panel-header {
@@ -136,4 +137,14 @@
 
 ::-webkit-scrollbar-thumb:active {
     background: #388E3C;
+}
+
+.no-auth{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: auto;
 }
