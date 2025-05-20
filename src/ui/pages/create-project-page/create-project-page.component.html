@@ -6,7 +6,7 @@
     <app-input-text-field  id="project-name" [label]="'createPage.labels.projectName' | translate" [(value)]="projectName"/>
 
     <div class="project-path-container">
-        <app-input-text-field  id="project-path" [label]="'createPage.labels.projectPath' | translate" [(value)]="projectPath" [readonly]="false"/>
+        <app-input-text-field (valueChange)="changeProjectPath($event)"  id="project-path" [label]="'createPage.labels.projectPath' | translate" [(value)]="projectPath" [readonly]="false"/>
         <app-fill-button id="choose-folder" [buttonText]="'createPage.buttons.chooseFolder' | translate" (click)="selectProjectPath()"/>
     </div>
 

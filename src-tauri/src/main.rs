@@ -207,12 +207,24 @@ mod workspace; // Подключение модуля workspace
 use std::path::PathBuf;
 use workspace::Workspace;
 
+// #[tauri::command]
+// fn create_workspace(workspace_path: String) -> bool {
+//     let path = PathBuf::from(workspace_path);
+//     let workspace = Workspace::default(); // Создаём workspace с настройками по умолчанию
+//     workspace.save(&path).expect("panic message"); // Сохраняем по переданному пути
+//     true // Возвращаем true для подтверждения успешного создания
+// }
+
 #[tauri::command]
-fn create_workspace(workspace_path: String) -> bool {
-    let path = PathBuf::from(workspace_path);
-    let workspace = Workspace::default(); // Создаём workspace с настройками по умолчанию
-    workspace.save(&path).expect("panic message"); // Сохраняем по переданному пути
-    true // Возвращаем true для подтверждения успешного создания
+fn create_workspace(workspace_path: String, project_name: String, preset: u8) -> Result<bool, String> {
+    let path = PathBuf::from(&workspace_path);
+    // Проверяем и создаём директорию
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent).map_err(|e| format!("Ошибка при создании директории: {}", e))?;
+    }
+    let workspace = Workspace::new(project_name, preset);
+    workspace.save(&path).map_err(|e| format!("Ошибка при сохранении workspace: {}", e))?;
+    Ok(true)
 }
 
 #[tauri::command]

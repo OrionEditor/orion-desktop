@@ -1,7 +1,7 @@
 use chrono::Utc;
 use fs::File;
 use serde::{Deserialize, Serialize};
-use std::fs::{self};
+use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -34,13 +34,46 @@ impl Workspace {
         }
     }
 
+    /// Создаёт новый экземпляр Workspace с указанными значениями.
+    pub fn new(project_name: String, presets: u8) -> Self {
+        Workspace {
+            project_name,
+            presets,
+            active_tabs: vec![],
+        }
+    }
+
+    // /// Сохраняет `workspace.json` по указанному пути.
+    // pub fn save(&self, workspace_path: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
+    //     // Добавляем "workspace.json" к пути
+    //     let mut full_path = workspace_path.clone();
+    //     full_path.push("workspace.json");
+    //
+    //     // Создаём родительские директории, если их нет
+    //     if let Some(parent) = full_path.parent() {
+    //         fs::create_dir_all(parent)?;
+    //     }
+    //
+    //     // Сериализуем данные в JSON
+    //     let content = serde_json::to_string_pretty(self)?;
+    //
+    //     // Открываем файл и записываем данные
+    //     {
+    //         let mut file = File::create(&full_path)?;
+    //         file.write_all(content.as_bytes())?;
+    //     }
+    //
+    //     println!("Workspace file saved to: {}", full_path.display());
+    //     Ok(())
+    // }
+
     /// Сохраняет `workspace.json` по указанному пути.
     pub fn save(&self, workspace_path: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
         // Добавляем "workspace.json" к пути
         let mut full_path = workspace_path.clone();
         full_path.push("workspace.json");
 
-        // Создаём родительские директории, если их нет
+        // Создаем родительские директории, если их нет
         if let Some(parent) = full_path.parent() {
             fs::create_dir_all(parent)?;
         }
@@ -48,13 +81,16 @@ impl Workspace {
         // Сериализуем данные в JSON
         let content = serde_json::to_string_pretty(self)?;
 
-        // Открываем файл и записываем данные
-        {
-            let mut file = File::create(&full_path)?;
-            file.write_all(content.as_bytes())?;
-        }
+        // Используем OpenOptions для перезаписи файла
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&full_path)?;
+        file.write_all(content.as_bytes())?;
+        file.flush()?;
 
-        println!("Workspace file saved to: {}", full_path.display());
+        println!("[{}] Workspace file saved to: {}", Utc::now().to_rfc3339(), full_path.display());
         Ok(())
     }
 

@@ -47,6 +47,10 @@ export class CreateProjectPageComponent {
   constructor(private dialogService: DialogService, private configService: ConfigService, private languageService: LanguageService, private validateService: ValidateService, private translateService: TranslateService, private windowService: WindowService, private uploadService: UploadService) {
   }
 
+  changeProjectPath(value: string){
+    this.projectName = value;
+  }
+
   async ngOnInit() {
     if (!this.configService.getConfig()) {
       await this.configService.loadConfig();
@@ -195,9 +199,11 @@ export class CreateProjectPageComponent {
             },
             // Этап 6: Создание рабочего пространства
             async () => {
-              await invoke('create_workspace', { workspacePath: this.projectPath + "\\.orion" });
-              await WorkspaceService.setProjectName(getWorkspacePath(this.projectPath), this.projectName);
-              await WorkspaceService.setPreset(getWorkspacePath(this.projectPath), this.selectedPresetId);
+              await invoke('create_workspace', {
+                workspacePath: this.projectPath + "\\.orion",
+                projectName: this.projectName,
+                preset: this.selectedPresetId,
+              });
             },
             // Этап 7: Открытие нового окна
             async () => {
