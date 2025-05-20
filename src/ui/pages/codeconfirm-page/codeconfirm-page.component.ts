@@ -32,7 +32,7 @@ export class CodeconfirmPageComponent {
   @Input() password: string = '';
   @Output() login = new EventEmitter<{ username: string; password: string }>();
   code: string = ''
-  codeInputs: string[] = ['', '', '', '', ''];
+  codeInputs: string[] = ['', '', '', '', '', ''];
   currentIndex: number = -1
 
   isCodeValid: boolean = false;  // Флаг для проверки правильности кода
@@ -40,7 +40,7 @@ export class CodeconfirmPageComponent {
 
   currentTheme: string = ''
   currentLang: string = ''
-  CODE_LENGTH: number = 5;
+  CODE_LENGTH: number = 6;
 
   constructor(private configService: ConfigService, private languageService: LanguageService, private authService: AuthService, private toastService: ToastService, private translateService : TranslateService) {
   }
@@ -84,7 +84,7 @@ export class CodeconfirmPageComponent {
     this.firstInput.nativeElement.focus();  // Устанавливаем фокус на первый элемент
   }
 
-  onCodeInput(event: Event, index: number) {
+  async onCodeInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
@@ -118,7 +118,7 @@ export class CodeconfirmPageComponent {
     if (this.code.length === this.CODE_LENGTH) {
       this.isCodeEntered = true; // Код введен
       this.isCodeValid = this.validateCode(this.code);
-      this.handleCodeValidation();
+      await this.handleCodeValidation();
     }
   }
 
@@ -166,8 +166,6 @@ export class CodeconfirmPageComponent {
   }
 
   validateCode(code: string): boolean {
-    // Фиктивная проверка кода
-    //TODO: Маршрутик для проверки кода
-    return code === '12345';
+    return code.length === 6;
   }
 }

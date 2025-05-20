@@ -7,6 +7,7 @@ export const environment = {
             verifyEmail: 'verify-email',
             login: 'login',
             register: 'register',
+            verify_code: ''
         },
         refreshToken: {
             refresh: 'refresh'

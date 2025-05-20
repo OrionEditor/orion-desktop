@@ -6,53 +6,18 @@ use std::io::Write;
 use std::path::PathBuf;
 
 #[derive(Serialize, Deserialize)]
-pub struct Collaborator {
-    pub name: String,
-    pub email: String,
-    pub role: String,
-    pub id: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct BackupConfig {
-    pub enabled: bool,
-    pub frequency: String,
-    pub last_backup: String,
-    pub location: String,
-}
-
-#[derive(Serialize, Deserialize)]
 pub struct Workspace {
-    pub user_id: String,
     pub project_name: String,
-    pub project_id: String,
-    pub created_at: String,
-    pub last_modified: String,
     pub presets: u8,
     pub active_tabs: Vec<String>,
-    pub backup: BackupConfig,
-    pub collaborators: Vec<Collaborator>,
-    pub recent_searches: Vec<String>,
 }
 
 impl Default for Workspace {
     fn default() -> Self {
         Workspace {
-            user_id: "default_user".to_string(),
             project_name: "New Project".to_string(),
-            project_id: "0000".to_string(),
-            created_at: Utc::now().to_rfc3339(),
-            last_modified: Utc::now().to_rfc3339(),
             presets: 1,
             active_tabs: vec![],
-            backup: BackupConfig {
-                enabled: true,
-                frequency: "daily".to_string(),
-                last_backup: Utc::now().to_rfc3339(),
-                location: "/path/to/backups".to_string(),
-            },
-            collaborators: vec![],
-            recent_searches: vec![],
         }
     }
 }
@@ -93,9 +58,82 @@ impl Workspace {
         Ok(())
     }
 
-    /// Обновляет поле `last_modified` и сохраняет изменения.
-    pub fn update_last_modified(&mut self, workspace_path: &PathBuf) {
-        self.last_modified = Utc::now().to_rfc3339();
-        self.save(workspace_path);
+
+    /// Перезаписывает имя проекта в `workspace.json`.
+    pub fn set_project_name(
+        &mut self,
+        workspace_path: &PathBuf,
+        new_name: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.project_name = new_name;
+        self.save(workspace_path)?;
+        println!("Project name updated to: {}", self.project_name);
+        Ok(())
+    }
+
+    /// Перезаписывает пресет в `workspace.json`.
+    pub fn set_preset(
+        &mut self,
+        workspace_path: &PathBuf,
+        new_preset: u8,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        self.presets = new_preset;
+        self.save(workspace_path)?;
+        println!("Preset updated to: {}", self.presets);
+        Ok(())
+    }
+
+    /// Добавляет путь в `active_tabs`, если он ещё не присутствует.
+    pub fn add_active_tab(
+        &mut self,
+        workspace_path: &PathBuf,
+        tab_path: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        if !self.active_tabs.contains(&tab_path) {
+            self.active_tabs.push(tab_path.clone());
+            self.save(workspace_path)?;
+            println!("Added tab to active_tabs: {}", tab_path);
+        } else {
+            println!("Tab already exists in active_tabs: {}", tab_path);
+        }
+        Ok(())
+    }
+
+    /// Удаляет путь из `active_tabs`, если он там есть.
+    pub fn remove_active_tab(
+        &mut self,
+        workspace_path: &PathBuf,
+        tab_path: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let initial_len = self.active_tabs.len();
+        self.active_tabs.retain(|tab| tab != &tab_path);
+        if self.active_tabs.len() < initial_len {
+            self.save(workspace_path)?;
+            println!("Removed tab from active_tabs: {}", tab_path);
+        } else {
+            println!("Tab not found in active_tabs: {}", tab_path);
+        }
+        Ok(())
+    }
+
+    /// Возвращает все значения из `active_tabs`.
+    pub fn get_active_tabs(workspace_path: &PathBuf) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let workspace = Self::load(workspace_path);
+        println!("Retrieved active_tabs: {:?}", workspace.active_tabs);
+        Ok(workspace.active_tabs)
+    }
+
+    /// Возвращает имя проекта.
+    pub fn get_project_name(workspace_path: &PathBuf) -> Result<String, Box<dyn std::error::Error>> {
+        let workspace = Self::load(workspace_path);
+        println!("Retrieved project_name: {}", workspace.project_name);
+        Ok(workspace.project_name)
+    }
+
+    /// Возвращает значение пресета.
+    pub fn get_preset(workspace_path: &PathBuf) -> Result<u8, Box<dyn std::error::Error>> {
+        let workspace = Self::load(workspace_path);
+        println!("Retrieved preset: {}", workspace.presets);
+        Ok(workspace.presets)
     }
 }

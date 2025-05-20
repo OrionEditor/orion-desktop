@@ -4,7 +4,8 @@ export let API_V1_ENDPOINTS: any = {
     auth: {
         verifyEmail: environment.endpoints.auth.verifyEmail,
         login: environment.endpoints.auth.login,
-        register: environment.endpoints.auth.register
+        register: environment.endpoints.auth.register,
+        VERIFY_CODE: environment.endpoints.auth.verify_code
     },
     REFRESH_TOKEN: {
         REFRESH:environment.endpoints.refreshToken.refresh
