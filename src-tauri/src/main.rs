@@ -420,6 +420,52 @@ fn get_markdown_file_content(file_path: String) -> Result<String, String> {
     MarkdownFiles::get_file_content(&file_path)
 }
 
+#[tauri::command]
+async fn get_project_name(workspace_path: String) -> Result<String, String> {
+    let path = PathBuf::from(workspace_path);
+    Workspace::get_project_name(&path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_preset(workspace_path: String) -> Result<u8, String> {
+    let path = PathBuf::from(workspace_path);
+    Workspace::get_preset(&path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_active_tabs(workspace_path: String) -> Result<Vec<String>, String> {
+    let path = PathBuf::from(workspace_path);
+    Workspace::get_active_tabs(&path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn set_project_name(workspace_path: String, new_name: String) -> Result<(), String> {
+    let path = PathBuf::from(workspace_path);
+    let mut workspace = Workspace::load(&path);
+    workspace.set_project_name(&path, new_name).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn set_preset(workspace_path: String, new_preset: u8) -> Result<(), String> {
+    let path = PathBuf::from(workspace_path);
+    let mut workspace = Workspace::load(&path);
+    workspace.set_preset(&path, new_preset).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn add_active_tab(workspace_path: String, tab_path: String) -> Result<(), String> {
+    let path = PathBuf::from(workspace_path);
+    let mut workspace = Workspace::load(&path);
+    workspace.add_active_tab(&path, tab_path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn remove_active_tab(workspace_path: String, tab_path: String) -> Result<(), String> {
+    let path = PathBuf::from(workspace_path);
+    let mut workspace = Workspace::load(&path);
+    workspace.remove_active_tab(&path, tab_path).map_err(|e| e.to_string())
+}
+
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -455,7 +501,14 @@ fn main() {
             get_markdown_file_content,
             delete_file,
             rename_file,
-            reload_all_windows
+            reload_all_windows,
+            get_project_name,
+            get_preset,
+            get_active_tabs,
+            set_project_name,
+            set_preset,
+            add_active_tab,
+            remove_active_tab
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

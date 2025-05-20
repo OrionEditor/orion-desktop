@@ -23,6 +23,8 @@ import {listen} from "@tauri-apps/api/event";
 import {SelectionCardsComponent} from "../../components/selection/selection-cards/selection-cards.component";
 import {PROJECT_TYPES} from "../../../shared/constants/cards/project-types.cards";
 import {FolderStructure} from "../../../interfaces/preset.interface";
+import {WorkspaceService} from "../../../services/Workspace/workspace.service";
+import {getWorkspacePath} from "../../../shared/constants/workspace/workspace-path.const";
 
 @Component({
   selector: 'app-create-project-page',
@@ -194,6 +196,8 @@ export class CreateProjectPageComponent {
             // Этап 6: Создание рабочего пространства
             async () => {
               await invoke('create_workspace', { workspacePath: this.projectPath + "\\.orion" });
+              await WorkspaceService.setProjectName(getWorkspacePath(this.projectPath), this.projectName);
+              await WorkspaceService.setPreset(getWorkspacePath(this.projectPath), this.selectedPresetId);
             },
             // Этап 7: Открытие нового окна
             async () => {

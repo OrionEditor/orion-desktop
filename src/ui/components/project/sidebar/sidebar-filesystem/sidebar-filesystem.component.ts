@@ -9,6 +9,8 @@ import {SidebarFilesystemControlsComponent} from "./sidebar-filesystem-controls/
 import {TranslatePipe} from "@ngx-translate/core";
 import {TabService} from "../../../../../services/tab.service";
 import {FileSystemSortingService} from "../../../../../services/FileSystem/file-system-sorting.service";
+import {WorkspaceService} from "../../../../../services/Workspace/workspace.service";
+import {getWorkspacePath} from "../../../../../shared/constants/workspace/workspace-path.const";
 
 @Component({
   selector: 'app-sidebar-filesystem',
@@ -26,6 +28,7 @@ import {FileSystemSortingService} from "../../../../../services/FileSystem/file-
 })
 export class SidebarFilesystemComponent {
   projectPath: string | null = '';
+  workspacePath: string = '';
   fileStructure: FileSystemNode[] = [];
   filteredFileStructure: FileSystemNode[] = [];
   searchQuery: string = '';
@@ -80,6 +83,7 @@ export class SidebarFilesystemComponent {
 
   async ngOnInit(){
     this.projectPath = this.configService.getLastOpened();
+    this.workspacePath = await WorkspaceService.getProjectName(getWorkspacePath(this.projectPath ? this.projectPath : ''));
 
     // Единая подписка на fileStructure$
     this.fileSystemService.fileStructure$.subscribe((structure) => {
