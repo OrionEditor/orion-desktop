@@ -14,6 +14,13 @@ export const environment = {
         },
         user: {
             get_profile: 'user/profile'
+        },
+        project: {
+            create_project: 'projects',
+            get_project_by_id: (projectId: string) => `projects/${projectId}`,
+            update_project_by_id: (projectId: string) => `projects/${projectId}`,
+            delete_project_by_id: (projectId: string) => `projects/${projectId}`,
+            get_projects_by_user: 'project/ProGet'
         }
     }
 };

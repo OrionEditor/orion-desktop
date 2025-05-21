@@ -12,6 +12,13 @@ export let API_V1_ENDPOINTS: any = {
     },
     USER: {
         GET_PROFILE: environment.endpoints.user.get_profile
+    },
+    PROJECT: {
+        CREATE_PROJECT: environment.endpoints.project.create_project,
+        GET_PROJECT_BY_ID: (projectId: string) => environment.endpoints.project.get_project_by_id(projectId),
+        UPDATE_PROJECT_BY_ID: (projectId: string) => environment.endpoints.project.update_project_by_id(projectId),
+        DELETE_PROJECT_BY_ID: (projectId: string) => environment.endpoints.project.delete_project_by_id(projectId),
+        GET_PROJECTS_BY_USER: environment.endpoints.project.get_projects_by_user
     }
 };
 
