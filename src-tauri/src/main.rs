@@ -467,14 +467,15 @@ async fn set_preset(workspace_path: String, new_preset: u8) -> Result<(), String
 #[tauri::command]
 async fn add_active_tab(workspace_path: String, tab_path: String) -> Result<(), String> {
     let path = PathBuf::from(workspace_path);
-    let mut workspace = Workspace::load(&path);
+    let mut workspace = Workspace::load_second(&path);
+    println!("{:?}", workspace);
     workspace.add_active_tab(&path, tab_path).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 async fn remove_active_tab(workspace_path: String, tab_path: String) -> Result<(), String> {
     let path = PathBuf::from(workspace_path);
-    let mut workspace = Workspace::load(&path);
+    let mut workspace = Workspace::load_second(&path);
     workspace.remove_active_tab(&path, tab_path).map_err(|e| e.to_string())
 }
 

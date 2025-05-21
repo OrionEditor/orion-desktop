@@ -4,6 +4,9 @@ import {SidebarToolbarComponent} from "./sidebar-toolbar/sidebar-toolbar.compone
 import {SidebarActionsComponent} from "./sidebar-actions/sidebar-actions.component";
 import {SidebarFilesystemComponent} from "./sidebar-filesystem/sidebar-filesystem.component";
 import {TabService} from "../../../../services/tab.service";
+import {WorkspaceService} from "../../../../services/Workspace/workspace.service";
+import {getWorkspacePath} from "../../../../shared/constants/workspace/workspace-path.const";
+import {getFileNameFromPath} from "../../../../utils/file.utils";
 
 @Component({
   selector: 'app-sidebar',
@@ -26,6 +29,14 @@ export class SidebarComponent {
   @Output() fileSelected = new EventEmitter<{path: string, name: string}>();
 
   constructor() {}
+
+  async ngOnInit(){
+    const activeTabs = await WorkspaceService.getActiveTabs(getWorkspacePath(this.projectPath ? this.projectPath : ''));
+
+    activeTabs.map((tab) => {
+      this.fileSelected.emit({path: tab, name: getFileNameFromPath(tab)});
+    } )
+  }
 
   onFileSelected(fileInfo: {path: string, name: string}) {
     this.fileSelected.emit(fileInfo);

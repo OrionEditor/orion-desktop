@@ -3,6 +3,8 @@ import {Tab} from "../../../../interfaces/components/tab.interface";
 import {TabContextMenuComponent} from "../../contextMenus/tab-context-menu/tab-context-menu.component";
 import {NgIf} from "@angular/common";
 import {getFileIcon} from "../../../../utils/file-icon.utils";
+import {WorkspaceService} from "../../../../services/Workspace/workspace.service";
+import {ConfigService} from "../../../../services/configService";
 
 @Component({
   selector: 'app-file-tab',
@@ -25,13 +27,22 @@ export class FileTabComponent {
   @Output() dragStart = new EventEmitter<string>();
   @Output() dragEnd = new EventEmitter<void>();
   @Output() dropTab = new EventEmitter<{ draggedId: string; targetId: string }>();
+  projectPath: string | null = '';
 
   showContextMenu = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  onClose(event: Event): void {
+  constructor(private configService: ConfigService) {
+  }
+
+  async ngOnInit(){
+    this.projectPath = this.configService.getLastOpened();
+  }
+
+  async onClose(event: Event) {
     event.stopPropagation();
     this.close.emit(this.tab.id);
+    await WorkspaceService.removeActiveTab(this.projectPath ? this.projectPath + '\\.orion' : '', this.tab.filePath);
   }
 
   onTabClick(): void {

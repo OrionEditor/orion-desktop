@@ -5,7 +5,7 @@ use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Workspace {
     pub project_name: String,
     pub presets: u8,
@@ -29,10 +29,36 @@ impl Workspace {
             serde_json::from_str(&content).unwrap_or_default()
         } else {
             let default_workspace = Self::default();
-            default_workspace.save(workspace_path);
+            default_workspace.save(workspace_path).expect("TODO: panic message");
             default_workspace
         }
     }
+
+    /// Загружает `workspace.json` из директории, указанной в `workspace_path`.
+    pub fn load_second(workspace_path: &PathBuf) -> Self {
+        let mut full_path = workspace_path.clone();
+        full_path.push("workspace.json");
+        println!("[{}] Загрузка workspace из: ", full_path.display());
+        if let Ok(content) = fs::read_to_string(&full_path) {
+            if content.trim().is_empty() {
+                eprintln!("[{}] Файл workspace.json пуст, использование дефолтных значений", Utc::now().to_rfc3339());
+                Self::default()
+            } else {
+                serde_json::from_str(&content).unwrap_or_else(|e| {
+                    eprintln!("[{}] Ошибка десериализации workspace.json: {}, использование дефолтных значений", Utc::now().to_rfc3339(), e);
+                    Self::default()
+                })
+            }
+        } else {
+            println!("[{}] Файл workspace.json не существует, создание нового", Utc::now().to_rfc3339());
+            let default_workspace = Self::default();
+            default_workspace.save(workspace_path).unwrap_or_else(|e| {
+                eprintln!("[{}] Ошибка при сохранении дефолтного workspace: {}", Utc::now().to_rfc3339(), e);
+            });
+            default_workspace
+        }
+    }
+
 
     /// Создаёт новый экземпляр Workspace с указанными значениями.
     pub fn new(project_name: String, presets: u8) -> Self {

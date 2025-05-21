@@ -12,6 +12,8 @@ import {FileSystemService} from "../../../../services/FileSystem/fileSystem.serv
 import {ConfigService} from "../../../../services/configService";
 import {TEXT_MODAL_TYPES} from "../../../../shared/constants/modals/textModal/textModal.types";
 import {TextModalService} from "../../../../services/Modals/TextModal/textModal.service";
+import {WorkspaceService} from "../../../../services/Workspace/workspace.service";
+import {getWorkspacePath} from "../../../../shared/constants/workspace/workspace-path.const";
 
 
 @Component({
@@ -84,12 +86,13 @@ export class FileNodeComponent {
     return this.node.type_id === 'Directory';
   }
 
-  openFile() {
+  async openFile() {
     if (!this.isDirectory()) {
       this.fileSelected.emit({
         path: this.node.path,
         name: this.node.name
       });
+      await WorkspaceService.addActiveTab(this.projectPath ? this.projectPath + '\\.orion' : '', this.node.path);
       console.log('Файл открыт:', this.node.name);
     }
   }
