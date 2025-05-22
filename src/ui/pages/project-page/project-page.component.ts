@@ -16,6 +16,14 @@ import {TranslateService} from "@ngx-translate/core";
 import {ModalBaseComponent} from "../../components/modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../components/modals/settings-modal/settings-modal.component";
 import {listen} from "@tauri-apps/api/event";
+import {ProjectService} from "../../../services/Routes/project/project.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {ProjectLocalService} from "../../../services/LocalServices/project-local.service";
+import {Store} from "@tauri-apps/plugin-store";
+import {StoreService} from "../../../services/Store/store.service";
+import {StoreKeys} from "../../../shared/constants/vault/store.keys";
+import {WorkspaceService} from "../../../services/Workspace/workspace.service";
+import {getWorkspacePath} from "../../../shared/constants/workspace/workspace-path.const";
 
 @Component({
   selector: 'app-project-page',
@@ -27,7 +35,8 @@ import {listen} from "@tauri-apps/api/event";
     ContentTabComponent,
     NgIf,
     ModalBaseComponent,
-    SettingsModalComponent
+    SettingsModalComponent,
+      HttpClientModule
   ],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.css'
@@ -47,12 +56,16 @@ export class ProjectPageComponent {
   tabs: Tab[] = [];
   activeTab: Tab | undefined;
 
-  constructor(private configService: ConfigService, private languageService: LanguageService, public tabService: TabService, protected textModalService: TextModalService, private translateService: TranslateService) {
+
+  constructor(private configService: ConfigService, private languageService: LanguageService, public tabService: TabService, protected textModalService: TextModalService, private translateService: TranslateService, private http: HttpClient) {
     this.tabService.tabs$.subscribe(tabs => {
       this.tabs = tabs;
       this.activeTab = tabs.find(tab => tab.isActive);
     });
   }
+
+  private projectService = new ProjectService(this.http);
+  private projectLocalService = new ProjectLocalService(this.projectService);
 
   async ngOnInit() {
     if (!this.configService.getConfig()) {
@@ -83,6 +96,21 @@ export class ProjectPageComponent {
     });
 
     this.projectPath = this.configService.getLastOpened();
+    //
+    const projectName = await WorkspaceService.getProjectName(getWorkspacePath(this.projectPath ? this.projectPath : ''));
+
+    try {
+      await this.projectLocalService.createProject(projectName);
+    } catch (e){}
+
+
+    await this.projectLocalService.syncProjects();
+
+    await this.projectLocalService.loadCurrentProject();
+
+    const projectId = this.projectLocalService.getCurrentProject()?.id;
+    console.log(projectId);
+    await StoreService.save(StoreKeys.PROJECT_ID, projectId);
   }
 
   openTab(fileInfo: {path: string, name: string}): void {

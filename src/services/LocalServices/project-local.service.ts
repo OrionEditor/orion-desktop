@@ -5,6 +5,9 @@ import {WorkspaceService} from "../Workspace/workspace.service";
 import {ConfigService} from "../configService";
 import {Project} from "../../interfaces/routes/project.interface";
 import {join} from "@tauri-apps/api/path";
+import {StoreService} from "../Store/store.service";
+import {StoreKeys} from "../../shared/constants/vault/store.keys";
+import {getWorkspacePath} from "../../shared/constants/workspace/workspace-path.const";
 
 @Injectable({
     providedIn: 'root'
@@ -15,9 +18,11 @@ export class ProjectLocalService {
 
     constructor(
         private projectService: ProjectService,
-        private workspaceService: WorkspaceService,
-        private configService: ConfigService
     ) {}
+
+    private workspaceService = new WorkspaceService();
+    private configService = new ConfigService();
+
 
     /**
      * Синхронизирует проекты с сервера.
@@ -26,6 +31,7 @@ export class ProjectLocalService {
         try {
             // @ts-ignore
             this.projects = await this.projectService.getProjectsByUser();
+            console.log(this.projects);
             await this.loadCurrentProject();
         } catch (e) {
             console.error('Не удалось синхронизировать проекты:', e);
@@ -38,17 +44,26 @@ export class ProjectLocalService {
      */
     async loadCurrentProject(): Promise<void> {
         try {
+            if (!this.configService.getConfig()) {
+                await this.configService.loadConfig();
+            }
+
             const projectPath = this.configService.getLastOpened();
             if (!projectPath) {
                 this.currentProject = null;
                 return;
             }
-            const workspacePath = await this.getWorkspacePath(projectPath);
-            const projectName = await WorkspaceService.getProjectName(workspacePath);
+
+            console.log(projectPath);
+
+
+            const projectName = await WorkspaceService.getProjectName(getWorkspacePath(projectPath ? projectPath : ''));
             const project = this.projects.find(p => p.name === projectName);
             this.currentProject = project || null;
             if (!project) {
                 console.warn(`Проект с именем "${projectName}" не найден в списке проектов`);
+            } else {
+                console.log('currentProject: ', project);
             }
         } catch (e) {
             console.error('Не удалось загрузить текущий проект:', e);

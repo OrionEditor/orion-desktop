@@ -4,5 +4,6 @@ export const enum StoreKeys{
     PROFILE_DATA = 'profile_data',
     USER_ID = 'user_id',
     EMAIL = 'email',
-    USERNAME = 'username'
+    USERNAME = 'username',
+    PROJECT_ID = 'project_id'
 }
