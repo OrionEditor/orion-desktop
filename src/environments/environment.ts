@@ -21,6 +21,12 @@ export const environment = {
             update_project_by_id: (projectId: string) => `projects/${projectId}`,
             delete_project_by_id: (projectId: string) => `projects/${projectId}`,
             get_projects_by_user: 'project/ProGet'
+        },
+        document: {
+            create_document: 'documents',
+            get_document_by_id: (documentId: string) => `documents/${documentId}`,
+            update_document: (documentId: string) => `documents/${documentId}`,
+            delete_document: (documentId: string) => `documents/${documentId}`,
         }
     }
 };

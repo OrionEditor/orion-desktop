@@ -19,6 +19,12 @@ export let API_V1_ENDPOINTS: any = {
         UPDATE_PROJECT_BY_ID: (projectId: string) => environment.endpoints.project.update_project_by_id(projectId),
         DELETE_PROJECT_BY_ID: (projectId: string) => environment.endpoints.project.delete_project_by_id(projectId),
         GET_PROJECTS_BY_USER: environment.endpoints.project.get_projects_by_user
+    },
+    DOCUMENT: {
+        CREATE_DOCUMENT: environment.endpoints.document.create_document,
+        GET_DOCUMENT_BY_ID: (documentId: string) => environment.endpoints.document.get_document_by_id(documentId),
+        UPDATE_DOCUMENT: (documentId: string) => environment.endpoints.document.update_document(documentId),
+        DELETE_DOCUMENT: (documentId: string) => environment.endpoints.document.delete_document(documentId),
     }
 };
 
