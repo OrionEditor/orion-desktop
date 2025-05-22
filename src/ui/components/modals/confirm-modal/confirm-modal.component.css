@@ -1,0 +1,66 @@
+.modal-content {
+    padding: 20px;
+    text-align: center;
+    z-index: 10000;
+    background: rgb(17, 48, 13);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #fff;
+}
+p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+.input-container {
+    margin-bottom: 15px;
+}
+.input-field {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: transparent;
+    color: #fff;
+}
+.input-field::placeholder {
+    color: #aaa;
+}
+.error {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 5px;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.yes-button, .no-button {
+    padding: 8px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.yes-button {
+    background-color: #4CAF50;
+    color: white;
+}
+.yes-button:hover {
+    background-color: #45a049;
+}
+.no-button {
+    background-color: #f44336;
+    color: white;
+}
+.no-button:hover {
+    background-color: #da190b;
+}

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EnvironmentInjector, inject, Input} from '@angular/core';
 import {FillButtonComponent} from "../../buttons/fill-button/fill-button.component";
 import {TabService} from "../../../../services/tab.service";
 import {MarkdownFilesService} from "../../../../services/Markdown/markdown-files.service";
@@ -24,6 +24,7 @@ import {ToastService} from "../../../../services/Notifications/toast.service";
 import {ProjectService} from "../../../../services/Routes/project/project.service";
 import {ProjectLocalService} from "../../../../services/LocalServices/project-local.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {ConfirmModalService} from "../../../../services/Modals/confirm-modal.service";
 
 @Component({
   selector: 'app-settings-modal',
@@ -50,6 +51,9 @@ export class SettingsModalComponent {
   projectId: string | null = null;
   currentProject: Project | null = null;
 
+  private injector = inject(EnvironmentInjector);
+
+
   constructor(private windowService: WindowService, private configService: ConfigService, private languageService: LanguageService, private http: HttpClient) {
     MarkdownFilesService.initialize().then(() => this.loadInitialFiles());
   }
@@ -72,6 +76,16 @@ export class SettingsModalComponent {
 
   // Удаление проекта
   async deleteProject() {
+    const result = await ConfirmModalService.createConfirmModal(
+        this.injector,
+        'Удалить текущий проект из удалённого хранилища?',
+        'Будьте внимательны, удаление проекта приведёт к потере всех версий документов!'
+    );
+
+    if (!result) {
+      return;
+    }
+
     const projectId = this.projectLocalService.getCurrentProject()?.id || null;
       await this.projectLocalService.deleteProject(projectId ? projectId : '');
       ToastService.success('Проект успешно удалён из удалённого хранилища!');
