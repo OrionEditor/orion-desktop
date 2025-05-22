@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { StoreService } from '../Store/store.service';
-import { StoreKeys } from '../../shared/constants/vault/store.keys';
-import {RefreshTokenService} from "./token/token-refresh.service";
+import { StoreService } from '../../Store/store.service';
+import { StoreKeys } from '../../../shared/constants/vault/store.keys';
+import {RefreshTokenService} from "../token/token-refresh.service";
 import {readFile} from "@tauri-apps/plugin-fs";
-import {API_V1_FULL_ENDPOINTS} from "../../api/v1/endpoints";
-import {ToastService} from "../Notifications/toast.service";
-import {withTokenRefresh} from "../../utils/http.utils";
-import {CreateDocumentResponse, GetDocumentResponse, Document, Version} from "../../interfaces/routes/document.interface";
+import {API_V1_FULL_ENDPOINTS} from "../../../api/v1/endpoints";
+import {ToastService} from "../../Notifications/toast.service";
+import {withTokenRefresh} from "../../../utils/http.utils";
+import {CreateDocumentResponse, GetDocumentResponse, Document, Version} from "../../../interfaces/routes/document.interface";
 
 @Injectable({
     providedIn: 'root'
