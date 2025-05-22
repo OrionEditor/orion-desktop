@@ -71,3 +71,111 @@
     bottom: 10px;
     left: 10px;
 }
+
+.remote-storage-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    color: var(--text-color);
+
+    h3 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+}
+
+.no-project-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    background-color: #fff3e0;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #ff9800;
+
+    .warning-icon {
+        font-size: 40px;
+        color: #ff9800;
+        line-height: 1;
+    }
+
+    p {
+        margin: 0;
+        font-size: 1rem;
+        color: #555;
+    }
+}
+
+.project-card {
+    max-width: 600px;
+    min-width: 400px;
+    background-color: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    color: var(--text-color);
+
+    .project-header {
+        padding: 16px;
+        background-color: transparent;
+        border-bottom: 1px solid #e0e0e0;
+
+        h4 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            margin: 4px 0 0;
+            font-size: 0.875rem;
+        }
+    }
+
+    .project-details {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .icon {
+                font-size: 20px;
+            }
+
+            span {
+                font-size: 1rem;
+            }
+        }
+    }
+
+    .project-actions {
+        padding: 16px;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.remote-storage-info {
+    padding: 16px;
+    background-color: #e3f2fd;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #1565c0;
+    text-align: center;
+    border: 1px solid #90caf9;
+
+    p {
+        margin: 0;
+    }
+}

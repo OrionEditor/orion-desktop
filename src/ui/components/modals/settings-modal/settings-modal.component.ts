@@ -19,6 +19,11 @@ import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
 import {AvatarComponent} from "../../avatar/avatar.component";
 import {danger} from "../../../../styles/var/globalColors";
 import {TokenService} from "../../../../services/Token/token.service";
+import {Project} from "../../../../interfaces/routes/project.interface";
+import {ToastService} from "../../../../services/Notifications/toast.service";
+import {ProjectService} from "../../../../services/Routes/project/project.service";
+import {ProjectLocalService} from "../../../../services/LocalServices/project-local.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-settings-modal',
@@ -30,7 +35,8 @@ import {TokenService} from "../../../../services/Token/token.service";
     ThemeToggleComponent,
     InputTextFieldComponent,
     CheckboxComponent,
-    AvatarComponent
+    AvatarComponent,
+      HttpClientModule
   ],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.css'
@@ -41,8 +47,48 @@ export class SettingsModalComponent {
   currentLang: string = Language.RU;
   hasAuth: string | null = null;
 
-  constructor(private windowService: WindowService, private configService: ConfigService, private languageService: LanguageService) {
+  projectId: string | null = null;
+  currentProject: Project | null = null;
+
+  constructor(private windowService: WindowService, private configService: ConfigService, private languageService: LanguageService, private http: HttpClient) {
     MarkdownFilesService.initialize().then(() => this.loadInitialFiles());
+  }
+
+  private projectService = new ProjectService(this.http);
+  private projectLocalService = new ProjectLocalService(this.projectService);
+
+  // Проверка текущего проекта
+  private async checkProject() {
+    try {
+      await this.projectLocalService.syncProjects();
+      this.currentProject = this.projectLocalService.getCurrentProject();
+      this.projectId = this.projectLocalService.getCurrentProject()?.id || null;
+    } catch (e) {
+      console.error('Ошибка при проверке проекта:', e);
+      this.projectId = null;
+      this.currentProject = null;
+    }
+  }
+
+  // Удаление проекта
+  async deleteProject() {
+    const projectId = this.projectLocalService.getCurrentProject()?.id || null;
+      await this.projectLocalService.deleteProject(projectId ? projectId : '');
+      // await this.projectService.deleteProjectById(projectId ? projectId : '');
+      ToastService.success('Проект успешно удалён из удалённого хранилища!');
+      this.currentProject = null;
+      this.projectId = null;
+  }
+
+  // Форматирование даты в DD.MM.YYYY
+  formatDate(dateString?: string): string {
+    if (!dateString) return 'Не указана';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Некорректная дата';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
   }
 
   async ngOnInit(){
@@ -57,6 +103,8 @@ export class SettingsModalComponent {
     this.languageService.useLang(this.currentLang);
 
     this.hasAuth = await StoreService.get(StoreKeys.ACCESS_TOKEN);
+
+    await this.checkProject();
   }
 
   async openTab(type: MarkdownFilesType): Promise<void> {

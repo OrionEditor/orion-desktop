@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ApplicationRef, Component, EnvironmentInjector} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import {StartPageComponent} from "../ui/pages/start-page/start-page.component";
@@ -25,6 +25,7 @@ import {TokenService} from "../services/Token/token.service";
 import {ProfileService} from "../services/Routes/profile/profile.service";
 import {NetworkService} from "../services/Network/network.service";
 import {listen} from "@tauri-apps/api/event";
+import {ToastService} from "../services/Notifications/toast.service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '../assets/localization/i18n/', '.json');
@@ -40,8 +41,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 export class AppComponent {
   windowLabel: string = '';
 
-  constructor(private configService: ConfigService, private windowService: WindowService, protected uploadService: UploadService, private apiEndpointsService: ApiEndpointsService, private http: HttpClient) {
+  constructor(appRef: ApplicationRef, injector: EnvironmentInjector, private configService: ConfigService, private windowService: WindowService, protected uploadService: UploadService, private apiEndpointsService: ApiEndpointsService, private http: HttpClient) {
     this.initializeMarkdownFiles();
+    ToastService.initialize(appRef, injector);
   }
 
   private profileService = new ProfileService(this.http);
@@ -68,6 +70,7 @@ export class AppComponent {
     }).catch((err) => {
       console.error('Ошибка при установке слушателя события:', err);
     });
+
   }
 
   async ngOnChanges(){

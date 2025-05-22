@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import {withTokenRefresh} from "../../../utils/http.utils";
-import {Project} from "../../../interfaces/config.interface";
+import {Project} from "../../../interfaces/routes/project.interface";
 import {ToastService} from "../../Notifications/toast.service";
 import {RefreshTokenService} from "../token/token-refresh.service";
 import {API_V1_FULL_ENDPOINTS} from "../../../api/v1/endpoints";

@@ -25,11 +25,27 @@ export let API_V1_ENDPOINTS: any = {
 export let API_V1_FULL_ENDPOINTS = addBaseUrl(API_V1_ENDPOINTS, environment.apiUrl);
 
 // Рекурсивная функция для добавления базового URL
+// function addBaseUrl(obj: any, baseUrl: string): any {
+//     if (typeof obj === 'string') {
+//         return `${baseUrl}/${obj}`;
+//     }
+//
+//     const result: any = {};
+//     for (const key in obj) {
+//         if (obj.hasOwnProperty(key)) {
+//             result[key] = addBaseUrl(obj[key], baseUrl);
+//         }
+//     }
+//     return result;
+// }
+
 function addBaseUrl(obj: any, baseUrl: string): any {
     if (typeof obj === 'string') {
         return `${baseUrl}/${obj}`;
     }
-
+    if (typeof obj === 'function') {
+        return (param: string) => `${baseUrl}/${obj(param)}`; // Обрабатываем функции
+    }
     const result: any = {};
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {

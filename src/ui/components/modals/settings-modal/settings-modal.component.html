@@ -16,6 +16,13 @@
         </button>
         <button
                 class="chip"
+                [class.active]="selectedChip === 'remote_storage'"
+                (click)="selectChip('remote_storage')"
+        >
+            Удалённое хранилище
+        </button>
+        <button
+                class="chip"
                 [class.active]="selectedChip === 'account'"
                 (click)="selectChip('account')"
         >
@@ -62,6 +69,53 @@
 <!--                            (checkedChange)="onLineChange($event)"-->
 <!--                    />-->
 <!--                </div>-->
+            </div>
+        </div>
+
+        <div *ngIf="selectedChip === 'remote_storage'">
+            <div class="remote-storage-content">
+                <h3>Удалённое хранилище</h3>
+
+                <!-- Если проект не создан -->
+                <div *ngIf="!projectId" class="no-project-message">
+                    <span class="warning-icon">⚠️</span>
+                    <p>Проект не синхронизирован с удалённым хранилищем.</p>
+                    <p *ngIf="!hasAuth">Вы не вошли в свой аккаунт. Войдите, чтобы синхронизировать проект.</p>
+                    <p *ngIf="hasAuth">Проверьте подключение к интернету или синхронизируйте проект вручную.</p>
+                </div>
+
+                <!-- Если проект создан -->
+                <div *ngIf="projectId" class="project-card">
+                    <div class="project-header">
+                        <h4>{{ currentProject?.name }}</h4>
+                        <p class="subtitle">Проект в удалённом хранилище</p>
+                    </div>
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <span class="icon">📝</span>
+                            <span><strong>Описание:</strong> {{ currentProject?.description || 'Без описания' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="icon">📅</span>
+                            <span><strong>Дата создания:</strong> {{ formatDate(currentProject?.created_at) }}</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <app-fill-button
+                                buttonText="Удалить проект"
+                                [colorBtn]="danger"
+                                (click)="deleteProject()"
+                        />
+                    </div>
+                </div>
+
+                <!-- Поясняющий текст -->
+                <div class="remote-storage-info">
+                    <p>
+                        Удалённое хранилище создаётся автоматически, если вы вошли в свой аккаунт и есть подключение к интернету.
+                        Удалённое хранилище необходимо для версионирования ваших документов и хранения их в облаке.
+                    </p>
+                </div>
             </div>
         </div>
 
