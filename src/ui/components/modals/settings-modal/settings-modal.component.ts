@@ -17,7 +17,7 @@ import {CheckboxComponent} from "../../inputs/checkbox/checkbox.component";
 import {StoreService} from "../../../../services/Store/store.service";
 import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
 import {AvatarComponent} from "../../avatar/avatar.component";
-import {danger} from "../../../../styles/var/globalColors";
+import {danger, success} from "../../../../styles/var/globalColors";
 import {TokenService} from "../../../../services/Token/token.service";
 import {Project} from "../../../../interfaces/routes/project.interface";
 import {ToastService} from "../../../../services/Notifications/toast.service";
@@ -25,6 +25,8 @@ import {ProjectService} from "../../../../services/Routes/project/project.servic
 import {ProjectLocalService} from "../../../../services/LocalServices/project-local.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {ConfirmModalService} from "../../../../services/Modals/confirm-modal.service";
+import {WorkspaceService} from "../../../../services/Workspace/workspace.service";
+import {getWorkspacePath} from "../../../../shared/constants/workspace/workspace-path.const";
 
 @Component({
   selector: 'app-settings-modal',
@@ -167,7 +169,19 @@ export class SettingsModalComponent {
     await WindowService.reloadAllWindows();
   }
 
+  async syncProject(){
+    const projectPath = this.configService.getLastOpened();
+    const projectName = await WorkspaceService.getProjectName(getWorkspacePath(projectPath ? projectPath : ''));
+
+    try {
+      await this.projectLocalService.createProject(projectName);
+      await this.checkProject();
+      ToastService.success('Удалённое хранилище успешно синхронизировано!')
+    } catch (e){}
+  }
+
   protected readonly MarkdownFilesType = MarkdownFilesType;
   protected readonly SettingsService = SettingsService;
     protected readonly danger = danger;
+  protected readonly success = success;
 }
