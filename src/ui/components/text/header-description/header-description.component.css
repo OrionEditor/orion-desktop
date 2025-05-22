@@ -1,0 +1,14 @@
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+p {
+    margin-top: 10px;
+    color: #9ca3af;
+}
+
+.title-space-class {
+    white-space: pre-line;
+}

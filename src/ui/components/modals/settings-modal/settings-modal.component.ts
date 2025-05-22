@@ -74,7 +74,6 @@ export class SettingsModalComponent {
   async deleteProject() {
     const projectId = this.projectLocalService.getCurrentProject()?.id || null;
       await this.projectLocalService.deleteProject(projectId ? projectId : '');
-      // await this.projectService.deleteProjectById(projectId ? projectId : '');
       ToastService.success('Проект успешно удалён из удалённого хранилища!');
       this.currentProject = null;
       this.projectId = null;

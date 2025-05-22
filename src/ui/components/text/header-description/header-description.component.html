@@ -1,0 +1,27 @@
+<div class="header-description-container">
+    <ng-container *ngIf="title">
+        <ng-container [ngSwitch]="titleType">
+            <h1 *ngSwitchCase="'h1'">{{ title }}</h1>
+            <h2 *ngSwitchCase="'h2'">{{ title }}</h2>
+            <h3 *ngSwitchCase="'h3'">{{ title }}</h3>
+            <h4 *ngSwitchCase="'h4'">{{ title }}</h4>
+            <h5 *ngSwitchCase="'h5'">{{ title }}</h5>
+            <h6 *ngSwitchCase="'h6'">{{ title }}</h6>
+            <h2 *ngSwitchDefault>{{ title }}</h2>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="titleSecondLevel">
+        <ng-container [ngSwitch]="titleSecondType">
+            <h1 *ngSwitchCase="'h1'">{{ titleSecondLevel }}</h1>
+            <h2 *ngSwitchCase="'h2'">{{ titleSecondLevel }}</h2>
+            <h3 *ngSwitchCase="'h3'">{{ titleSecondLevel }}</h3>
+            <h4 *ngSwitchCase="'h4'">{{ titleSecondLevel }}</h4>
+            <h5 *ngSwitchCase="'h5'">{{ titleSecondLevel }}</h5>
+            <h6 *ngSwitchCase="'h6'">{{ titleSecondLevel }}</h6>
+            <h3 *ngSwitchDefault>{{ titleSecondLevel }}</h3>
+        </ng-container>
+    </ng-container>
+
+    <p *ngIf="description">{{ description }}</p>
+</div>
