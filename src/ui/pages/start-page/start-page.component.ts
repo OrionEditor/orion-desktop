@@ -24,10 +24,11 @@ import {TokenService} from "../../../services/Token/token.service";
 import {AvatarComponent} from "../../components/avatar/avatar.component";
 import {StoreKeys} from "../../../shared/constants/vault/store.keys";
 import {StoreService} from "../../../services/Store/store.service";
+import {AppVersionComponent} from "../../components/app-version/app-version.component";
 @Component({
   selector: 'app-start-page',
   standalone: true,
-  imports: [NgForOf, NgIf, ThemeToggleComponent, FillButtonComponent, OutlineButtonComponent, LogoContainerComponent, TranslatePipe, LanguageSelectorComponent, AvatarComponent],
+    imports: [NgForOf, NgIf, ThemeToggleComponent, FillButtonComponent, OutlineButtonComponent, LogoContainerComponent, TranslatePipe, LanguageSelectorComponent, AvatarComponent, AppVersionComponent],
   templateUrl: './start-page.component.html',
   styleUrls: ['./start-page.component.css']
 })

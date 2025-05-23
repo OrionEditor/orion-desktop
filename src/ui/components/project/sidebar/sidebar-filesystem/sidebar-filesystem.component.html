@@ -1,7 +1,7 @@
 <div class="sidebar-filesystem">
-    <div class="sidebar-filesystem-project-name">
-        <span>{{workspacePath}}</span>
-    </div>
+<!--    <div class="sidebar-filesystem-project-name">-->
+<!--        <span>{{workspacePath}}</span>-->
+<!--    </div>-->
     <div class="sidebar-filesystem-controls">
         <app-sidebar-filesystem-controls [projectPath]="projectPath"       (expandAllEvent)="expandAllNodes()"
                                          (collapseAllEvent)="collapseAllNodes()" (sortChange)="onSortChange($event)"
@@ -9,7 +9,7 @@
         />
         <app-sidebar-filesystem-search (searchQuery)="onSearch($event)"/>
     </div>
-    <ul>
+    <ul class="sidebar-filesystem-ul">
         <ng-container *ngFor="let node of filteredFileStructure">
             <app-file-node [node]="node"         (dragstart)="onDragStart($event, node)"
                            (dragover)="onDragOver($event)"
@@ -26,4 +26,11 @@
             </div>
         </div>
     </ul>
+
+    <div class="sidebar-filesystem-footer">
+        <app-app-version/>
+        <div class="project-name-container">
+            <span>{{workspacePath}}</span>
+        </div>
+    </div>
 </div>

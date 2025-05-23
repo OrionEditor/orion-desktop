@@ -10,7 +10,6 @@
     "*"
   ],
   "permissions": [
-    "global-shortcut:default",
     "core:default",
     "shell:allow-open",
     "dialog:allow-open",

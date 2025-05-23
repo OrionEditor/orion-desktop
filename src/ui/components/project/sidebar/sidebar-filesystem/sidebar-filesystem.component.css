@@ -39,3 +39,22 @@
 .no-results{
     color: var(--text-color);
 }
+
+.sidebar-filesystem-ul{
+    height: 78vh;
+}
+
+.sidebar-filesystem-footer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    margin-left: 10px;
+}
+
+.project-name-container{
+    border: 2px solid green;
+    border-radius: 7px;
+    padding: 5px;
+    color: var(--text-color);
+}

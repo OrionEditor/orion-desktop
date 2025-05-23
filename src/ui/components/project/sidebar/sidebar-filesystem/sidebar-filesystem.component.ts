@@ -11,18 +11,20 @@ import {TabService} from "../../../../../services/tab.service";
 import {FileSystemSortingService} from "../../../../../services/FileSystem/file-system-sorting.service";
 import {WorkspaceService} from "../../../../../services/Workspace/workspace.service";
 import {getWorkspacePath} from "../../../../../shared/constants/workspace/workspace-path.const";
+import {AppVersionComponent} from "../../../app-version/app-version.component";
 
 @Component({
   selector: 'app-sidebar-filesystem',
   standalone: true,
-  imports: [
-    NgForOf,
-    FileNodeComponent,
-    SidebarFilesystemSearchComponent,
-    SidebarFilesystemControlsComponent,
-    NgIf,
-    TranslatePipe
-  ],
+    imports: [
+        NgForOf,
+        FileNodeComponent,
+        SidebarFilesystemSearchComponent,
+        SidebarFilesystemControlsComponent,
+        NgIf,
+        TranslatePipe,
+        AppVersionComponent
+    ],
   templateUrl: './sidebar-filesystem.component.html',
   styleUrl: './sidebar-filesystem.component.css'
 })
