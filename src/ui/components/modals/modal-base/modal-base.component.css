@@ -15,10 +15,10 @@
 .modal-content {
     position: absolute;
     padding: 20px;
-    min-width: 300px;
+    min-width: 400px;
     max-width: 90vw;
     max-height: 90vh;
-    overflow-y: auto;
+    overflow-y: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: left 0.1s ease-out, top 0.1s ease-out;
     background-color: var(--modal-background-color);

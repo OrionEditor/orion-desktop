@@ -11,12 +11,13 @@
 </div>
 <app-modal-base
         [isOpen]="modalsControls.versionModal.isModalOpen"
-        [closeOnOverlayClick]="false"
+        [closeOnOverlayClick]="true"
         [contentBorderRadius]="'12px'"
         (closed)="closeVersionModal()"
-        [isDraggable]="true"
+        [isDraggable]="false"
         position="fixed"
-        [closeOnButton]="isMajorOrMinorUpdate ? false : true"
+        [closeOnButton]="false"
+        contentBackgroundColor="transparent"
 >
-    <app-version-modal [updateStatus]="updateStatus"/>
+    <app-version-modal [updateStatus]="updateStatus" (closed)="closeVersionModal()"/>
 </app-modal-base>

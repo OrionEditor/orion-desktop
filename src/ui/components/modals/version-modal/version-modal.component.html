@@ -1,32 +1,95 @@
-<div class="modal-content" (click)="$event.stopPropagation()">
-    <ng-container *ngIf="!updateStatus?.available">
-        <div class="modal-header">
-            <h2 class="current-version up-to-date">v{{ version$ | async }}</h2>
+<!--<div class="modal-content" (click)="$event.stopPropagation()">-->
+<!--    <ng-container *ngIf="!updateStatus?.available">-->
+<!--        <div class="modal-header">-->
+<!--            <h2 class="current-version up-to-date">v{{ version$ | async }}</h2>-->
+<!--        </div>-->
+<!--        <div class="modal-body">-->
+<!--            <p class="status-text">Это последняя актуальная версия</p>-->
+<!--        </div>-->
+<!--    </ng-container>-->
+<!--    <ng-container *ngIf="updateStatus?.available">-->
+<!--        <div class="modal-header update-available">-->
+<!--            <div class="version-comparison">-->
+<!--                <h2 class="current-version outdated">v{{ version$ | async }}</h2>-->
+<!--                <span class="arrow">➔</span>-->
+<!--                <h2 class="new-version">v{{ updateStatus?.version }}</h2>-->
+<!--            </div>-->
+<!--            <p class="release-notes">{{ updateStatus?.notes }}</p>-->
+<!--        </div>-->
+<!--        <div class="modal-footer">-->
+<!--            <button-->
+<!--                    class="install-button"-->
+<!--                    [disabled]="isDownloading"-->
+<!--                    (click)="installUpdate()"-->
+<!--            >-->
+<!--                <span *ngIf="!isDownloading">Загрузить новую версию</span>-->
+<!--                &lt;!&ndash;                <span *ngIf="isDownloading" class="progress-text">{{ downloadProgress }}%</span>&ndash;&gt;-->
+<!--                <span *ngIf="isDownloading" class="progress-text">Загрузка...</span>-->
+<!--                <div class="progress-bar" [style.width]="downloadProgress + '%'"></div>-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </ng-container>-->
+<!--</div>-->
+
+<!--<div class="modal-overlay" (click)="closeModal()">-->
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <!-- Звёздный фон -->
+        <div class="stars"></div>
+        <!-- Кнопка закрытия -->
+<!--        <button class="close-button" (click)="closeModal()">✕</button>-->
+        <!-- Иконка ракеты -->
+<!--        <div class="modal-icon">🚀</div>-->
+        <div class="modal-icon">
+            <img src="assets/icons/svg/modals/rocket.svg"/>
         </div>
-        <div class="modal-body">
-            <p class="status-text">Это последняя актуальная версия</p>
-        </div>
-    </ng-container>
-    <ng-container *ngIf="updateStatus?.available">
-        <div class="modal-header update-available">
-            <div class="version-comparison">
-                <h2 class="current-version outdated">v{{ version$ | async }}</h2>
-                <span class="arrow">➔</span>
-                <h2 class="new-version">v{{ updateStatus?.version }}</h2>
+        <!-- SVG-планета -->
+        <svg class="planet" viewBox="0 0 100 100" width="80" height="80">
+            <circle cx="50" cy="50" r="40" fill="url(#planetGradient)" />
+            <defs>
+                <linearGradient id="planetGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#6b7280;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#1f2937;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <!-- Если обновление недоступно -->
+        <ng-container *ngIf="!updateStatus?.available">
+            <div class="modal-header">
+                <h2 class="current-version up-to-date">Версия v{{ version$ | async }}</h2>
+                <p class="status-text">Ваше приложение полностью обновлено!</p>
             </div>
-            <p class="release-notes">{{ updateStatus?.notes }}</p>
-        </div>
-        <div class="modal-footer">
-            <button
-                    class="install-button"
-                    [disabled]="isDownloading"
-                    (click)="installUpdate()"
-            >
-                <span *ngIf="!isDownloading">Загрузить новую версию</span>
-                <!--                <span *ngIf="isDownloading" class="progress-text">{{ downloadProgress }}%</span>-->
-                <span *ngIf="isDownloading" class="progress-text">Загрузка...</span>
-                <div class="progress-bar" [style.width]="downloadProgress + '%'"></div>
-            </button>
-        </div>
-    </ng-container>
-</div>
+            <div class="modal-footer">
+                <button class="action-button" (click)="closeModal()">ОК</button>
+            </div>
+        </ng-container>
+
+        <!-- Если обновление доступно -->
+        <ng-container *ngIf="updateStatus?.available">
+            <div class="modal-header">
+                <div class="version-comparison">
+                    <span class="current-version outdated">v{{ version$ | async }}</span>
+                    <span class="arrow">➔</span>
+                    <span class="new-version">v{{ updateStatus?.version }}</span>
+                </div>
+                <p class="release-date">Выпуск: {{ formatDate(date) }}</p>
+                <p class="release-notes">{{ updateStatus?.notes }}</p>
+            </div>
+            <div class="modal-footer">
+                <button
+                        class="action-button"
+                        [disabled]="isDownloading"
+                        (click)="installUpdate()"
+                >
+                    <ng-container *ngIf="!isDownloading">
+                        Обновить сейчас
+                    </ng-container>
+                    <ng-container *ngIf="isDownloading">
+                        <span class="spinner"></span>
+                        Установка...
+                    </ng-container>
+                </button>
+            </div>
+        </ng-container>
+    </div>
+<!--</div>-->

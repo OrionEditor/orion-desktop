@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {UpdateStatus} from "../../../../interfaces/data/update-status.interface";
 import {UpdateService} from "../../../../services/Version/update.service";
 import {VersionService} from "../../../../services/Version/version.service";
@@ -16,9 +16,12 @@ import {AsyncPipe, NgIf} from "@angular/common";
 })
 export class VersionModalComponent {
   @Input() updateStatus: UpdateStatus | null = null;
+  @Output() closed = new EventEmitter<void>();
   version$ = this.versionService.getAppVersion();
   downloadProgress: number = 0;
   isDownloading: boolean = false;
+
+  date: string = this.updateStatus?.date || '';
 
   constructor(
       private updateService: UpdateService,
@@ -55,7 +58,18 @@ export class VersionModalComponent {
   closeModal(): void {
     const modal = document.querySelector('app-version-modal');
     if (modal) {
+      this.closed.emit();
       modal.remove();
     }
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
   }
 }
