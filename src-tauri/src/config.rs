@@ -28,7 +28,7 @@ impl Default for Config {
             last_opened: None,
             theme: "dark".to_string(),
             font_size: 14,
-            language: "en".to_string(), // Язык по умолчанию
+            language: "ru".to_string(), // Язык по умолчанию
             auth_token: None,
         }
     }
