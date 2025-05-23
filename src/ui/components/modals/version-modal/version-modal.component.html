@@ -1,0 +1,32 @@
+<div class="modal-content" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="!updateStatus?.available">
+        <div class="modal-header">
+            <h2 class="current-version up-to-date">v{{ version$ | async }}</h2>
+        </div>
+        <div class="modal-body">
+            <p class="status-text">Это последняя актуальная версия</p>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="updateStatus?.available">
+        <div class="modal-header update-available">
+            <div class="version-comparison">
+                <h2 class="current-version outdated">v{{ version$ | async }}</h2>
+                <span class="arrow">➔</span>
+                <h2 class="new-version">v{{ updateStatus?.version }}</h2>
+            </div>
+            <p class="release-notes">{{ updateStatus?.notes }}</p>
+        </div>
+        <div class="modal-footer">
+            <button
+                    class="install-button"
+                    [disabled]="isDownloading"
+                    (click)="installUpdate()"
+            >
+                <span *ngIf="!isDownloading">Загрузить новую версию</span>
+                <!--                <span *ngIf="isDownloading" class="progress-text">{{ downloadProgress }}%</span>-->
+                <span *ngIf="isDownloading" class="progress-text">Загрузка...</span>
+                <div class="progress-bar" [style.width]="downloadProgress + '%'"></div>
+            </button>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,45 @@
+.version-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid #2ecc71;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.version-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.5);
+}
+
+.version-text {
+    font-size: 16px;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    animation: subtle-pulse 3s ease-in-out infinite;
+}
+
+.version-up-to-date {
+    color: #2ecc71;
+}
+
+.version-outdated {
+    color: #e74c3c;
+}
+
+@keyframes subtle-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+    .version-container {
+        padding: 6px 12px;
+    }
+    .version-text {
+        font-size: 14px;
+    }
+}

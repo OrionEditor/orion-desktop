@@ -18,6 +18,9 @@ export class ModalBaseComponent {
   @Input() isDraggable: boolean = false;
   @Output() closed = new EventEmitter<void>();
 
+  @Input() position: string = 'absolute';
+  @Input() closeOnButton: boolean = true;
+
   @ViewChild('modalContent', { static: false }) modalContent!: ElementRef<HTMLDivElement>;
 
   private isDragging = false;

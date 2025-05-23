@@ -1,0 +1,22 @@
+<div class="version-container" [ngClass]="{
+    'version-up-to-date': !updateStatus?.available && !isChecking,
+    'version-outdated': updateStatus?.available
+  }" [style.background]="'transparent'" (click)="openVersionModal()">
+  <span class="version-text" [ngClass]="{
+    'version-up-to-date': !updateStatus?.available && !isChecking,
+    'version-outdated': updateStatus?.available
+  }">
+    v{{ version$ | async }}
+  </span>
+</div>
+<app-modal-base
+        [isOpen]="modalsControls.versionModal.isModalOpen"
+        [closeOnOverlayClick]="false"
+        [contentBorderRadius]="'12px'"
+        (closed)="closeVersionModal()"
+        [isDraggable]="true"
+        position="fixed"
+        [closeOnButton]="isMajorOrMinorUpdate ? false : true"
+>
+    <app-version-modal [updateStatus]="updateStatus"/>
+</app-modal-base>
