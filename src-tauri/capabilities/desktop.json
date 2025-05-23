@@ -1,0 +1,35 @@
+{
+  "identifier": "desktop-capability",
+  "platforms": [
+    "macOS",
+    "windows",
+    "linux"
+  ],
+  "windows": [
+    "main",
+    "*"
+  ],
+  "permissions": [
+    "global-shortcut:default",
+    "core:default",
+    "shell:allow-open",
+    "dialog:allow-open",
+    "dialog:allow-confirm",
+    "dialog:default",
+    "fs:default",
+    "fs:allow-write-file",
+    "fs:write-all",
+    "fs:allow-read-text-file",
+    "fs:read-files",
+    "fs:allow-read-text-file-lines",
+    "fs:read-all",
+    "fs:allow-read-file",
+    "store:allow-load",
+    "store:allow-save",
+    "store:allow-set",
+    "store:allow-get",
+    "store:allow-delete",
+    "store:allow-clear",
+    "updater:default"
+  ]
+}
