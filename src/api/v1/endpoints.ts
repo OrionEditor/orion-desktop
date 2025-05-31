@@ -25,6 +25,7 @@ export let API_V1_ENDPOINTS: any = {
         GET_DOCUMENT_BY_ID: (documentId: string) => environment.endpoints.document.get_document_by_id(documentId),
         UPDATE_DOCUMENT: (documentId: string) => environment.endpoints.document.update_document(documentId),
         DELETE_DOCUMENT: (documentId: string) => environment.endpoints.document.delete_document(documentId),
+        GET_DOCUMENT_BY_NAME: (projectId: string, documentName: string) => environment.endpoints.document.get_document_by_name(projectId, documentName),
     }
 };
 

@@ -131,4 +131,24 @@ export class DocumentService {
             )
         );
     }
+
+    /**
+     * Получает документ по ID проекта и имени документа.
+     * @param projectId ID проекта
+     * @param documentName Имя документа
+     * @returns Документ и его версии или объект с ошибкой
+     */
+    async getDocumentByProjectAndName(projectId: string, documentName: string): Promise<GetDocumentResponse> {
+        return withTokenRefresh(this.http, this.refreshTokenService, headers =>
+            this.http.get(API_V1_FULL_ENDPOINTS.DOCUMENT.GET_DOCUMENT_BY_NAME(projectId, documentName), { headers }).pipe(
+                map((response: any) => {
+                    if (response.document && response.versions) {
+                        return response as GetDocumentResponse;
+                    } else {
+                        throw new Error(response.error || 'Некорректный ответ сервера');
+                    }
+                })
+            )
+        );
+    }
 }

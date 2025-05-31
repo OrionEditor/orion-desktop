@@ -16,7 +16,7 @@ impl Default for Workspace {
     fn default() -> Self {
         Workspace {
             project_name: "New Project".to_string(),
-            presets: 1,
+            presets: 0,
             active_tabs: vec![],
         }
     }

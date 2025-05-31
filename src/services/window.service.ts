@@ -38,8 +38,6 @@ export class WindowService {
         }
     }
 
-    // Перезагрузить окно по метке
-    // Перезагрузить окно по метке
     async reloadWindowByLabel(label: string): Promise<void> {
         try {
             // Получаем окно по метке
