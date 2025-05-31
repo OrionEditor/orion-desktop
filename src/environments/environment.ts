@@ -27,7 +27,13 @@ export const environment = {
             get_document_by_id: (documentId: string) => `documents/${documentId}`,
             update_document: (documentId: string) => `documents/${documentId}`,
             delete_document: (documentId: string) => `documents/${documentId}`,
-            get_document_by_name: (projectId: string, documentName: string) => `documents/project/${projectId}/name/${documentName}`
+            get_document_by_name: (projectId: string, documentName: string) => `documents/project/${projectId}/name/${documentName}`,
+        },
+        version: {
+            get_version_by_document_id: (documentId: string) => `documents/${documentId}/versions`,
+            create_version: (documentId: string) => `documents/${documentId}/versions`,
+            get_version: (versionId: string) => `documents/versions/${versionId}`,
+            delete_version: (versionId: string) => `documents/versions/${versionId}`,
         }
     }
 };

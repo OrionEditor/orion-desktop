@@ -26,6 +26,12 @@ export let API_V1_ENDPOINTS: any = {
         UPDATE_DOCUMENT: (documentId: string) => environment.endpoints.document.update_document(documentId),
         DELETE_DOCUMENT: (documentId: string) => environment.endpoints.document.delete_document(documentId),
         GET_DOCUMENT_BY_NAME: (projectId: string, documentName: string) => environment.endpoints.document.get_document_by_name(projectId, documentName),
+    },
+    VERSION: {
+        GET_VERSION_BY_DOCUMENT_ID: (documentId: string) => environment.endpoints.version.get_version_by_document_id(documentId),
+        CREATE_VERSION: (documentId: string) => environment.endpoints.version.create_version(documentId),
+        GET_VERSION: (versionId: string) => environment.endpoints.version.get_version(versionId),
+        DELETE_VERSION: (versionId: string) => environment.endpoints.version.delete_version(versionId),
     }
 };
 
