@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
+}
