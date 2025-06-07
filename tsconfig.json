@@ -20,7 +20,7 @@
     "module": "es2015",
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
-//    "types": ["node"]
+    "types": ["node"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
