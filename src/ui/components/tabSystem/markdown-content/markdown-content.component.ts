@@ -16,7 +16,7 @@ import {MdSettingsContextMenu} from "../../../../shared/constants/contextMenu/md
 import {AudioTrackComponent} from "../../audio/audio-track/audio-track.component";
 import {Gender} from "../../../../shared/enums/gender.enum";
 import {LanguageTranslateService} from "../../../../services/translate.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {VersionListComponent} from "../../versions/version-list/version-list.component";
 import {Version} from "../../../../interfaces/version.interface";
 import {ModalBaseComponent} from "../../modals/modal-base/modal-base.component";
@@ -35,6 +35,10 @@ import {initializeLinkHandler} from "../../../../utils/markown/link/link.utils";
 import hljs from 'highlight.js';
 import {TableMarkdownTemplate} from "../../../../shared/constants/templates/table-markdown.template";
 import {MarkdownTableParserService} from "../../../../services/Parsers/md-table.parser.service";
+import {DocumentService} from "../../../../services/Routes/document/document.service";
+import {DocumentLocalService} from "../../../../services/LocalServices/document-local.service";
+import {StoreService} from "../../../../services/Store/store.service";
+import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
 
 @Component({
   selector: 'app-markdown-content',
@@ -47,7 +51,8 @@ import {MarkdownTableParserService} from "../../../../services/Parsers/md-table.
     AudioTrackComponent,
     VersionListComponent,
     ModalBaseComponent,
-    SettingsModalComponent
+    SettingsModalComponent,
+      HttpClientModule
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -60,6 +65,7 @@ export class MarkdownContentComponent {
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
   @ViewChild('renderedContentRef', { static: false }) renderedContentRef!: ElementRef<HTMLDivElement>;
 
+  projectId: string = '';
   content: string = '';
   renderedContent: SafeHtml | string = '';
   lineNumbers: number[] = [];
@@ -95,8 +101,13 @@ export class MarkdownContentComponent {
 
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
+  onDocumentCloudSync: boolean = false;
+
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
-              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService) {}
+              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient) {}
+
+  private documentService = new DocumentService(this.http);
+  private documentLocalService = new DocumentLocalService(this.documentService);
 
   // private async updateRenderedContent(): Promise<void> {
   //   const links = this.linkParserService.extractLinksAndImages(this.content);
@@ -290,7 +301,12 @@ export class MarkdownContentComponent {
       this.updateStats();
       this.updateLines();
     });
+
+    this.projectId = await StoreService.get(StoreKeys.PROJECT_ID) || '';
+
     this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
+
+    this.onDocumentCloudSync = await this.documentLocalService.syncDocument(this.projectId,this.fileName, this.filePath);
   }
   private updateLines(): void {
     this.lines = this.content.split('\n');

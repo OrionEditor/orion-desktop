@@ -34,15 +34,6 @@
 
 }
 
-.tab-controls-info{
-    width: 100%;
-    height: 2vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: self-end;
-    align-content: end;
-}
 
 .editor-container {
     display: flex;
@@ -108,11 +99,27 @@
     border-left: 1px solid var(--text-color);
 }
 
-.tab-controls-info {
-    margin-top: 10px;
-    width: 100%;
+.sync-status{
     display: flex;
-    justify-content: end;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.sync-status img{
+    width: 32px;
+    height: 32px;
+}
+
+.on-status{
+    color: green;
+}
+
+.off-status {
+    color: red;
 }
 
 .file-path-link {
@@ -211,18 +218,34 @@
     height: 25px;
     /*background-color: var(--text-color);*/
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     align-content: center;
     border-radius: 16px;
     cursor: pointer;
     gap: 10px;
+    margin-left: 10px;
 }
 
 .parameters img{
     width: 20px;
     height: 20px;
+}
+
+.param-item{
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    cursor: pointer;
+}
+
+.param-item img {
+    width: 26px;
+    height: 26px;
 }
 
 .one-side-editor {
@@ -288,6 +311,17 @@
     box-sizing: border-box;
     color: var(--text-color);
 }
+
+.tab-controls-info{
+    width: 100%;
+    height: 2vh;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: self-end;
+    align-content: end;
+}
+
 
 .info {
     padding: 10px;

@@ -140,7 +140,7 @@ export class DocumentService {
      */
     async getDocumentByProjectAndName(projectId: string, documentName: string): Promise<GetDocumentResponse> {
         return withTokenRefresh(this.http, this.refreshTokenService, headers =>
-            this.http.get(API_V1_FULL_ENDPOINTS.DOCUMENT.GET_DOCUMENT_BY_NAME(projectId, documentName), { headers }).pipe(
+            this.http.get(`http://127.0.0.1/documents/project/${projectId}/name/${documentName}`, { headers }).pipe(
                 map((response: any) => {
                     if (response.document && response.versions) {
                         return response as GetDocumentResponse;

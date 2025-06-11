@@ -24,6 +24,8 @@ import {StoreService} from "../../../services/Store/store.service";
 import {StoreKeys} from "../../../shared/constants/vault/store.keys";
 import {WorkspaceService} from "../../../services/Workspace/workspace.service";
 import {getWorkspacePath} from "../../../shared/constants/workspace/workspace-path.const";
+import {DocumentService} from "../../../services/Routes/document/document.service";
+import {DocumentLocalService} from "../../../services/LocalServices/document-local.service";
 
 @Component({
   selector: 'app-project-page',
@@ -67,6 +69,9 @@ export class ProjectPageComponent {
   private projectService = new ProjectService(this.http);
   private projectLocalService = new ProjectLocalService(this.projectService);
 
+  private documentService = new DocumentService(this.http);
+  private documentLocalService = new DocumentLocalService(this.documentService);
+
   async ngOnInit() {
     if (!this.configService.getConfig()) {
       await this.configService.loadConfig();
@@ -107,6 +112,7 @@ export class ProjectPageComponent {
     await this.projectLocalService.syncProjects();
 
     await this.projectLocalService.loadCurrentProject();
+
 
     const projectId = this.projectLocalService.getCurrentProject()?.id;
     console.log(projectId);

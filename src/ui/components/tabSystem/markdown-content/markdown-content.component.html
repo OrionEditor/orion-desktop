@@ -19,6 +19,16 @@
         <div class="parameters">
             <img src="assets/icons/svg/actions/parameters.svg" (click)="onRightClick($event)">
             <app-context-menu *ngIf="showContextMenu" [items]="MarkdownSettingsMenuItems" [x]="menuX" [y]="menuY" (close)="onMenuClose()"></app-context-menu>
+
+            <div class="param-item">
+                <ng-container *ngIf="onDocumentCloudSync">
+                    <img src="assets/icons/svg/markdown-content/cloud-sync.svg" title="Документ синхронизирован с облачным хранилищем">
+                </ng-container>
+
+                <ng-container *ngIf="!onDocumentCloudSync">
+                    <img src="assets/icons/svg/markdown-content/cloud-not-sync.svg" title="Документ не синхронизирован с облачным хранилищем">
+                </ng-container>
+            </div>
         </div>
     </div>
 </div>

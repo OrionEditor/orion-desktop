@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {GetDocumentResponse, Document, Version, CreateDocumentResponse} from "../../interfaces/routes/document.interface";
+import {Injectable} from '@angular/core';
+import {CreateDocumentResponse, GetDocumentResponse} from "../../interfaces/routes/document.interface";
 import {DocumentService} from "../Routes/document/document.service";
 import {ToastService} from "../Notifications/toast.service";
 
@@ -13,24 +13,69 @@ export class DocumentLocalService {
         private documentService: DocumentService
     ) {}
 
+    // /**
+    //  * Синхронизирует документы с сервера по их ID.
+    //  * @param documentIds Массив ID документов для синхронизации
+    //  */
+    // async syncDocuments(documentIds: string[]): Promise<void> {
+    //     try {
+    //         const newDocuments: GetDocumentResponse[] = [];
+    //         for (const documentId of documentIds) {
+    //             const existing = this.documents.find(doc => doc.document.id === documentId);
+    //             if (!existing) {
+    //                 const documentResponse = await this.documentService.getDocumentById(documentId);
+    //                 newDocuments.push(documentResponse);
+    //             }
+    //         }
+    //         this.documents = [...this.documents, ...newDocuments];
+    //     } catch (e) {
+    //         console.error('Не удалось синхронизировать документы:', e);
+    //         ToastService.danger('Не удалось синхронизировать документы с сервером!');
+    //     }
+    // }
+
     /**
-     * Синхронизирует документы с сервера по их ID.
-     * @param documentIds Массив ID документов для синхронизации
+     * Синхронизирует документ с сервера по его имени и проекту.
+     * @param projectId ID проекта
+     * @param documentName Имя документа
+     * @param documentPath Путь документа
      */
-    async syncDocuments(documentIds: string[]): Promise<void> {
+    async syncDocument(projectId: string, documentName: string, documentPath: string): Promise<boolean> {
         try {
-            const newDocuments: GetDocumentResponse[] = [];
-            for (const documentId of documentIds) {
-                const existing = this.documents.find(doc => doc.document.id === documentId);
-                if (!existing) {
-                    const documentResponse = await this.documentService.getDocumentById(documentId);
-                    newDocuments.push(documentResponse);
-                }
+            // Проверяем, существует ли документ локально
+            const existing = this.documents.find(doc => doc.document.name === documentName && doc.document.project_id === projectId);
+            if (existing) {
+                console.log(`Документ ${documentName} уже существует локально`);
+                return true;
             }
-            this.documents = [...this.documents, ...newDocuments];
+
+            let documentResponse: GetDocumentResponse;
+
+            try {
+                // Пытаемся получить документ с сервера
+                documentResponse = await this.documentService.getDocumentByProjectAndName(projectId, documentName);
+                console.log(`Документ ${documentName} найден на сервере`);
+                return true;
+            } catch (e) {
+                //Если документ не существует удалённо, создаём его
+                console.log(`Документ ${documentName} не найден на сервере, создаём новый`);
+                const createResponse = await this.documentService.createDocument(projectId, documentName, documentPath);
+                documentResponse = {
+                    document: createResponse.document,
+                    versions: [createResponse.version]
+                };
+                ToastService.success(`Документ ${documentName} успешно создан в удалённом хранилище!`);
+            }
+
+            // Обновляем локальный кэш
+            this.documents = [...this.documents, documentResponse];
+            console.log(`Локальный кэш обновлён:`, this.documents);
+            return true;
+            // ToastService.success(`Документ ${documentName} успешно синхронизирован!`);
         } catch (e) {
-            console.error('Не удалось синхронизировать документы:', e);
-            ToastService.danger('Не удалось синхронизировать документы с сервером!');
+            console.error(`Ошибка при синхронизации документа ${documentName}:`, e);
+            return false;
+            // ToastService.danger(`Не удалось синхронизировать документ ${documentName}!`);
         }
     }
 
