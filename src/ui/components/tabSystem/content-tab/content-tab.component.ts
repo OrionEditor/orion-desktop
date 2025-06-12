@@ -41,6 +41,7 @@ import {AudioContentComponent} from "../audio-content/audio-content.component";
 export class ContentTabComponent {
   @Input() filePath: string = '';
   @Input() fileName: string = '';
+  @Input() projectPath: string = '';
 
   isImageFile(extension: string): boolean {
     return Object.values(FILE_TYPES.IMAGE).includes(extension);

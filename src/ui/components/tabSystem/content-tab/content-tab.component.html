@@ -1,6 +1,6 @@
 <div class="tab-content" *ngIf="filePath">
     <ng-container *ngIf="getFileExtension(fileName) === FILE_TYPES.MD">
-        <app-markdown-content [fileName]="fileName" [filePath]="filePath"/>
+        <app-markdown-content [fileName]="fileName" [filePath]="filePath" [projectPath]="projectPath"/>
     </ng-container>
 
     <ng-container *ngIf="isImageFile(getFileExtension(fileName))">

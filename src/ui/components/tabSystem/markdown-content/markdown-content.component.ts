@@ -18,7 +18,6 @@ import {Gender} from "../../../../shared/enums/gender.enum";
 import {LanguageTranslateService} from "../../../../services/translate.service";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {VersionListComponent} from "../../versions/version-list/version-list.component";
-import {Version} from "../../../../interfaces/version.interface";
 import {ModalBaseComponent} from "../../modals/modal-base/modal-base.component";
 import {SettingsModalComponent} from "../../modals/settings-modal/settings-modal.component";
 import {SettingsService} from "../../../../services/settings.service";
@@ -28,7 +27,7 @@ import {MarkdownLinkParserService} from "../../../../services/Markdown/markdown-
 import {ImageMarkdownTemplate} from "../../../../shared/constants/templates/image-markdown.template";
 import {VideoMarkdownTemplate} from "../../../../shared/constants/templates/video-markdown.template";
 import {AudioMarkdownTemplate} from "../../../../shared/constants/templates/audio-markdown.template";
-import {resolveResource} from "@tauri-apps/api/path";
+import {join, resolveResource} from "@tauri-apps/api/path";
 import {CodeMarkdownTemplate} from "../../../../shared/constants/templates/code-markdown.template";
 import {MarkdownCodeParserService} from "../../../../services/Parsers/md-code.parser.service";
 import {initializeLinkHandler} from "../../../../utils/markown/link/link.utils";
@@ -39,6 +38,12 @@ import {DocumentService} from "../../../../services/Routes/document/document.ser
 import {DocumentLocalService} from "../../../../services/LocalServices/document-local.service";
 import {StoreService} from "../../../../services/Store/store.service";
 import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
+import {GetDocumentResponse} from "../../../../interfaces/routes/document.interface";
+import {Version} from "../../../../interfaces/routes/document.interface";
+import {VersionService} from "../../../../services/Routes/version.service";
+import {mkdir, readFile} from "@tauri-apps/plugin-fs";
+import {ToastService} from "../../../../services/Notifications/toast.service";
+import {writeFile, remove} from "@tauri-apps/plugin-fs";
 
 @Component({
   selector: 'app-markdown-content',
@@ -60,6 +65,7 @@ import {StoreKeys} from "../../../../shared/constants/vault/store.keys";
 export class MarkdownContentComponent {
   @Input() filePath: string = '';
   @Input() fileName: string = '';
+  @Input() projectPath: string = '';
 
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
@@ -103,11 +109,18 @@ export class MarkdownContentComponent {
 
   onDocumentCloudSync: boolean = false;
 
+  currentDocument: GetDocumentResponse | null = null;
+
+  // Данные для версий
+  versions: Version[] = [];
+
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
               private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient) {}
 
   private documentService = new DocumentService(this.http);
   private documentLocalService = new DocumentLocalService(this.documentService);
+
+  private versionService = new VersionService(this.http);
 
   // private async updateRenderedContent(): Promise<void> {
   //   const links = this.linkParserService.extractLinksAndImages(this.content);
@@ -306,7 +319,13 @@ export class MarkdownContentComponent {
 
     this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
-    this.onDocumentCloudSync = await this.documentLocalService.syncDocument(this.projectId,this.fileName, this.filePath);
+    this.onDocumentCloudSync = await this.documentLocalService.syncDocument(this.projectId,this.fileName, this.filePath, this.projectPath);
+
+    this.currentDocument = this.documentLocalService.getDocumentByNameFromCache(this.projectId, this.fileName);
+
+    if(this.currentDocument){
+      this.versions = [{id: 0, document_id: '0', version_number: 0, is_active: true, created_at: '', content_hash: '', s3_path: ''},...this.currentDocument.versions];
+    }
   }
   private updateLines(): void {
     this.lines = this.content.split('\n');
@@ -600,23 +619,112 @@ export class MarkdownContentComponent {
     this.isVersionPanelCollapsed = !this.isVersionPanelCollapsed;
   }
 
-  // Данные для версий
-  versions: Version[] = [
-    { id: '1', fileName: 'file_v1.md', versionNumber: 'v1', size: '12 KB', createdAt: '2025-03-30 14:00', isActive: false },
-    { id: '2', fileName: 'file_v2.md', versionNumber: 'v2', size: '15 KB', createdAt: '2025-03-30 15:30', isActive: true },
-    { id: '3', fileName: 'file_v3.md', versionNumber: 'v3', size: '18 KB', createdAt: '2025-03-30 16:00', isActive: false }
-  ];
-
   selectVersion(versionId: string): void {
+    console.log(versionId);
     this.versions = this.versions.map(version => ({
       ...version,
-      isActive: version.id === versionId
+      is_active: version.version_number === Number(versionId)
     }));
-    const activeVersion = this.versions.find(v => v.isActive);
+    console.log(this.versions);
+    const activeVersion = this.versions.find(v => v.is_active);
+    console.log(activeVersion);
     if (activeVersion) {
-      this.content = `Содержимое версии ${activeVersion.versionNumber}`; // Заглушка, замените на загрузку реального контента
+      // this.content = `Содержимое версии ${activeVersion.versionNumber}`; // Заглушка, замените на загрузку реального контента
       this.lines = this.content.split('\n');
       this.updateStats();
+    }
+  }
+
+  async createNewDocumentVersion() {
+    try {
+      if (!this.currentDocument || !this.currentDocument.document.id) {
+        throw new Error('Документ не выбран');
+      }
+
+      // Создаём новую версию на сервере
+      const newVersion = await this.versionService.createVersion(
+          this.currentDocument.document.id,
+          this.filePath
+      );
+
+      // // Обновляем локальный массив versions
+      // this.versions = [newVersion, ...this.versions];
+
+      // Обновляем локальный массив versions, добавляя новую версию на индекс 1
+      this.versions = [
+        this.versions[0], // Сохраняем версию с индексом 0
+        newVersion,       // Новая версия на индекс 1
+        ...this.versions.slice(1) // Остальные версии
+      ];
+
+      // Создаём локальную копию версии
+      const documentId = this.currentDocument.document.id;
+      const versionNumber = newVersion.version_number;
+      const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+
+      // Создаём директорию, если не существует
+      await mkdir(versionsDir, { recursive: true });
+
+      // Формируем имя файла версии
+      const versionFileName = `v${versionNumber}_${this.fileName}`;
+      const versionFilePath = await join(versionsDir, versionFileName);
+
+      // Копируем файл
+      const fileContent = await readFile(this.filePath);
+      await writeFile(versionFilePath, fileContent);
+
+      console.log(`Версия ${versionNumber} создана локально: ${versionFilePath}`);
+      ToastService.success(`Версия ${versionNumber} успешно создана!`);
+    } catch (e) {
+      console.error('Ошибка при создании новой версии:', e);
+      ToastService.danger(`Не удалось создать новую версию: ${e}`);
+    }
+  }
+
+
+  async deleteCurrentVersion() {
+    try {
+      if (!this.currentDocument || !this.currentDocument.document.id) {
+        throw new Error('Документ не выбран');
+      }
+
+      // Находим активную версию
+      const activeVersion = this.versions.find(v => v.is_active);
+      if (!activeVersion) {
+        throw new Error('Активная версия не найдена');
+      }
+
+      // Проверяем, что версия не локальная (id !== 0)
+      if (activeVersion.id === 0) {
+        ToastService.warning('Локальная версия не может быть удалена');
+        return;
+      }
+
+      // Удаляем версию на сервере
+      await this.versionService.deleteVersion(activeVersion.id);
+
+      // Обновляем локальный массив versions, удаляя активную версию
+      this.versions = this.versions.filter(v => v.id !== activeVersion.id);
+
+      // Удаляем локальный файл версии
+      const documentId = this.currentDocument.document.id;
+      const versionNumber = activeVersion.version_number;
+      const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+      const versionFileName = `v${versionNumber}_${this.fileName}`;
+      const versionFilePath = await join(versionsDir, versionFileName);
+
+      await remove(versionFilePath);
+
+      console.log(`Версия ${versionNumber} удалена локально: ${versionFilePath}`);
+      ToastService.success(`Версия ${versionNumber} успешно удалена!`);
+
+      // Если удалена активная версия, выбираем локальную версию (id: 0) как активную
+      if (this.versions.length > 0) {
+        this.selectVersion('0');
+      }
+    } catch (e) {
+      console.error('Ошибка при удалении версии:', e);
+      ToastService.danger(`Не удалось удалить версию: ${e}`);
     }
   }
 

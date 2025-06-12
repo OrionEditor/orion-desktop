@@ -13,6 +13,7 @@ export interface Version {
     s3_path: string;
     content_hash: string;
     created_at: string;
+    is_active?: boolean;
 }
 
 export interface CreateDocumentResponse {

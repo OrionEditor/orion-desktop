@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Version} from "../../../../interfaces/version.interface";
-import {NgForOf, NgIf} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {getFileIcon} from "../../../../utils/file-icon.utils";
 import {FormsModule} from "@angular/forms";
 import {StoreService} from "../../../../services/Store/store.service";
@@ -9,6 +8,8 @@ import {NetworkService} from "../../../../services/Network/network.service";
 import {FillButtonComponent} from "../../buttons/fill-button/fill-button.component";
 import {success} from "../../../../styles/var/globalColors";
 import {WindowService} from "../../../../services/window.service";
+import {GetDocumentResponse} from "../../../../interfaces/routes/document.interface";
+import {Version} from "../../../../interfaces/routes/document.interface";
 
 @Component({
   selector: 'app-version-list',
@@ -17,7 +18,8 @@ import {WindowService} from "../../../../services/window.service";
     NgForOf,
     NgIf,
     FormsModule,
-    FillButtonComponent
+    FillButtonComponent,
+    DatePipe
   ],
   templateUrl: './version-list.component.html',
   styleUrl: './version-list.component.css'
@@ -29,6 +31,9 @@ export class VersionListComponent {
   @Input() isCollapsed: boolean = false;
   @Output() versionSelected = new EventEmitter<string>();
   @Output() collapseToggled = new EventEmitter<boolean>();
+  @Output() newVersion = new EventEmitter<void>();
+  @Output() delVersion = new EventEmitter<void>();
+  @Input() currentDocument: GetDocumentResponse | null = null;
 
   searchQuery: string = '';
   filteredVersions: Version[] = [];
@@ -61,32 +66,15 @@ export class VersionListComponent {
   }
 
   createNewVersion(): void {
-    // this.newVersion.emit();
+    this.newVersion.emit();
   }
 
   deleteVersion(): void {
-    // const activeVersion = this.versions.find(v => v.isActive);
-    // if (activeVersion) {
-    //   this.deleteVersionEvent.emit(activeVersion.id);
-    // }
-  }
-
-  restoreVersion(): void {
-    // const activeVersion = this.versions.find(v => v.isActive);
-    // if (activeVersion) {
-    //   this.restoreVersionEvent.emit(activeVersion.id);
-    // }
-  }
-
-  exportVersion(): void {
-    // const activeVersion = this.versions.find(v => v.isActive);
-    // if (activeVersion) {
-    //   this.exportVersionEvent.emit(activeVersion.id);
-    // }
+    this.delVersion.emit();
   }
 
   hasActiveVersion(): boolean {
-    return this.versions.some(v => v.isActive);
+    return this.versions.some(v => v.is_active);
   }
 
   filterVersions(): void {
@@ -95,9 +83,9 @@ export class VersionListComponent {
     } else {
       const query = this.searchQuery.toLowerCase();
       this.filteredVersions = this.versions.filter(version =>
-          version.fileName.toLowerCase().includes(query) ||
-          version.versionNumber.toLowerCase().includes(query) ||
-          version.createdAt.toLowerCase().includes(query)
+          // version.fileName.toLowerCase().includes(query) ||
+          version.version_number.toString().toLowerCase().includes(query) ||
+          version.created_at.toLowerCase().includes(query)
       );
     }
   }

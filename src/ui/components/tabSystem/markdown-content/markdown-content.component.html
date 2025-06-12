@@ -87,6 +87,9 @@
             (collapseToggled)="toggleVersionPanel($event)"
             [fileName]="fileName"
             [filePath]="filePath"
+            [currentDocument]="currentDocument"
+            (newVersion)="createNewDocumentVersion()"
+            (delVersion)="deleteCurrentVersion()"
     ></app-version-list>
 </div>
 

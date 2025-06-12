@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {CreateDocumentResponse, GetDocumentResponse} from "../../interfaces/routes/document.interface";
 import {DocumentService} from "../Routes/document/document.service";
 import {ToastService} from "../Notifications/toast.service";
+import {join} from "@tauri-apps/api/path";
+import {mkdir, readFile, writeFile} from "@tauri-apps/plugin-fs";
 
 @Injectable({
     providedIn: 'root'
@@ -40,8 +42,9 @@ export class DocumentLocalService {
      * @param documentName Имя документа
      * @param documentPath Путь документа
      */
-    async syncDocument(projectId: string, documentName: string, documentPath: string): Promise<boolean> {
+    async syncDocument(projectId: string, documentName: string, documentPath: string, projectPath: string): Promise<boolean> {
         try {
+            console.log("ИМЯ ДОКУМЕНТА 1:", documentName);
             // Проверяем, существует ли документ локально
             const existing = this.documents.find(doc => doc.document.name === documentName && doc.document.project_id === projectId);
             if (existing) {
@@ -55,7 +58,6 @@ export class DocumentLocalService {
                 // Пытаемся получить документ с сервера
                 documentResponse = await this.documentService.getDocumentByProjectAndName(projectId, documentName);
                 console.log(`Документ ${documentName} найден на сервере`);
-                return true;
             } catch (e) {
                 //Если документ не существует удалённо, создаём его
                 console.log(`Документ ${documentName} не найден на сервере, создаём новый`);
@@ -65,6 +67,24 @@ export class DocumentLocalService {
                     versions: [createResponse.version]
                 };
                 ToastService.success(`Документ ${documentName} успешно создан в удалённом хранилище!`);
+
+                // Создаём локальную копию версии
+                const versionNumber = 1;
+                const versionsDir = await join(projectPath, '.orion', 'versions', createResponse.document.id);
+
+                // Создаём директорию, если не существует
+                await mkdir(versionsDir, { recursive: true });
+
+                // Формируем имя файла версии
+                const versionFileName = `v${versionNumber}_${documentName}`;
+                const versionFilePath = await join(versionsDir, versionFileName);
+
+                // Копируем файл
+                const fileContent = await readFile(documentPath);
+                await writeFile(versionFilePath, fileContent);
+
+                console.log(`Версия ${versionNumber} создана локально: ${versionFilePath}`);
+                ToastService.success(`Версия ${versionNumber} успешно создана!`);
             }
 
             // Обновляем локальный кэш
@@ -119,6 +139,22 @@ export class DocumentLocalService {
             ToastService.danger(`Ошибка получения документа: ${e}`);
             throw e;
         }
+    }
+
+    /**
+     * Получает документ по имени и проекту из локального кэша.
+     * @param projectId ID проекта
+     * @param documentName Имя документа
+     * @returns Документ и его версии или null, если документ не найден
+     */
+    getDocumentByNameFromCache(projectId: string, documentName: string): GetDocumentResponse | null {
+        const localDocument = this.documents.find(doc => doc.document.name === documentName && doc.document.project_id === projectId);
+        if (localDocument) {
+            console.log(`Документ ${documentName} найден в локальном кэше`);
+            return localDocument;
+        }
+        console.log(`Документ ${documentName} не найден в локальном кэше`);
+        return null;
     }
 
     /**

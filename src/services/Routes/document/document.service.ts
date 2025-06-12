@@ -138,13 +138,36 @@ export class DocumentService {
      * @param documentName Имя документа
      * @returns Документ и его версии или объект с ошибкой
      */
+    // async getDocumentByProjectAndName(projectId: string, documentName: string): Promise<GetDocumentResponse> {
+    //     const endpoint = `http://127.0.0.1/documents/project/${projectId}/name/${documentName}`;
+    //     console.log("Endpoint:", endpoint);
+    //     return withTokenRefresh(this.http, this.refreshTokenService, headers =>
+    //         this.http.get(endpoint, { headers }).pipe(
+    //             map((response: any) => {
+    //                 if (response.document && response.versions) {
+    //                     console.log("НАЙДЕН!", response);
+    //                     return response as GetDocumentResponse;
+    //                 } else {
+    //                     console.log("ОШИБКА");
+    //                     throw new Error(response.error || 'Некорректный ответ сервера');
+    //                 }
+    //             })
+    //         )
+    //     );
+    // }
+
     async getDocumentByProjectAndName(projectId: string, documentName: string): Promise<GetDocumentResponse> {
+        const encodedDocumentName = encodeURIComponent(documentName); // Явное кодирование
+        const endpoint = `http://127.0.0.1/documents/project/${projectId}/name/${encodedDocumentName}`;
+        console.log("Endpoint:", endpoint);
         return withTokenRefresh(this.http, this.refreshTokenService, headers =>
-            this.http.get(`http://127.0.0.1/documents/project/${projectId}/name/${documentName}`, { headers }).pipe(
+            this.http.get(endpoint, { headers }).pipe(
                 map((response: any) => {
                     if (response.document && response.versions) {
+                        console.log("НАЙДЕН!", response);
                         return response as GetDocumentResponse;
                     } else {
+                        console.log("ОШИБКА");
                         throw new Error(response.error || 'Некорректный ответ сервера');
                     }
                 })
