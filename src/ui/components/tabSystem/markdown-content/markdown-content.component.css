@@ -425,3 +425,43 @@
     color: #8b0000;
     text-decoration: line-through;
 }
+
+/* Новые стили для содержания */
+.toc {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+}
+
+.toc h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.toc li {
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.toc-link {
+    text-decoration: none;
+    color: #0066cc;
+    cursor: pointer!important;
+}
+
+.toc-link:hover {
+    text-decoration: underline;
+}
+
+.toc ul ul {
+    padding-left: 20px;
+}

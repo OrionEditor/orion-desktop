@@ -58,6 +58,12 @@ import {ModalsConfig} from "../../../../shared/constants/modals/confirm/modals-c
 import * as Diff from 'diff';
 import {VersionDiffModalComponent} from "../../modals/version-diff-modal/version-diff-modal.component";
 
+interface TocItem {
+  level: number; // Уровень заголовка (1 для #, 2 для ##, и т.д.)
+  text: string; // Текст заголовка
+  id: string; // Уникальный ID для навигации
+}
+
 @Component({
   selector: 'app-markdown-content',
   standalone: true,
@@ -145,6 +151,8 @@ export class MarkdownContentComponent {
   // Чекбокс для отображения изменений
   showDiff: boolean = false;
 
+  showTableOfContents: boolean = true; // По умолчанию включено
+
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
               private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient) {}
 
@@ -222,6 +230,19 @@ export class MarkdownContentComponent {
   private async updateRenderedContent(): Promise<void> {
     let html = marked(this.content).toString();
     console.log('Parsed HTML:', html);
+
+    // Извлекаем заголовки
+    const headings = this.extractHeadings();
+
+    // Добавляем id к заголовкам в HTML
+    let headingIndex = 0;
+    html = html.replace(/<(h[1-6])>(.*?)<\/\1>/g, (match, tag, text) => {
+      const heading = headings[headingIndex++];
+      if (heading) {
+        return `<${tag} id="${heading.id}">${text}</${tag}>`;
+      }
+      return match;
+    });
 
     // Обработка ссылок и медиа
     const links = this.linkParserService.extractLinksAndImages(this.content);
@@ -311,6 +332,11 @@ export class MarkdownContentComponent {
       );
     });
 
+    // Добавляем содержание в начало, если включено
+    if (this.showTableOfContents) {
+      const tocHtml = this.generateTocHtml(headings);
+      html = tocHtml + html;
+    }
 
     this.renderedContent = this.sanitizer.bypassSecurityTrustHtml(html);
     setTimeout(() => {
@@ -318,10 +344,28 @@ export class MarkdownContentComponent {
     }, 100)
   }
 
+
+
   ngAfterViewInit(): void {
     this.updateTextareaHighlight();
     if (this.renderedContentRef) {
       initializeLinkHandler(this.renderedContentRef.nativeElement);
+      this.renderedContentRef.nativeElement.addEventListener('click', (event: Event) => {
+        const target = event.target as HTMLElement;
+        if (target.classList.contains('toc-link')) {
+          event.preventDefault();
+          event.stopPropagation(); // Останавливаем распространение события
+          const id = target.getAttribute('data-target');
+          if (id) {
+            const element = this.renderedContentRef.nativeElement.querySelector(`#${id}`);
+            if (element) {
+              element.scrollIntoView({behavior: 'smooth'});
+              // Очищаем hash в URL, если он изменился
+              history.replaceState(null, '', window.location.pathname + window.location.search);
+            }
+          }
+        }
+      });
       // Применяем подсветку Highlight.js
       hljs.highlightAll();
 
@@ -359,6 +403,13 @@ export class MarkdownContentComponent {
         action: () => this.showVersionDiffModal(),
         select: false,
         icon: 'assets/icons/svg/contextMenu/diff.svg'
+      },
+      {
+        id: '0002',
+        text: 'Показать/скрыть содержание',
+        action: () => this.toggleTableOfContents(),
+        select: this.showTableOfContents,
+        icon: 'assets/icons/svg/contextMenu/heading.svg'
       }
     ];
     this.onDocumentCloudSync = await this.documentLocalService.syncDocument(this.projectId,this.fileName, this.filePath, this.projectPath);
@@ -368,6 +419,92 @@ export class MarkdownContentComponent {
     if(this.currentDocument){
       this.versions = [{id: 0, document_id: '0', version_number: 0, is_active: true, created_at: '', content_hash: '', s3_path: ''},...this.currentDocument.versions];
     }
+  }
+
+  toggleTableOfContents() {
+    this.showTableOfContents = !this.showTableOfContents;
+    this.MarkdownSettingsMenuItems = this.MarkdownSettingsMenuItems.map(item =>
+        item.text === 'Показать содержание' ? { ...item, select: this.showTableOfContents } : item
+    );
+    this.updateRenderedContent(); // Обновляем отображение
+  }
+
+  extractHeadings(): TocItem[] {
+  const headings: TocItem[] = [];
+  const lines = this.content.split('\n');
+  const headingRegex = /^(#+)\s+(.+)/;
+
+  lines.forEach((line, index) => {
+    const match = line.match(headingRegex);
+    if (match) {
+      const level = match[1].length; // Количество # определяет уровень
+      const text = match[2].trim();
+      // Генерируем уникальный ID, заменяя пробелы на дефисы и добавляя индекс
+      const id = `heading-${text.toLowerCase().replace(/\s+/g, '-')}-${index}`;
+      headings.push({ level, text, id });
+    }
+  });
+
+  console.log('Extracted headings:', headings);
+  return headings;
+  }
+
+  // private generateTocHtml(headings: TocItem[]): string {
+  //   if (!headings.length) {
+  //     return '<div class="toc"><h3>Содержание</h3><p>Нет заголовков</p></div>';
+  //   }
+  //
+  //   let html = '<div class="toc"><h3>Содержание</h3><ul>';
+  //   let currentLevel = 1;
+  //
+  //   headings.forEach(heading => {
+  //     while (heading.level > currentLevel) {
+  //       html += '<ul>';
+  //       currentLevel++;
+  //     }
+  //     while (heading.level < currentLevel) {
+  //       html += '</ul>';
+  //       currentLevel--;
+  //     }
+  //     html += `<li><a href="#${heading.id}" class="toc-link">${heading.text}</a></li>`;
+  //   });
+  //
+  //   while (currentLevel > 1) {
+  //     html += '</ul>';
+  //     currentLevel--;
+  //   }
+  //   html += '</ul></div>';
+  //
+  //   return html;
+  // }
+
+  private generateTocHtml(headings: TocItem[]): string {
+    if (!headings.length) {
+      return '<div class="toc"><h3>Содержание</h3><p>Нет заголовков</p></div>';
+    }
+
+    let html = '<div class="toc"><h3>Содержание</h3><ul>';
+    let currentLevel = 1;
+
+    headings.forEach(heading => {
+      while (heading.level > currentLevel) {
+        html += '<ul>';
+        currentLevel++;
+      }
+      while (heading.level < currentLevel) {
+        html += '</ul>';
+        currentLevel--;
+      }
+      html += `<li><a data-target="${heading.id}" class="toc-link">${heading.text}</a></li>`;
+    });
+
+    while (currentLevel > 1) {
+      html += '</ul>';
+      currentLevel--;
+    }
+    html += '</ul></div>';
+
+    return html;
   }
 
   async toggleShowDiff() {
