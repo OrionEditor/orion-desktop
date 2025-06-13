@@ -10,6 +10,8 @@ import {success} from "../../../../styles/var/globalColors";
 import {WindowService} from "../../../../services/window.service";
 import {GetDocumentResponse} from "../../../../interfaces/routes/document.interface";
 import {Version} from "../../../../interfaces/routes/document.interface";
+import {stat} from "@tauri-apps/plugin-fs";
+import {join} from "@tauri-apps/api/path";
 
 @Component({
   selector: 'app-version-list',
@@ -34,6 +36,7 @@ export class VersionListComponent {
   @Output() newVersion = new EventEmitter<void>();
   @Output() delVersion = new EventEmitter<void>();
   @Input() currentDocument: GetDocumentResponse | null = null;
+  @Input() projectPath: string = ';'
 
   searchQuery: string = '';
   filteredVersions: Version[] = [];
@@ -45,11 +48,53 @@ export class VersionListComponent {
 
   async ngOnInit(){
     this.hasAuth = await StoreService.get(StoreKeys.ACCESS_TOKEN);
+    await this.updateFileSizes();
   }
 
   async ngOnChanges() {
     this.hasAuth = await StoreService.get(StoreKeys.ACCESS_TOKEN);
+    await this.updateFileSizes();
     this.filterVersions();
+  }
+
+  async updateFileSizes() {
+    if (!this.currentDocument || !this.currentDocument.document.id) {
+      return;
+    }
+
+    const documentId = this.currentDocument.document.id;
+    const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+
+    this.versions = await Promise.all(this.versions.map(async (version) => {
+      let filePathToCheck: string;
+      if (version.version_number === 0) {
+        // Локальная версия
+        filePathToCheck = this.filePath;
+      } else {
+        // Другие версии
+        const versionFileName = `v${version.version_number}_${this.fileName}`;
+        filePathToCheck = await join(versionsDir, versionFileName);
+      }
+
+      try {
+        const stats = await stat(filePathToCheck);
+        const size = this.formatFileSize(stats.size);
+        return { ...version, fileSize: size };
+      } catch (e) {
+        console.error(`Ошибка при получении размера файла для версии ${version.version_number}:`, e);
+        return { ...version, fileSize: 'N/A' };
+      }
+    }));
+
+    this.filterVersions();
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   }
 
   async openLoginPage(){

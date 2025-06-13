@@ -35,9 +35,13 @@
                     (click)="selectVersion(version.version_number.toString())"
             >
                 <img class="version-icon" [src]="getFileIcon(fileName)" alt="File">
+<!--                <div class="version-details">-->
+<!--                    <span class="version-name">[{{ version.version_number > 0 ? version.version_number : '' }}{{version.version_number === 0 ? 'Локальная версия': null}}] {{ fileName }}</span>-->
+<!--                    <span class="version-meta">{{ version.created_at | date: 'dd.MM.yyyy HH:mm' }}</span>-->
+<!--                </div>-->
                 <div class="version-details">
                     <span class="version-name">[{{ version.version_number > 0 ? version.version_number : '' }}{{version.version_number === 0 ? 'Локальная версия': null}}] {{ fileName }}</span>
-                    <span class="version-meta">{{ version.created_at | date: 'dd.MM.yyyy HH:mm' }}</span>
+                    <span class="version-meta">{{ version.created_at | date: 'dd.MM.yyyy HH:mm' }} | {{ version.fileSize || 'N/A' }}</span>
                 </div>
             </div>
             <div *ngIf="versions.length === 0" class="no-versions">

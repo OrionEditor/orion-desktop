@@ -1,4 +1,13 @@
-import {Component, ElementRef, Input, SecurityContext, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EnvironmentInjector,
+  inject,
+  Input,
+  SecurityContext,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {MarkdownStatistics} from "../../../../interfaces/markdown/markdown-statisctics.interface";
@@ -44,6 +53,8 @@ import {VersionService} from "../../../../services/Routes/version.service";
 import {mkdir, readFile} from "@tauri-apps/plugin-fs";
 import {ToastService} from "../../../../services/Notifications/toast.service";
 import {writeFile, remove} from "@tauri-apps/plugin-fs";
+import {ConfirmModalService} from "../../../../services/Modals/confirm-modal.service";
+import {ModalsConfig} from "../../../../shared/constants/modals/confirm/modals-config";
 
 @Component({
   selector: 'app-markdown-content',
@@ -66,6 +77,7 @@ export class MarkdownContentComponent {
   @Input() filePath: string = '';
   @Input() fileName: string = '';
   @Input() projectPath: string = '';
+  documentPath: string = this.filePath;
 
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
@@ -121,6 +133,8 @@ export class MarkdownContentComponent {
   private documentLocalService = new DocumentLocalService(this.documentService);
 
   private versionService = new VersionService(this.http);
+
+  private injector = inject(EnvironmentInjector);
 
   // private async updateRenderedContent(): Promise<void> {
   //   const links = this.linkParserService.extractLinksAndImages(this.content);
@@ -306,6 +320,7 @@ export class MarkdownContentComponent {
   }
 
   async ngOnInit() {
+    this.documentPath = this.filePath;
     await this.loadContent();
     this.markdownService.content$.subscribe(content => {
       this.content = content;
@@ -619,19 +634,52 @@ export class MarkdownContentComponent {
     this.isVersionPanelCollapsed = !this.isVersionPanelCollapsed;
   }
 
-  selectVersion(versionId: string): void {
-    console.log(versionId);
-    this.versions = this.versions.map(version => ({
-      ...version,
-      is_active: version.version_number === Number(versionId)
-    }));
-    console.log(this.versions);
-    const activeVersion = this.versions.find(v => v.is_active);
-    console.log(activeVersion);
-    if (activeVersion) {
-      // this.content = `Содержимое версии ${activeVersion.versionNumber}`; // Заглушка, замените на загрузку реального контента
+  async selectVersion(versionId: string): Promise<void> {
+    try {
+      // Обновляем статус активности версий
+      this.versions = this.versions.map(version => ({
+        ...version,
+        is_active: version.version_number === Number(versionId)
+      }));
+
+      const activeVersion = this.versions.find(v => v.is_active);
+      if (!activeVersion) {
+        throw new Error('Активная версия не найдена');
+      }
+
+      // Загружаем содержимое версии
+      let versionContent: string;
+      if (activeVersion.id === 0) {
+        this.filePath = this.documentPath;
+        // Для локальной версии (id: 0) используем текущий файл
+        const fileData = await readFile(this.filePath);
+        versionContent = new TextDecoder('utf-8').decode(fileData);
+      } else {
+        // Для остальных версий загружаем из .orion/versions
+        if (!this.currentDocument) {
+          throw new Error('Документ не выбран');
+        }
+        const documentId = this.currentDocument.document.id;
+        const versionNumber = activeVersion.version_number;
+        const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+        const versionFileName = `v${versionNumber}_${this.fileName}`;
+        const versionFilePath = await join(versionsDir, versionFileName);
+        this.filePath = versionFilePath;
+
+        const fileData = await readFile(versionFilePath);
+        versionContent = new TextDecoder('utf-8').decode(fileData);
+      }
+
+      // Обновляем содержимое
+      this.content = versionContent;
       this.lines = this.content.split('\n');
+      await this.updateRenderedContent();
       this.updateStats();
+
+      console.log(`Версия ${activeVersion.version_number} загружена:`, versionContent);
+    } catch (e) {
+      console.error('Ошибка при выборе версии:', e);
+      ToastService.danger(`Не удалось загрузить версию: ${e}`);
     }
   }
 
@@ -646,6 +694,12 @@ export class MarkdownContentComponent {
           this.currentDocument.document.id,
           this.filePath
       );
+
+      const findV = this.versions.find(v => v.version_number === newVersion.version_number);
+      if(findV){
+        ToastService.warning(`В файле нет новых изменений, версия не может быть создана!`);
+        return;
+      }
 
       // // Обновляем локальный массив versions
       // this.versions = [newVersion, ...this.versions];
@@ -699,6 +753,14 @@ export class MarkdownContentComponent {
         ToastService.warning('Локальная версия не может быть удалена');
         return;
       }
+
+      const result = await ConfirmModalService.createConfirmModal(
+          this.injector,
+          ModalsConfig.ConfirmModal.deleteVersion.title,
+          ModalsConfig.ConfirmModal.deleteVersion.description
+      );
+
+      if(!result){return;}
 
       // Удаляем версию на сервере
       await this.versionService.deleteVersion(activeVersion.id);

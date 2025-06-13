@@ -14,6 +14,7 @@ export interface Version {
     content_hash: string;
     created_at: string;
     is_active?: boolean;
+    fileSize?: string;
 }
 
 export interface CreateDocumentResponse {
