@@ -92,4 +92,12 @@ export const MdSettingsContextMenu = (filePath: string = '', content: string = '
         action: () => MarkdownSettingsContextMenuService.openExplorer(filePath),
         icon: 'assets/icons/svg/contextMenu/explorer.svg',
     },
+    {
+        id: 'show_diff',
+        text: 'Показать изменения',
+        // action: () => MarkdownSettingsContextMenuService.showDiff(showDiffModal),
+        select: false,
+        icon: 'assets/icons/svg/contextMenu/diff.svg',
+        isShow: false
+    }
 ];

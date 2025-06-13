@@ -150,10 +150,10 @@
                 <div class="version-column">
                     <h3>Версия {{ currentVersionNumber }}</h3>
                     <div class="stats">
-                        <p>Размер файла: {{ currentFileSize }} байт</p>
-                        <p>Символов: {{ currentStats?.characterCount }}</p>
-                        <p>Слов: {{ currentStats?.wordCount }}</p>
-                        <p>Строк: {{ currentStats?.lineCount }}</p>
+                        <p>Размер файла: <span [style.color]="getFileSizeColor()">{{ currentFileSize }}</span> байт</p>
+                        <p>Символов: <span [style.color]="getCharacterCountColor()">{{ currentStats?.characterCount }}</span></p>
+                        <p>Слов: <span [style.color]="getWordCountColor()">{{ currentStats?.wordCount }}</span></p>
+                        <p>Строк: <span [style.color]="getLineCountColor()">{{ currentStats?.lineCount }}</span></p>
                     </div>
                     <div class="diff-wrapper">
                         <div class="line-numbers">
@@ -174,10 +174,10 @@
                 <div class="version-column">
                     <h3>Версия {{ prevVersionNumber }}</h3>
                     <div class="stats">
-                        <p>Размер файла: {{ prevFileSize }} байт</p>
-                        <p>Символов: {{ prevStats?.characterCount }}</p>
-                        <p>Слов: {{ prevStats?.wordCount }}</p>
-                        <p>Строк: {{ prevStats?.lineCount }}</p>
+                        <p>Размер файла: <span [style.color]="getFileSizeColorReverse()">{{ prevFileSize }}</span> байт</p>
+                        <p>Символов: <span [style.color]="getCharacterCountColorReverse()">{{ prevStats?.characterCount }}</span></p>
+                        <p>Слов: <span [style.color]="getWordCountColorReverse()">{{ prevStats?.wordCount }}</span></p>
+                        <p>Строк: <span [style.color]="getLineCountColorReverse()">{{ prevStats?.lineCount }}</span></p>
                     </div>
                     <div class="diff-wrapper">
                         <div class="line-numbers">

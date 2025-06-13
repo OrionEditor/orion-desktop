@@ -12,6 +12,7 @@
 }
 
 .modal-content {
+    position: relative;
     background: var(--background-color);
     border-radius: 8px;
     width: 90%;
@@ -22,15 +23,15 @@
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 16px;
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
 
 .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     background: none;
     border: none;
     font-size: 20px;
@@ -185,13 +186,14 @@
 }
 
 .line-number span.diff-marker:first-child {
-    color: #8b0000; /* Красный для - */
+    color: #006400; /* Зелёный для + */
 }
 
 .diff-marker.removed {
-    color: #006400; /* Зелёный для + */
+    color: #8b0000; /* Красный для - */
 }
 
 .diff-marker.added {
     color: #8b0000; /* Красный для - */
 }
+

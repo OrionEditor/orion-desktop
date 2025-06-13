@@ -62,4 +62,8 @@ export class MarkdownSettingsContextMenuService {
     public static async openExplorer(filePath: string): Promise<void> {
         await OpenInExplorer(filePath);
     }
+
+    public static showDiff(){
+
+    }
 }

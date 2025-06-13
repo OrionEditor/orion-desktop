@@ -357,7 +357,8 @@ export class MarkdownContentComponent {
         id: '0001',
         text: 'Показать изменения',
         action: () => this.showVersionDiffModal(),
-        select: false
+        select: false,
+        icon: 'assets/icons/svg/contextMenu/diff.svg'
       }
     ];
     this.onDocumentCloudSync = await this.documentLocalService.syncDocument(this.projectId,this.fileName, this.filePath, this.projectPath);
