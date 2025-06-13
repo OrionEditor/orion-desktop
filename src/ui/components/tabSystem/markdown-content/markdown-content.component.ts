@@ -153,6 +153,12 @@ export class MarkdownContentComponent {
 
   showTableOfContents: boolean = true; // По умолчанию включено
 
+  twoSideFullView: boolean = false;
+
+  toggleTwoSideFullView(){
+    this.twoSideFullView = !this.twoSideFullView;
+  }
+
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
               private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient) {}
 

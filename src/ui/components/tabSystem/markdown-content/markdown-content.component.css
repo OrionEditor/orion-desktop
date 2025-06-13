@@ -465,3 +465,21 @@
 .toc ul ul {
     padding-left: 20px;
 }
+
+.toggle-two-side{
+    position: absolute;
+    top: 10vh;
+    z-index: 1000;
+    background: var(--text-color);
+    color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    border-radius: 30%;
+    cursor: pointer;
+    user-select: none;
+    transition: right ease-in-out 0.3s;
+}

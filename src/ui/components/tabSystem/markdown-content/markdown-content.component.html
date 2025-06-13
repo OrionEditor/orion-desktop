@@ -52,6 +52,7 @@
     <div class="editor-container" *ngIf="view === MarkdownView.TWO_SIDE">
         <div *ngIf="showDiff" class="diff-view" [innerHTML]="diffContent"></div>
         <textarea
+                *ngIf="!twoSideFullView"
                 class="editor-textarea"
                 [(ngModel)]="content"
                 (input)="onContentChange($event)"
@@ -60,6 +61,10 @@
                 [value]="MarkdownSettingsMenuItems[0].select ? renderedContent : content"
                 placeholder="Введите Markdown здесь..."></textarea>
         <div #renderedContentRef class="rendered-content" [innerHTML]="renderedContent"></div>
+        <div [style.right]="!isVersionPanelCollapsed ? '18vw' : '2vw'" class="toggle-two-side" (click)="toggleTwoSideFullView()">
+            <span *ngIf="!twoSideFullView">⮜</span>
+            <span *ngIf="twoSideFullView">⮞</span>
+        </div>
     </div>
 
     <div class="editor-container" *ngIf="view === MarkdownView.ONE_SIDE">
