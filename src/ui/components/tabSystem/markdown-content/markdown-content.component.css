@@ -373,3 +373,55 @@
     display: block;
     margin: 10px 0;
 }
+
+/* Новые стили для diff */
+.diff-view {
+    flex: 1;
+    height: 100%;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    overflow-y: auto;
+}
+
+.diff-added {
+    background-color: rgba(0, 66, 255, 0.2);
+    color: #006400;
+}
+
+.diff-removed {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #8b0000;
+    text-decoration: line-through;
+}
+
+/* Новые стили для contenteditable */
+.editor-contenteditable {
+    flex: 1;
+    height: 100%;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    outline: none;
+}
+
+.editor-contenteditable:empty:before {
+    content: attr(placeholder);
+    color: #aaa;
+}
+
+.diff-added {
+    background-color: rgba(244, 244, 244, 0.2);
+    color: red;
+}
+
+.diff-removed {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #8b0000;
+    text-decoration: line-through;
+}

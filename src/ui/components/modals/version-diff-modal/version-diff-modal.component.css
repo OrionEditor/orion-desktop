@@ -1,0 +1,197 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--background-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+.diff-container {
+    display: flex;
+    gap: 16px;
+}
+
+.version-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.diff-content {
+    font-family: monospace;
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: var(--background-color);
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 50vh;
+    color: var(--text-color);
+}
+
+.diff-block {
+    margin: 2px 0;
+}
+
+
+.diff-placeholder {
+    height: 1.2em;
+    visibility: hidden;
+}
+
+.stats {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: var(--background-color);
+    color: var(--text-color);
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.arrows-column {
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrows-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.diff-placeholder {
+    visibility: hidden;
+}
+
+.diff-line {
+    display: flex;
+    align-items: flex-start;
+    min-height: 1.2em;
+}
+
+.diff-wrapper {
+    display: flex;
+}
+
+.line-numbers {
+    width: 40px;
+    background: var(--background-color);
+    border-right: 1px solid #ccc;
+    text-align: right;
+    padding: 10px 5px;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--text-color);
+    user-select: none;
+}
+
+.line-number {
+    min-height: 1.2em;
+    line-height: 1.2em;
+}
+
+.diff-content {
+    flex: 1;
+    padding: 10px;
+}
+
+.diff-added {
+    background-color: rgba(0, 255, 0, 0.3) !important;
+    color: #006400 !important;
+    font-weight: bold;
+}
+
+.diff-removed {
+    background-color: rgba(255, 0, 0, 0.3) !important;
+    color: #8b0000 !important;
+    text-decoration: line-through;
+}
+
+.diff-placeholder {
+    visibility: hidden;
+}
+
+.diff-line {
+    display: flex;
+    align-items: center;
+    min-height: 1.2em;
+    white-space: pre-wrap;
+}
+
+.line-numbers {
+    width: 50px; /* Увеличиваем ширину для символов + и - */
+    background: var(--background-color);
+    text-align: right;
+    padding: 10px 5px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #666;
+    user-select: none;
+    border: 1px solid #ccc;
+}
+
+.line-number {
+    min-height: 1.2em;
+    line-height: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.diff-marker {
+    width: 15px;
+    color: #006400; /* Зелёный для +, красный для - в зависимости от контекста */
+}
+
+.line-number .diff-marker {
+    margin-right: 5px;
+}
+
+.line-number span.diff-marker:first-child {
+    color: #8b0000; /* Красный для - */
+}
+
+.diff-marker.removed {
+    color: #006400; /* Зелёный для + */
+}
+
+.diff-marker.added {
+    color: #8b0000; /* Красный для - */
+}

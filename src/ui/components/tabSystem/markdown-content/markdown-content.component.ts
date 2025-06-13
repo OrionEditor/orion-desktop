@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, createComponent,
   ElementRef,
   EnvironmentInjector,
   inject,
@@ -55,6 +55,8 @@ import {ToastService} from "../../../../services/Notifications/toast.service";
 import {writeFile, remove} from "@tauri-apps/plugin-fs";
 import {ConfirmModalService} from "../../../../services/Modals/confirm-modal.service";
 import {ModalsConfig} from "../../../../shared/constants/modals/confirm/modals-config";
+import * as Diff from 'diff';
+import {VersionDiffModalComponent} from "../../modals/version-diff-modal/version-diff-modal.component";
 
 @Component({
   selector: 'app-markdown-content',
@@ -68,7 +70,8 @@ import {ModalsConfig} from "../../../../shared/constants/modals/confirm/modals-c
     VersionListComponent,
     ModalBaseComponent,
     SettingsModalComponent,
-      HttpClientModule
+    HttpClientModule,
+    VersionDiffModalComponent
   ],
   templateUrl: './markdown-content.component.html',
   styleUrl: './markdown-content.component.css'
@@ -82,6 +85,7 @@ export class MarkdownContentComponent {
   @ViewChild('textareaRef', { static: false }) textareaRef!: ElementRef<HTMLTextAreaElement>;
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
   @ViewChild('renderedContentRef', { static: false }) renderedContentRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('editorContentRef', { static: false }) editorContentRef!: ElementRef<HTMLDivElement>;
 
   projectId: string = '';
   content: string = '';
@@ -125,6 +129,21 @@ export class MarkdownContentComponent {
 
   // Данные для версий
   versions: Version[] = [];
+
+  // Свойства для управления модальным окном
+  showDiffModal: boolean = false;
+  prevVersionContent: string = '';
+  currentVersionContent: string = '';
+  prevVersionNumber: number = 0;
+  currentVersionNumber: number = 0;
+  prevFileSize: number = 0;
+  currentFileSize: number = 0;
+
+
+  // Новое свойство для хранения HTML различий
+  diffContent: SafeHtml | string = '';
+  // Чекбокс для отображения изменений
+  showDiff: boolean = false;
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
               private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient) {}
@@ -332,14 +351,33 @@ export class MarkdownContentComponent {
 
     this.projectId = await StoreService.get(StoreKeys.PROJECT_ID) || '';
 
-    this.MarkdownSettingsMenuItems = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
-
+    this.MarkdownSettingsMenuItems = [
+      ...MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack),
+      {
+        id: '0001',
+        text: 'Показать изменения',
+        action: () => this.showVersionDiffModal(),
+        select: false
+      }
+    ];
     this.onDocumentCloudSync = await this.documentLocalService.syncDocument(this.projectId,this.fileName, this.filePath, this.projectPath);
 
     this.currentDocument = this.documentLocalService.getDocumentByNameFromCache(this.projectId, this.fileName);
 
     if(this.currentDocument){
       this.versions = [{id: 0, document_id: '0', version_number: 0, is_active: true, created_at: '', content_hash: '', s3_path: ''},...this.currentDocument.versions];
+    }
+  }
+
+  async toggleShowDiff() {
+    this.showDiff = !this.showDiff;
+    this.MarkdownSettingsMenuItems = this.MarkdownSettingsMenuItems.map(item =>
+        item.text === 'Показать изменения' ? { ...item, select: this.showDiff } : item
+    );
+    if (this.showDiff) {
+      await this.selectVersion(this.versions.find(v => v.is_active)?.version_number.toString() || '0');
+    } else {
+      this.diffContent = '';
     }
   }
   private updateLines(): void {
@@ -634,9 +672,213 @@ export class MarkdownContentComponent {
     this.isVersionPanelCollapsed = !this.isVersionPanelCollapsed;
   }
 
+  // async selectVersion(versionId: string): Promise<void> {
+  //   try {
+  //     // Обновляем статус активности версий
+  //     this.versions = this.versions.map(version => ({
+  //       ...version,
+  //       is_active: version.version_number === Number(versionId)
+  //     }));
+  //
+  //     const activeVersion = this.versions.find(v => v.is_active);
+  //     if (!activeVersion) {
+  //       throw new Error('Активная версия не найдена');
+  //     }
+  //
+  //     // Загружаем содержимое версии
+  //     let versionContent: string;
+  //     if (activeVersion.id === 0) {
+  //       this.filePath = this.documentPath;
+  //       // Для локальной версии (id: 0) используем текущий файл
+  //       const fileData = await readFile(this.filePath);
+  //       versionContent = new TextDecoder('utf-8').decode(fileData);
+  //     } else {
+  //       // Для остальных версий загружаем из .orion/versions
+  //       if (!this.currentDocument) {
+  //         throw new Error('Документ не выбран');
+  //       }
+  //       const documentId = this.currentDocument.document.id;
+  //       const versionNumber = activeVersion.version_number;
+  //       const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+  //       const versionFileName = `v${versionNumber}_${this.fileName}`;
+  //       const versionFilePath = await join(versionsDir, versionFileName);
+  //       this.filePath = versionFilePath;
+  //
+  //       const fileData = await readFile(versionFilePath);
+  //       versionContent = new TextDecoder('utf-8').decode(fileData);
+  //     }
+  //
+  //     // Обновляем содержимое
+  //     this.content = versionContent;
+  //     this.lines = this.content.split('\n');
+  //     await this.updateRenderedContent();
+  //     this.updateStats();
+  //
+  //     console.log(`Версия ${activeVersion.version_number} загружена:`, versionContent);
+  //   } catch (e) {
+  //     console.error('Ошибка при выборе версии:', e);
+  //     ToastService.danger(`Не удалось загрузить версию: ${e}`);
+  //   }
+  // }
+
+  async showVersionDiffModal() {
+    const activeVersion = this.versions.find(v => v.is_active);
+    if (!activeVersion) {
+      ToastService.warning('Активная версия не выбрана');
+      return;
+    }
+
+    if (activeVersion.version_number === 0) {
+      ToastService.warning('Для локальной версии сравнение недоступно');
+      return;
+    }
+
+    try {
+      let currentContent: string;
+      let prevContent: string = '';
+      let currentFileSize: number = 0;
+      let prevFileSize: number = 0;
+
+      if (!this.currentDocument) {
+        throw new Error('Документ не выбран');
+      }
+
+      const documentId = this.currentDocument.document.id;
+      const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+      const currentVersionFileName = `v${activeVersion.version_number}_${this.fileName}`;
+      const currentVersionFilePath = await join(versionsDir, currentVersionFileName);
+      const currentFileData = await readFile(currentVersionFilePath);
+      currentContent = new TextDecoder('utf-8').decode(currentFileData);
+      currentFileSize = currentFileData.length;
+
+      const prevVersion = this.versions.find(v => v.version_number === activeVersion.version_number - 1);
+      if (prevVersion) {
+        let prevFilePath: string;
+        if (prevVersion.id === 0) {
+          prevFilePath = this.documentPath;
+        } else {
+          const prevVersionFileName = `v${prevVersion.version_number}_${this.fileName}`;
+          prevFilePath = await join(versionsDir, prevVersionFileName);
+        }
+        try {
+          const prevFileData = await readFile(prevFilePath);
+          prevContent = new TextDecoder('utf-8').decode(prevFileData);
+          prevFileSize = prevFileData.length;
+        } catch (e) {
+          console.warn(`Не удалось загрузить предыдущую версию ${prevVersion.version_number}:`, e);
+        }
+      }
+
+      // Устанавливаем данные для модального окна
+      this.prevVersionContent = prevContent;
+      this.currentVersionContent = currentContent;
+      this.prevVersionNumber = prevVersion ? prevVersion.version_number : 0;
+      this.currentVersionNumber = activeVersion.version_number;
+      this.prevFileSize = prevFileSize;
+      this.currentFileSize = currentFileSize;
+      this.showDiffModal = true; // Показываем модальное окно
+
+    } catch (e) {
+      console.error('Ошибка при открытии модального окна сравнения:', e);
+      ToastService.danger(`Не удалось открыть сравнение версий: ${e}`);
+    }
+  }
+
+  closeDiffModal() {
+    this.showDiffModal = false; // Скрываем модальное окно
+  }
+
+  // async selectVersion(versionId: string): Promise<void> {
+  //   try {
+  //     this.versions = this.versions.map(version => ({
+  //       ...version,
+  //       is_active: version.version_number === Number(versionId)
+  //     }));
+  //
+  //     const activeVersion = this.versions.find(v => v.is_active);
+  //     if (!activeVersion) {
+  //       throw new Error('Активная версия не найдена');
+  //     }
+  //
+  //     let versionContent: string;
+  //     let prevVersionContent: string = '';
+  //     if (activeVersion.id === 0) {
+  //       this.filePath = this.documentPath;
+  //       const fileData = await readFile(this.filePath);
+  //       versionContent = new TextDecoder('utf-8').decode(fileData);
+  //     } else {
+  //       if (!this.currentDocument) {
+  //         throw new Error('Документ не выбран');
+  //       }
+  //       const documentId = this.currentDocument.document.id;
+  //       const versionNumber = activeVersion.version_number;
+  //       const versionsDir = await join(this.projectPath, '.orion', 'versions', documentId);
+  //       const versionFileName = `v${versionNumber}_${this.fileName}`;
+  //       const versionFilePath = await join(versionsDir, versionFileName);
+  //       this.filePath = versionFilePath;
+  //
+  //       const fileData = await readFile(versionFilePath);
+  //       versionContent = new TextDecoder('utf-8').decode(fileData);
+  //
+  //       // Загружаем предыдущую версию
+  //       const prevVersion = this.versions.find(v => v.version_number === versionNumber - 1);
+  //       if (prevVersion) {
+  //         let prevFilePath: string;
+  //         if (prevVersion.id === 0) {
+  //           prevFilePath = this.documentPath;
+  //         } else {
+  //           const prevVersionFileName = `v${prevVersion.version_number}_${this.fileName}`;
+  //           prevFilePath = await join(versionsDir, prevVersionFileName);
+  //         }
+  //         try {
+  //           const prevFileData = await readFile(prevFilePath);
+  //           prevVersionContent = new TextDecoder('utf-8').decode(prevFileData);
+  //         } catch (e) {
+  //           console.warn(`Не удалось загрузить предыдущую версию ${prevVersion.version_number}:`, e);
+  //         }
+  //       }
+  //     }
+  //
+  //     this.content = versionContent;
+  //     this.lines = this.content.split('\n');
+  //
+  //     if (this.showDiff && activeVersion.version_number > 0) {
+  //       const diff = Diff.diffLines(prevVersionContent, versionContent);
+  //       let diffHtml = '';
+  //       diff.forEach((part: { value: string; added: any; removed: any; }) => {
+  //         // @ts-ignore
+  //         const escapedValue = part.value.replace(/[&<>"']/g, match => ({
+  //           '&': '&amp;',
+  //           '<': '&lt;',
+  //           '>': '&gt;',
+  //           '"': '&quot;',
+  //           "'": '&#39;'
+  //         }[match]!));
+  //         if (part.added) {
+  //           diffHtml += `<span class="diff-added">${escapedValue}</span>`;
+  //         } else if (part.removed) {
+  //           diffHtml += `<span class="diff-removed">${escapedValue}</span>`;
+  //         } else {
+  //           diffHtml += `<span>${escapedValue}</span>`;
+  //         }
+  //       });
+  //       this.diffContent = this.sanitizer.bypassSecurityTrustHtml(diffHtml.replace(/\n/g, '<br>'));
+  //     } else {
+  //       this.diffContent = '';
+  //     }
+  //
+  //     await this.updateRenderedContent();
+  //     this.updateStats();
+  //
+  //     console.log(`Версия ${activeVersion.version_number} загружена:`, versionContent);
+  //   } catch (e) {
+  //     console.error('Ошибка при выборе версии:', e);
+  //     ToastService.danger(`Не удалось загрузить версию: ${e}`);
+  //   }
+  // }
+
   async selectVersion(versionId: string): Promise<void> {
     try {
-      // Обновляем статус активности версий
       this.versions = this.versions.map(version => ({
         ...version,
         is_active: version.version_number === Number(versionId)
@@ -647,15 +889,12 @@ export class MarkdownContentComponent {
         throw new Error('Активная версия не найдена');
       }
 
-      // Загружаем содержимое версии
       let versionContent: string;
       if (activeVersion.id === 0) {
         this.filePath = this.documentPath;
-        // Для локальной версии (id: 0) используем текущий файл
         const fileData = await readFile(this.filePath);
         versionContent = new TextDecoder('utf-8').decode(fileData);
       } else {
-        // Для остальных версий загружаем из .orion/versions
         if (!this.currentDocument) {
           throw new Error('Документ не выбран');
         }
@@ -670,7 +909,6 @@ export class MarkdownContentComponent {
         versionContent = new TextDecoder('utf-8').decode(fileData);
       }
 
-      // Обновляем содержимое
       this.content = versionContent;
       this.lines = this.content.split('\n');
       await this.updateRenderedContent();

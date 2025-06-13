@@ -34,10 +34,23 @@
 </div>
 
 <div class="tab-controls-editor">
+<!--    <div class="editor-container" *ngIf="view === MarkdownView.TWO_SIDE">-->
+<!--&lt;!&ndash;        <div class="line-numbers" *ngIf="SettingsService.getLineNumbers()">&ndash;&gt;-->
+<!--&lt;!&ndash;            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--        <textarea-->
+<!--                class="editor-textarea"-->
+<!--                [(ngModel)]="content"-->
+<!--                (input)="onContentChange($event)"-->
+<!--                (keyup)="onCursorMove($event)"-->
+<!--                (click)="onCursorMove($event)"-->
+<!--                [value]="MarkdownSettingsMenuItems[0].select ? renderedContent : content"-->
+<!--                placeholder="Введите Markdown здесь..."></textarea>-->
+<!--        <div #renderedContentRef class="rendered-content" [innerHTML]="renderedContent"></div>-->
+<!--    </div>-->
+
     <div class="editor-container" *ngIf="view === MarkdownView.TWO_SIDE">
-<!--        <div class="line-numbers" *ngIf="SettingsService.getLineNumbers()">-->
-<!--            <span *ngFor="let number of lineNumbers" [class.active-line]="number === currentLine">{{ number }}</span>-->
-<!--        </div>-->
+        <div *ngIf="showDiff" class="diff-view" [innerHTML]="diffContent"></div>
         <textarea
                 class="editor-textarea"
                 [(ngModel)]="content"
@@ -112,3 +125,14 @@
         [fileName]="fileName"
 >
 </app-audio-track>
+
+<app-version-diff-modal
+        *ngIf="showDiffModal"
+        [prevVersionContent]="prevVersionContent"
+        [currentVersionContent]="currentVersionContent"
+        [prevVersionNumber]="prevVersionNumber"
+        [currentVersionNumber]="currentVersionNumber"
+        [prevFileSize]="prevFileSize"
+        [currentFileSize]="currentFileSize"
+        (close)="closeDiffModal()"
+></app-version-diff-modal>
