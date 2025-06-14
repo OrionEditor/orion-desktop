@@ -25,7 +25,8 @@
     "buttons": {
       "create": "Создать",
       "open": "Открыть",
-      "login": "Войти"
+      "login": "Войти",
+      "search": "Поиск"
     },
     "actions": {
       "actionItemCreate": {
@@ -35,6 +36,10 @@
       "actionItemOpen": {
         "title": "Открыть проект",
         "description": "Откройте существующий проект на устройстве."
+      },
+      "actionItemSearch": {
+        "title": "Найти мои проекты",
+        "description": "Найдите потерянные проекты на компьютере."
       }
     },
     "alerts": {

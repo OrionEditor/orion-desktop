@@ -245,7 +245,8 @@ fn clear_auth_token() {
 }
 
 use serde::Serialize;
-use std::fs;
+use std::{env, fs, io};
+use std::fs::DirEntry;
 use std::path::Path;
 use std::time::SystemTime;
 use tauri_plugin_shell::process::Command;
@@ -479,6 +480,93 @@ async fn remove_active_tab(workspace_path: String, tab_path: String) -> Result<(
     workspace.remove_active_tab(&path, tab_path).map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+fn search_orion_projects(deep: bool) -> Vec<Option<Project>> {
+    let mut projects = Vec::new();
+
+    // Fast search directories
+    let fast_dirs = vec![
+        env::var("USERPROFILE").map(|p| format!("{}\\Desktop", p)).unwrap_or_default(),
+        env::var("USERPROFILE").map(|p| format!("{}\\Documents", p)).unwrap_or_default(),
+        env::var("USERPROFILE").map(|p| format!("{}\\Downloads", p)).unwrap_or_default(),
+        env::var("USERPROFILE").map(|p| format!("{}\\Videos", p)).unwrap_or_default(),
+        "C:\\".to_string(),
+    ];
+
+    // Additional deep search directories
+    let deep_dirs = vec![
+        "C:\\Program Files".to_string(),
+        "C:\\Program Files (x86)".to_string(),
+        "C:\\ProgramData".to_string(),
+    ];
+
+    // Get all drives
+    let drives = get_drives();
+
+    // Fast search
+    for dir in fast_dirs.iter().chain(drives.iter()) {
+        if let Ok(entries) = fs::read_dir(dir) {
+            for entry in entries.flatten() {
+                if let Ok(project) = check_dir(&entry, deep) {
+                    projects.push(project);
+                }
+            }
+        }
+    }
+
+    if deep {
+        // Deep search
+        for dir in deep_dirs {
+            if let Ok(entries) = fs::read_dir(&dir) {
+                for entry in entries.flatten() {
+                    if let Ok(project) = check_dir(&entry, true) {
+                        projects.push(project);
+                    }
+                }
+            }
+        }
+    }
+
+    projects
+}
+
+fn get_drives() -> Vec<String> {
+    let mut drives = Vec::new();
+    for letter in b'A'..=b'Z' {
+        let drive = format!("{}:\\", letter as char);
+        if Path::new(&drive).exists() {
+            drives.push(drive);
+        }
+    }
+    drives
+}
+
+fn check_dir(entry: &DirEntry, deep: bool) -> io::Result<Option<Project>> {
+    if entry.file_type()?.is_dir() {
+        let path = entry.path();
+        let orion_path = path.join(".orion");
+        if orion_path.exists() {
+            let name = path.file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or_default()
+                .to_string();
+            let path_str = path.to_str().unwrap_or_default().to_string();
+            return Ok(Some(Project { name, path: path_str }));
+        }
+        if deep {
+            // Recursive search
+            if let Ok(entries) = fs::read_dir(&path) {
+                for sub_entry in entries.flatten() {
+                    if let Ok(Some(project)) = check_dir(&sub_entry, true) {
+                        return Ok(Some(project));
+                    }
+                }
+            }
+        }
+    }
+    Ok(None)
+}
+
 fn main() {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -522,7 +610,8 @@ fn main() {
             set_project_name,
             set_preset,
             add_active_tab,
-            remove_active_tab
+            remove_active_tab,
+            search_orion_projects
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

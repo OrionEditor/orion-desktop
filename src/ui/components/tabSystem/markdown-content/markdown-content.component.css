@@ -97,6 +97,7 @@
     width: 50%; /* Половина ширины для отображения */
     color: var(--text-color);
     border-left: 1px solid var(--text-color);
+    transition: width 1s ease-in-out;
 }
 
 .sync-status{

@@ -1,0 +1,45 @@
+<div class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="projectSearchModalLabel" style="display: block;" aria-hidden="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectSearchModalLabel">Поиск проектов Orion</h5>
+                <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="search-status mb-3">
+                    <p *ngIf="isSearching">
+                        {{ searchPhase === 'fast' ? 'Выполняется быстрый поиск...' : 'Выполняется глубокий поиск...' }}
+                        <span class="badge bg-primary">{{ formatTime(elapsedTime) }}</span>
+                    </p>
+                    <p *ngIf="!isSearching && foundProjects.length === 0 && !showDeepSearchPrompt">
+                        Проекты не найдены.
+                    </p>
+                    <div *ngIf="showDeepSearchPrompt" class="alert alert-info">
+                        Быстрый поиск завершен. Хотите выполнить глубокий поиск?
+                        <button class="btn btn-primary btn-sm ms-2" (click)="startDeepSearch()">
+                            Начать глубокий поиск
+                        </button>
+                    </div>
+                </div>
+                <div class="project-list" *ngIf="foundProjects.length > 0">
+                    <div class="row">
+                        <div class="col-md-6 mb-3" *ngFor="let project of foundProjects; let i = index">
+                            <div class="card project-card animate__animated animate__fadeIn" (click)="openProject(project)" style="cursor: pointer;" [style.animation-delay]="i * 0.1 + 's'">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ project.name }}</h5>
+                                    <p class="card-text text-muted">{{ project.path }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show" (click)="closeModal()"></div>

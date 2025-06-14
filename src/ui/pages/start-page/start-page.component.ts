@@ -25,10 +25,11 @@ import {AvatarComponent} from "../../components/avatar/avatar.component";
 import {StoreKeys} from "../../../shared/constants/vault/store.keys";
 import {StoreService} from "../../../services/Store/store.service";
 import {AppVersionComponent} from "../../components/app-version/app-version.component";
+import {ProjectSearchModalComponent} from "../../components/modals/project-search-modal/project-search-modal.component";
 @Component({
   selector: 'app-start-page',
   standalone: true,
-    imports: [NgForOf, NgIf, ThemeToggleComponent, FillButtonComponent, OutlineButtonComponent, LogoContainerComponent, TranslatePipe, LanguageSelectorComponent, AvatarComponent, AppVersionComponent],
+  imports: [NgForOf, NgIf, ThemeToggleComponent, FillButtonComponent, OutlineButtonComponent, LogoContainerComponent, TranslatePipe, LanguageSelectorComponent, AvatarComponent, AppVersionComponent, ProjectSearchModalComponent],
   templateUrl: './start-page.component.html',
   styleUrls: ['./start-page.component.css']
 })
@@ -37,6 +38,8 @@ export class StartPageComponent {
   currentTheme: string = "";
   currentLang: string = "";
   hasAuth: string | null = null;
+  showSearchModal: boolean = false;
+
   constructor(protected configService: ConfigService, private renderer: Renderer2, private languageService: LanguageService, private router: Router, private dialogService: DialogService, private translateService: TranslateService, private windowService: WindowService) {}
 
   async ngOnInit() {
@@ -135,6 +138,13 @@ export class StartPageComponent {
     await this.windowService.openLoginWindow();
   }
 
+  openSearchModal() {
+    this.showSearchModal = true;
+  }
+
+  closeSearchModal() {
+    this.showSearchModal = false;
+  }
 
   protected readonly success = success;
   protected readonly StoreService = StoreService;

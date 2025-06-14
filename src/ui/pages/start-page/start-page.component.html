@@ -39,8 +39,16 @@
                     </div>
                     <app-outline-button [buttonText]="'startPage.buttons.open' | translate" [colorBtn]="success" (click)="openProject()"/>
                 </div>
+<!--                <div class="action-item">-->
+<!--                    <div class="action-content">-->
+<!--                        <div class="action-title">{{'startPage.actions.actionItemSearch.title' | translate}}</div>-->
+<!--                        <div class="action-description">{{'startPage.actions.actionItemSearch.description' | translate}}</div>-->
+<!--                    </div>-->
+<!--                    <app-outline-button [buttonText]="'startPage.buttons.search' | translate" [colorBtn]="success" (click)="openSearchModal()"/>-->
+<!--                </div>-->
                 <app-theme-toggle [currentTheme]="currentTheme"/>
             </div>
         </div>
     </div>
+    <app-project-search-modal *ngIf="showSearchModal" (close)="closeSearchModal()"></app-project-search-modal>
 </div>

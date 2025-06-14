@@ -1,0 +1,48 @@
+.modal-content {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.project-card {
+    transition: transform 0.2s;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.project-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-status {
+    font-weight: 500;
+}
+
+.badge {
+    margin-left: 10px;
+}
+
+/* Animation for dark mode */
+body.dark .modal-content {
+    background-color: #2c2c2c;
+    color: #ffffff;
+}
+
+body.dark .project-card {
+    background-color: #3a3a3a;
+    color: #ffffff;
+}
+
+body.dark .card-text {
+    color: #bbbbbb;
+}
+
+body.dark .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+}

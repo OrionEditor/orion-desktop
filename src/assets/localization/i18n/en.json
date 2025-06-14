@@ -25,7 +25,8 @@
     "buttons": {
       "create": "Create",
       "open": "Open",
-      "login": "Login"
+      "login": "Login",
+      "search": "Search"
     },"actions": {
       "actionItemCreate": {
         "title": "Create a new storage",
@@ -34,6 +35,10 @@
       "actionItemOpen": {
         "title": "Open project",
         "description": "Open an existing project on the device."
+      },
+      "actionItemSearch": {
+        "title": "Search my projects",
+        "description": "Find lost project on local machine."
       }
     },
     "alerts": {
