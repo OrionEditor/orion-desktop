@@ -8,7 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "tauri": "tauri",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "tauri:build": "node src/utils/dotenv.ts && tauri build",
+    "tauri:dev": "node src/utils/dotenv.ts && tauri dev"
   },
   "private": true,
   "dependencies": {
@@ -26,11 +28,12 @@
     "@tauri-apps/plugin-fs": "^2.0.2",
     "@tauri-apps/plugin-opener": "^2.2.6",
     "@tauri-apps/plugin-process": "^2.2.1",
-    "@tauri-apps/plugin-shell": "^2",
+    "@tauri-apps/plugin-shell": "^2.2.1",
     "@tauri-apps/plugin-store": "^2.2.0",
+    "@tauri-apps/plugin-stronghold": "^2.2.0",
     "@tauri-apps/plugin-updater": "^2.7.1",
     "diff": "^8.0.2",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "dotenv-webpack": "^8.1.0",
     "highlight.js": "^11.11.1",
     "html-to-md": "^0.8.6",

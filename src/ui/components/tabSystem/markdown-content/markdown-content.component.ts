@@ -57,6 +57,8 @@ import {ConfirmModalService} from "../../../../services/Modals/confirm-modal.ser
 import {ModalsConfig} from "../../../../shared/constants/modals/confirm/modals-config";
 import * as Diff from 'diff';
 import {VersionDiffModalComponent} from "../../modals/version-diff-modal/version-diff-modal.component";
+import {Child, Command} from "@tauri-apps/plugin-shell";
+import {ShellService} from "../../../../services/shell/shell.service";
 
 interface TocItem {
   level: number; // Уровень заголовка (1 для #, 2 для ##, и т.д.)
@@ -92,6 +94,8 @@ export class MarkdownContentComponent {
   @ViewChild('editorRef', { static: false }) editorRef!: ElementRef<HTMLDivElement>;
   @ViewChild('renderedContentRef', { static: false }) renderedContentRef!: ElementRef<HTMLDivElement>;
   @ViewChild('editorContentRef', { static: false }) editorContentRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('consoleInputRef', { static: false }) consoleInputRef!: ElementRef<HTMLInputElement>;
+
 
   projectId: string = '';
   content: string = '';
@@ -126,6 +130,7 @@ export class MarkdownContentComponent {
   currentGender: Gender= Gender.FEMALE;
 
   isVersionPanelCollapsed: boolean = true;
+  isConsolePanelCollapsed: boolean = true;
 
   MarkdownSettingsMenuItems: ContextMenuItem[] = MdSettingsContextMenu(this.filePath, this.content, this.fileName, this.showAudioTrack);
 
@@ -155,12 +160,15 @@ export class MarkdownContentComponent {
 
   twoSideFullView: boolean = false;
 
+  consoleOutput: string[] = [];
+  private commandProcess: Child | null = null;
+
   toggleTwoSideFullView(){
     this.twoSideFullView = !this.twoSideFullView;
   }
 
   constructor(private markdownService: MarkdownService, private markdownInfoService: MarkdownInfoService, private dialogService: DialogService, private languageTranslateService: LanguageTranslateService, private linkParserService: MarkdownLinkParserService,
-              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient) {}
+              private sanitizer: DomSanitizer, private codeParserService: MarkdownCodeParserService, private tableParserService: MarkdownTableParserService, private http: HttpClient,   private shellService: ShellService) {}
 
   private documentService = new DocumentService(this.http);
   private documentLocalService = new DocumentLocalService(this.documentService);
@@ -232,6 +240,10 @@ export class MarkdownContentComponent {
   // ngAfterViewInit(): void {
   //   this.updateTextareaHighlight();
   // }
+
+  ngOnDestroy() {
+    this.stopConsole(); // Clean up console process
+  }
 
   private async updateRenderedContent(): Promise<void> {
     let html = marked(this.content).toString();
@@ -1174,6 +1186,77 @@ export class MarkdownContentComponent {
 
   toggleVersionPanel(isCollapsed: boolean): void {
     this.isVersionPanelCollapsed = isCollapsed;
+  }
+
+  async toggleConsolePanel(isCollapsed: boolean) {
+    this.isConsolePanelCollapsed = isCollapsed;
+    if (!isCollapsed) {
+      await this.startConsole();
+      requestAnimationFrame(() => {
+        if (this.consoleInputRef) {
+          this.consoleInputRef.nativeElement.focus();
+        }
+      });
+    } else {
+      this.stopConsole();
+    }
+  }
+
+  async startConsole(): Promise<void> {
+    if (!this.projectPath) {
+      ToastService.warning('Путь к проекту не указан');
+      return;
+    }
+    try {
+      this.consoleOutput = [`cd /d ${this.projectPath}`];
+      this.commandProcess = await this.shellService.startCmd(this.projectPath);
+      // @ts-ignore
+      this.commandProcess.on('close', (data) => {
+        this.consoleOutput.push(`Console closed with code ${data.code}.`);
+        this.commandProcess = null;
+      });
+      // @ts-ignore
+      this.commandProcess.on('error', (error) => {
+        this.consoleOutput.push(`Error: ${error}`);
+      });
+      // @ts-ignore
+      this.commandProcess.stdout.on('data', (line) => {
+        const lines = line.split('\n').map((l: string) => l.trim()).filter((l: string) => l);
+        this.consoleOutput.push(...lines);
+      });
+      // @ts-ignore
+      this.commandProcess.stderr.on('data', (line) => {
+        const lines = line.split('\n').map((l: string) => l.trim()).filter((l: string) => l);
+        this.consoleOutput.push(...lines);
+      });
+    } catch (error) {
+      console.error('Не удалось запустить консоль:', error);
+      ToastService.danger('Не удалось запустить консоль');
+    }
+  }
+
+  async stopConsole() {
+    if (this.commandProcess) {
+      await this.commandProcess.kill();
+      this.commandProcess = null;
+    }
+    this.consoleOutput = [];
+  }
+
+  async sendConsoleCommand(event: KeyboardEvent): Promise<void> {
+    if (event.key === 'Enter' && this.commandProcess) {
+      const input = this.consoleInputRef.nativeElement;
+      const command = input.value.trim();
+      if (command) {
+        this.consoleOutput.push(`> ${command}`);
+        try {
+          await this.shellService.sendCommand(this.commandProcess, command);
+          input.value = '';
+        } catch (error) {
+          this.consoleOutput.push(`Ошибка выполнения команды: ${error}`);
+        }
+      }
+    }
   }
 
   protected readonly MarkdownView = MarkdownView;

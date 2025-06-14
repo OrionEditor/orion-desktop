@@ -165,6 +165,34 @@
         }
       ]
     },
-    "store:default"
+    "store:default",
+    "shell:allow-spawn",
+    "shell:allow-execute",
+    "shell:allow-kill",
+    "shell:allow-open",
+    "shell:allow-stdin-write",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "run",
+          "cmd": "sh",
+          "args": true
+        }
+      ]
+    },
+    "opener:default",
+    "shell:default",
+    "shell:allow-spawn",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "run-git-commit",
+          "cmd": "git",
+          "args": true
+        }
+      ]
+    }
   ]
 }

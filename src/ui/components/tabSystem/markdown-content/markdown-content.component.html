@@ -1,6 +1,9 @@
 <div class="tab-controls-actions">
     <div class="actions">
         <div class="view-list">
+<!--            <div class="view-item" [style.background]="!isConsolePanelCollapsed ? 'var(&#45;&#45;text-color)' : 'transparent'">-->
+<!--                <img src="assets/icons/svg/view/console.svg" (click)="toggleConsolePanel(!isConsolePanelCollapsed)">-->
+<!--            </div>-->
             <div class="view-item" [style.background]="view === MarkdownView.ONE_SIDE ? 'var(--text-color)' : 'transparent'">
                 <img src="assets/icons/svg/view/one-page.svg" (click)="onOneSide()">
             </div>
@@ -66,6 +69,17 @@
             <span *ngIf="twoSideFullView">⮞</span>
         </div>
     </div>
+
+<!--    <div class="console-panel" [class.collapsed]="isConsolePanelCollapsed">-->
+<!--        <div class="console-header">-->
+<!--            <span>Консоль</span>-->
+<!--            <button class="close-btn" (click)="toggleConsolePanel(true)">×</button>-->
+<!--        </div>-->
+<!--        <div class="console-output">-->
+<!--            <div *ngFor="let line of consoleOutput" class="console-line">{{ line }}</div>-->
+<!--        </div>-->
+<!--        <input #consoleInputRef class="console-input" (keydown)="sendConsoleCommand($event)" placeholder="Введите команду...">-->
+<!--    </div>-->
 
     <div class="editor-container" *ngIf="view === MarkdownView.ONE_SIDE">
 <!--        <div class="line-numbers" *ngIf="SettingsService.getLineNumbers()">-->
