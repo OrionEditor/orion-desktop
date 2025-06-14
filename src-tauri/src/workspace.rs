@@ -4,12 +4,28 @@ use serde::{Deserialize, Serialize};
 use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Workspace {
     pub project_name: String,
     pub presets: u8,
     pub active_tabs: Vec<String>,
+    pub tags: Vec<Tag>,
+    pub element_tags: Vec<ElementTag>
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Tag {
+    pub tag_id: String,
+    pub tag_label: String,
+    pub tag_color: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ElementTag {
+    pub element_path: String,
+    pub tag_id: String,
 }
 
 impl Default for Workspace {
@@ -18,6 +34,8 @@ impl Default for Workspace {
             project_name: "New Project".to_string(),
             presets: 0,
             active_tabs: vec![],
+            tags: vec![],
+            element_tags: vec![],
         }
     }
 }
@@ -66,6 +84,8 @@ impl Workspace {
             project_name,
             presets,
             active_tabs: vec![],
+            tags: vec![],
+            element_tags: vec![],
         }
     }
 
@@ -197,5 +217,93 @@ impl Workspace {
         let workspace = Self::load(workspace_path);
         println!("Retrieved preset: {}", workspace.presets);
         Ok(workspace.presets)
+    }
+
+    /// Добавляет новый тег в `tags`.
+    pub fn add_tag(
+        &mut self,
+        workspace_path: &PathBuf,
+        tag_label: String,
+        tag_color: String,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let tag_id = Uuid::new_v4().to_string();
+        let tag = Tag {
+            tag_id: tag_id.clone(),
+            tag_label,
+            tag_color,
+        };
+        self.tags.push(tag);
+        self.save(workspace_path)?;
+        println!("Added tag: {}", tag_id);
+        Ok(tag_id)
+    }
+
+    /// Удаляет тег из `tags` и все связанные `element_tags`.
+    pub fn remove_tag(
+        &mut self,
+        workspace_path: &PathBuf,
+        tag_id: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let initial_len = self.tags.len();
+        self.tags.retain(|tag| tag.tag_id != tag_id);
+        self.element_tags.retain(|et| et.tag_id != tag_id);
+        if self.tags.len() < initial_len {
+            self.save(workspace_path)?;
+            println!("Removed tag: {}", tag_id);
+        } else {
+            println!("Tag not found: {}", tag_id);
+        }
+        Ok(())
+    }
+
+    /// Возвращает все теги.
+    pub fn get_tags(workspace_path: &PathBuf) -> Result<Vec<Tag>, Box<dyn std::error::Error>> {
+        let workspace = Self::load(workspace_path);
+        println!("Retrieved tags: {:?}", workspace.tags);
+        Ok(workspace.tags)
+    }
+
+    /// Привязывает тег к файлу или папке.
+    pub fn add_element_tag(
+        &mut self,
+        workspace_path: &PathBuf,
+        element_path: String,
+        tag_id: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        if !self.element_tags.iter().any(|et| et.element_path == element_path && et.tag_id == tag_id) {
+            self.element_tags.push(ElementTag {
+                element_path,
+                tag_id,
+            });
+            self.save(workspace_path)?;
+        } else {
+            println!("Element tag already exists for path: {}", element_path);
+        }
+        Ok(())
+    }
+
+    /// Удаляет связь тега с файлом или папкой.
+    pub fn remove_element_tag(
+        &mut self,
+        workspace_path: &PathBuf,
+        element_path: String,
+        tag_id: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let initial_len = self.element_tags.len();
+        self.element_tags.retain(|et| !(et.element_path == element_path && et.tag_id == tag_id));
+        if self.element_tags.len() < initial_len {
+            self.save(workspace_path)?;
+            println!("Removed element tag for path: {}", element_path);
+        } else {
+            println!("Element tag not found for path: {}", element_path);
+        }
+        Ok(())
+    }
+
+    /// Возвращает все связи тегов с элементами.
+    pub fn get_element_tags(workspace_path: &PathBuf) -> Result<Vec<ElementTag>, Box<dyn std::error::Error>> {
+        let workspace = Self::load(workspace_path);
+        println!("Retrieved element_tags: {:?}", workspace.element_tags);
+        Ok(workspace.element_tags)
     }
 }

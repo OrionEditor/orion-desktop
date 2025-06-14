@@ -2647,6 +2647,7 @@ dependencies = [
  "tauri-plugin-store",
  "tauri-plugin-updater",
  "tempfile",
+ "uuid",
  "winapi",
  "zip",
 ]
