@@ -4,13 +4,13 @@
 <!--            <div class="view-item" [style.background]="!isConsolePanelCollapsed ? 'var(&#45;&#45;text-color)' : 'transparent'">-->
 <!--                <img src="assets/icons/svg/view/console.svg" (click)="toggleConsolePanel(!isConsolePanelCollapsed)">-->
 <!--            </div>-->
-            <div class="view-item" [style.background]="view === MarkdownView.ONE_SIDE ? 'var(--text-color)' : 'transparent'">
+            <div class="view-item" [style.background]="view === MarkdownView.ONE_SIDE ? 'var(--choose-bg)' : 'transparent'">
                 <img src="assets/icons/svg/view/one-page.svg" (click)="onOneSide()">
             </div>
-            <div class="view-item" [style.background]="view === MarkdownView.TWO_SIDE ? 'var(--text-color)' : 'transparent'">
+            <div class="view-item" [style.background]="view === MarkdownView.TWO_SIDE ? 'var(--choose-bg)' : 'transparent'">
                 <img src="assets/icons/svg/view/two-page.svg" (click)="onTwoSide()">
             </div>
-            <div class="view-item" [style.background]="!isVersionPanelCollapsed ? 'var(--text-color)' : 'transparent'">
+            <div class="view-item" [style.background]="!isVersionPanelCollapsed ? 'var(--choose-bg)' : 'transparent'">
                 <img src="assets/icons/svg/actions/version-history.svg" (click)="toggleVersionPanel(!isVersionPanelCollapsed)">
             </div>
         </div>

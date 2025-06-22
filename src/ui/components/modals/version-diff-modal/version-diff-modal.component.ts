@@ -93,7 +93,7 @@ export class VersionDiffModalComponent {
 
     let currentHtml = '';
     let prevHtml = '';
-    let currentLineChanges: ('removed' | 'added' | null)[] = [];
+    let currentLineChanges: ('added' | 'removed' | null)[] = [];
     let prevLineChanges: ('removed' | 'added' | null)[] = [];
 
     let currentLine = '';
@@ -114,7 +114,7 @@ export class VersionDiffModalComponent {
           currentHtml += `<div class="diff-line">${currentLine}</div>`;
           prevHtml += `<div class="diff-line">${prevLine}</div>`;
           currentLineChanges[lineIndex] = part.added ? 'removed' : part.removed ? 'added' : currentLineChanges[lineIndex] || null;
-          prevLineChanges[lineIndex] = part.added ? 'added' : part.removed ? 'removed' : prevLineChanges[lineIndex] || null;
+          prevLineChanges[lineIndex] = part.added ? 'removed' : part.removed ? 'added' : prevLineChanges[lineIndex] || null;
           lineIndex++;
           currentLine = '';
           prevLine = '';
@@ -136,7 +136,7 @@ export class VersionDiffModalComponent {
     if (currentLine || prevLine) {
       currentHtml += `<div class="diff-line">${currentLine}</div>`;
       prevHtml += `<div class="diff-line">${prevLine}</div>`;
-      currentLineChanges[lineIndex] = diff[diff.length - 1]?.removed ? 'removed' : diff[diff.length - 1]?.added ? 'added' : null;
+      currentLineChanges[lineIndex] = diff[diff.length - 1]?.removed ? 'added' : diff[diff.length - 1]?.added ? 'removed' : null;
       prevLineChanges[lineIndex] = diff[diff.length - 1]?.added ? 'removed' : diff[diff.length - 1]?.removed ? 'added' : null;
     }
 

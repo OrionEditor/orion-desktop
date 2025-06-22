@@ -5,6 +5,9 @@
     <div class="sidebar-filesystem-controls-item" (click)="onCreateFolder()">
         <img src="assets/icons/svg/filesystem/controls/new-folder.svg" title="Создать папку">
     </div>
+    <div class="sidebar-filesystem-controls-item" (click)="openTagModal()">
+        <img src="assets/icons/svg/filesystem/controls/new-tag.svg" title="Создать тег">
+    </div>
     <div *ngIf="fileStructureLength != 1" class="sidebar-filesystem-controls-item" (click)="toggleExpandCollapse()">
         <img
                 [src]="isExpanded ? 'assets/icons/svg/filesystem/controls/collapse.svg' : 'assets/icons/svg/filesystem/controls/expand.svg'"
@@ -25,3 +28,24 @@
         [placeholderInput]="textModalService.getModalInputPlaceholder()"
 ></app-text-modal>
 <app-context-menu *ngIf="showSortContextMenu" [items]="(sortingContextMenuService.menu$ | async) || []" [position]="PositionEnum.FIXED" [x]="menuX" [y]="menuY" (close)="onMenuClose()" (itemSelected)="onSortSelect($event)"/>
+
+<div class="tag-modal" *ngIf="showTagModal">
+    <div class="tag-modal-content">
+        <h2>Управление тегами</h2>
+        <div class="tag-list">
+            <div *ngFor="let tag of tagService.getLocalTags()" class="tag-item">
+                <div class="tag-item-info">
+                    <span [style.background]="tag.tag_color" class="tag-color"></span>
+                    <span>{{ tag.tag_label }}</span>
+                </div>
+                <app-fill-button (click)="deleteTag(tag.tag_id)" buttonText="Удалить" [colorBtn]="danger"/>
+            </div>
+        </div>
+        <div class="create-tag">
+            <input type="text" [(ngModel)]="newTagLabel" placeholder="Имя тега">
+            <input type="color" [(ngModel)]="newTagColor">
+            <app-fill-button (click)="createTag()" buttonText="Создать" [colorBtn]="success"/>
+        </div>
+        <app-fill-button (click)="closeTagModal()" buttonText="Закрыть" [colorBtn]="danger"/>
+    </div>
+</div>

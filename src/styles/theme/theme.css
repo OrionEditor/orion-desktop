@@ -11,6 +11,8 @@
     --primary: #007bff;
     --danger: #dc3545;
     --warning: #ffc107;
+    --span-bg: #212529;
+    --choose-bg: black;
 }
 
 body.dark {
@@ -25,4 +27,6 @@ body.dark {
     --primary: #007bff;
     --danger: #dc3545;
     --warning: #ffc107;
+    --span-bg: #c5c8ca;
+    --choose-bg: #c5c8ca;
 }

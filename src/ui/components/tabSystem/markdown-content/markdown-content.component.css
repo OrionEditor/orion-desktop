@@ -336,7 +336,7 @@
 }
 
 .info span, .filepath {
-    background-color: #212529;
+    background-color: var(--span-bg);
     padding: 4px 8px;
     border-radius: 3px;
 }
@@ -472,7 +472,7 @@
     position: absolute;
     top: 10vh;
     z-index: 1000;
-    background: var(--text-color);
+    background: var(--choose-bg);
     color: var(--background-color);
     display: flex;
     justify-content: center;

@@ -306,4 +306,25 @@ impl Workspace {
         println!("Retrieved element_tags: {:?}", workspace.element_tags);
         Ok(workspace.element_tags)
     }
+
+    /// Возвращает все теги, связанные с элементом по его пути.
+    pub fn get_tags_by_element_path(
+        workspace_path: &PathBuf,
+        element_path: String,
+    ) -> Result<Vec<Tag>, Box<dyn std::error::Error>> {
+        let workspace = Self::load(workspace_path);
+        let element_tag_ids: Vec<String> = workspace
+            .element_tags
+            .into_iter()
+            .filter(|et| et.element_path == element_path)
+            .map(|et| et.tag_id)
+            .collect();
+        let tags: Vec<Tag> = workspace
+            .tags
+            .into_iter()
+            .filter(|tag| element_tag_ids.contains(&tag.tag_id))
+            .collect();
+        println!("Retrieved tags for path {}: {:?}", element_path, tags);
+        Ok(tags)
+    }
 }

@@ -480,19 +480,21 @@ async fn remove_active_tab(workspace_path: String, tab_path: String) -> Result<(
     workspace.remove_active_tab(&path, tab_path).map_err(|e| e.to_string())
 }
 
+
 #[tauri::command]
 async fn add_tag(workspace_path: String, tag_label: String, tag_color: String) -> Result<String, String> {
     let path = PathBuf::from(workspace_path);
-    let mut workspace = Workspace::load(&path);
+    let mut workspace = Workspace::load_second(&path);
     workspace.add_tag(&path, tag_label, tag_color).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 async fn remove_tag(workspace_path: String, tag_id: String) -> Result<(), String> {
     let path = PathBuf::from(workspace_path);
-    let mut workspace = Workspace::load(&path);
+    let mut workspace = Workspace::load_second(&path);
     workspace.remove_tag(&path, tag_id).map_err(|e| e.to_string())
 }
+
 
 #[tauri::command]
 async fn get_tags(workspace_path: String) -> Result<Vec<workspace::Tag>, String> {
@@ -503,14 +505,14 @@ async fn get_tags(workspace_path: String) -> Result<Vec<workspace::Tag>, String>
 #[tauri::command]
 async fn add_element_tag(workspace_path: String, element_path: String, tag_id: String) -> Result<(), String> {
     let path = PathBuf::from(workspace_path);
-    let mut workspace = Workspace::load(&path);
+    let mut workspace = Workspace::load_second(&path);
     workspace.add_element_tag(&path, element_path, tag_id).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 async fn remove_element_tag(workspace_path: String, element_path: String, tag_id: String) -> Result<(), String> {
     let path = PathBuf::from(workspace_path);
-    let mut workspace = Workspace::load(&path);
+    let mut workspace = Workspace::load_second(&path);
     workspace.remove_element_tag(&path, element_path, tag_id).map_err(|e| e.to_string())
 }
 
@@ -518,6 +520,12 @@ async fn remove_element_tag(workspace_path: String, element_path: String, tag_id
 async fn get_element_tags(workspace_path: String) -> Result<Vec<workspace::ElementTag>, String> {
     let path = PathBuf::from(workspace_path);
     Workspace::get_element_tags(&path).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn get_tags_by_element_path(workspace_path: String, element_path: String) -> Result<Vec<workspace::Tag>, String> {
+    let path = PathBuf::from(workspace_path);
+    Workspace::get_tags_by_element_path(&path, element_path).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -658,7 +666,8 @@ fn main() {
             get_tags,
             add_element_tag,
             remove_element_tag,
-            get_element_tags
+            get_element_tags,
+            get_tags_by_element_path
         ]) // Регистрируем команду
         .run(tauri::generate_context!()) // Запускаем Tauri
         .expect("error while running tauri application");

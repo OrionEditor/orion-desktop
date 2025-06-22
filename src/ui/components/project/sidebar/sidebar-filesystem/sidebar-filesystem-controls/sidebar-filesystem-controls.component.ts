@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
-import {AsyncPipe, NgIf, NgStyle} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {FileSystemService} from "../../../../../../services/FileSystem/fileSystem.service";
 import {TextModalComponent} from "../../../../modals/text-modal/text-modal.component";
 import {TEXT_MODAL_TYPES} from "../../../../../../shared/constants/modals/textModal/textModal.types";
@@ -14,6 +14,10 @@ import {
 } from "../../../../../../services/FileSystem/file-system-sorting.context-menu.service";
 import {PositionEnum} from "../../../../../../shared/enums/position.enum";
 import {getFileExtension} from "../../../../../../utils/file.utils";
+import {TagService} from "../../../../../../services/Tags/tags.sevice";
+import {getWorkspacePath} from "../../../../../../shared/constants/workspace/workspace-path.const";
+import {FillButtonComponent} from "../../../../buttons/fill-button/fill-button.component";
+import {danger, success} from "../../../../../../styles/var/globalColors";
 
 @Component({
   selector: 'app-sidebar-filesystem-controls',
@@ -24,7 +28,9 @@ import {getFileExtension} from "../../../../../../utils/file.utils";
     NgStyle,
     TextModalComponent,
     AsyncPipe,
-    ContextMenuComponent
+    ContextMenuComponent,
+    NgForOf,
+    FillButtonComponent
   ],
   templateUrl: './sidebar-filesystem-controls.component.html',
   styleUrl: './sidebar-filesystem-controls.component.css'
@@ -41,6 +47,16 @@ export class SidebarFilesystemControlsComponent {
   menuX: number = 0;
   menuY: number = 0
 
+  showTagModal = false;
+  newTagLabel: string = '';
+  newTagColor: string = '#2BB63B';
+
+  async ngOnInit() {
+    if (this.projectPath) {
+      await this.tagService.syncTags(getWorkspacePath(this.projectPath));
+    }
+  }
+
   onRightClick(event: MouseEvent): void {
     event.preventDefault();
     this.menuX = event.clientX;
@@ -52,7 +68,7 @@ export class SidebarFilesystemControlsComponent {
     this.showSortContextMenu = false;
   }
 
-  constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService, protected sortingContextMenuService: FileSystemSortingContextMenuService) {}
+  constructor(private fileSystemService: FileSystemService, protected textModalService: TextModalService, private validateService: ValidationService, private translateService: TranslateService, protected sortingContextMenuService: FileSystemSortingContextMenuService, protected tagService: TagService) {}
 
   async confirmModal(inputValue: string) {
     const modalInput = this.textModalService.modalInput.trim();
@@ -81,7 +97,26 @@ export class SidebarFilesystemControlsComponent {
           );
           await this.fileSystemService.loadFileStructure(this.projectPath!);
         } catch (e) {}
-      } else if(modalType === TEXT_MODAL_TYPES.RENAME){
+      }
+      // else if (modalType === TEXT_MODAL_TYPES.TAG) {
+      //   await this.tagService.addTag(this.projectPath + '\\.orion', modalInput, '#FF5733'); // Цвет по умолчанию
+      //   this.closeModal();
+      // }
+      else if (modalType === TEXT_MODAL_TYPES.ADD_TAG) {
+        // await this.tagService.addTagToElement(this.projectPath + '\\.orion', this.textModalService.path, modalInput);
+
+        const tags = await this.tagService.getTags(getWorkspacePath(this.projectPath));
+        console.log(tags);
+        console.log(modalInput);
+        const tag = tags.find(t => t.tag_label == modalInput);
+        console.log('tag:', tag);
+        if (!tag) {
+          alert('Тег с таким названием не найден!');
+          return;
+        }
+        await this.tagService.addTagToElement(this.projectPath + '\\.orion', this.textModalService.path, tag.tag_id);
+      }
+      else if(modalType === TEXT_MODAL_TYPES.RENAME){
 
         try {
           await FileSystemService.renameFile(
@@ -114,6 +149,12 @@ export class SidebarFilesystemControlsComponent {
     this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.FOLDER, translatedPlaceholder);
   }
 
+  async onCreateTag() {
+    const translatedHeader = 'Создать тег';
+    const translatedPlaceholder = 'Введите имя тега...';
+    this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.TAG, translatedPlaceholder);
+  }
+
   toggleExpandCollapse() {
     if (this.isExpanded) {
       this.collapseAllEvent.emit();
@@ -132,5 +173,40 @@ export class SidebarFilesystemControlsComponent {
     this.showSortContextMenu = false;
   }
 
+  openTagModal() {
+    this.showTagModal = true;
+    this.newTagLabel = '';
+    this.newTagColor = '#2BB63B';
+  }
+
+  closeTagModal() {
+    this.showTagModal = false;
+  }
+
+  async createTag() {
+    if (!this.projectPath || !this.newTagLabel.trim()) {
+      alert('Имя тега не может быть пустым!');
+      return;
+    }
+    try {
+      await this.tagService.addTag(this.projectPath + '\\.orion', this.newTagLabel.trim(), this.newTagColor);
+      this.newTagLabel = '';
+      this.newTagColor = '#2BB63B';
+    } catch (error) {
+      console.error('Ошибка при создании тега:', error);
+    }
+  }
+
+  async deleteTag(tagId: string) {
+    if (!this.projectPath) return;
+    try {
+      await this.tagService.removeTag(this.projectPath + '\\.orion', tagId);
+    } catch (error) {
+      console.error('Ошибка при удалении тега:', error);
+    }
+  }
+
   protected readonly PositionEnum = PositionEnum;
+  protected readonly danger = danger;
+  protected readonly success = success;
 }

@@ -12,12 +12,12 @@ pub struct Project {
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    pub recent_projects: Vec<Project>, // Изменено на Vec<Project>
+    pub recent_projects: Vec<Project>,
     pub last_opened: Option<String>,
     pub theme: String,
     pub font_size: u8,
-    pub language: String,           // Новое поле для языка
-    pub auth_token: Option<String>, // Поле для токена
+    pub language: String,
+    pub auth_token: Option<String>,
 }
 
 // Реализация Default для Config

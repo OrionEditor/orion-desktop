@@ -14,6 +14,9 @@ import {TEXT_MODAL_TYPES} from "../../../../shared/constants/modals/textModal/te
 import {TextModalService} from "../../../../services/Modals/TextModal/textModal.service";
 import {WorkspaceService} from "../../../../services/Workspace/workspace.service";
 import {getWorkspacePath} from "../../../../shared/constants/workspace/workspace-path.const";
+import {TagService} from "../../../../services/Tags/tags.sevice";
+import {FillButtonComponent} from "../../buttons/fill-button/fill-button.component";
+import {danger, success} from "../../../../styles/var/globalColors";
 
 
 @Component({
@@ -25,7 +28,8 @@ import {getWorkspacePath} from "../../../../shared/constants/workspace/workspace
     ContextMenuNodeComponent,
     NgStyle,
     TranslatePipe,
-    ContextMenuComponent
+    ContextMenuComponent,
+    FillButtonComponent
   ],
   templateUrl: './file-node.component.html',
   styleUrl: './file-node.component.css'
@@ -42,17 +46,31 @@ export class FileNodeComponent {
   showContextMenu = false;
   contextMenuPosition = { x: 0, y: 0 };
 
-  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this), this.onRename.bind(this));
+  tags: { tag_id: string, tag_label: string, tag_color: string }[] = [];
+  showAddTagModal = false;
 
-  constructor(private fileSystemService: FileSystemService, private configService: ConfigService, private translateService: TranslateService, private textModalService: TextModalService) {}
 
-  ngOnInit() {
+  FileNodeContextMenuFilter: ContextMenuItem[] = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this), this.onRename.bind(this), this.openAddTagModal.bind(this));
+
+  constructor(private fileSystemService: FileSystemService, private configService: ConfigService, private translateService: TranslateService, private textModalService: TextModalService, protected tagService: TagService) {}
+
+  async ngOnInit() {
     this.projectPath = this.configService.getLastOpened();
     if (this.node.expanded === undefined) {
       this.node.expanded = false;
     }
     document.addEventListener('click', this.onDocumentClick.bind(this));
-    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this), this.onRename.bind(this));
+    this.FileNodeContextMenuFilter = FileNodeContextmenu(this.node, this.deleteFile.bind(this), this.onCreateFolder.bind(this), this.onCreateNote.bind(this), this.onRename.bind(this),     this.openAddTagModal.bind(this));
+    await this.loadTags();
+  }
+
+  async loadTags() {
+    if (!this.projectPath) return;
+    try {
+      this.tags = await this.tagService.getTagsByElementPath(getWorkspacePath(this.projectPath), this.node.path);
+    } catch (error) {
+      console.error('Ошибка при загрузке тегов:', error);
+    }
   }
 
   ngOnDestroy() {
@@ -196,7 +214,38 @@ export class FileNodeComponent {
     this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.RENAME, translatedPlaceholder, this.node.path, this.node.name);
   }
 
+  // async onAddTag() {
+  //   const translatedHeader = 'Добавить тег';
+  //   const translatedPlaceholder = 'Введите название тега';
+  //   this.textModalService.openModal(translatedHeader, TEXT_MODAL_TYPES.ADD_TAG, translatedPlaceholder, this.node.path);
+  // }
+
+  openAddTagModal() {
+    this.showAddTagModal = true;
+  }
+
+  closeAddTagModal() {
+    this.showAddTagModal = false;
+  }
+
+  async toggleTagAttachment(tagId: string) {
+    if (!this.projectPath) return;
+    const workspacePath = this.projectPath + '\\.orion';
+    try {
+      if (this.tagService.isTagAttached(this.node.path, tagId)) {
+        await this.tagService.removeTagFromElement(workspacePath, this.node.path, tagId);
+      } else {
+        await this.tagService.addTagToElement(workspacePath, this.node.path, tagId);
+      }
+      await this.loadTags(); // Обновляем отображаемые теги
+    } catch (error) {
+      console.error('Ошибка при изменении привязки тега:', error);
+    }
+  }
+
   protected readonly DEFAULT_FOLDER_ICON = DEFAULT_FOLDER_ICON;
   protected readonly getFileIcon = getFileIcon;
   protected readonly FileNodeContextmenu = FileNodeContextmenu;
+  protected readonly danger = danger;
+  protected readonly success = success;
 }

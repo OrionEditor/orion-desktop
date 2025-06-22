@@ -23,7 +23,8 @@
     </span>
         <!-- Название и содержимое -->
         <span class="file-node-name">
-      {{ getNodeName() }}
+                        {{ getNodeName() }}
+            <span *ngFor="let tag of tags" class="tag-label" [style.background]="tag.tag_color" [title]="tag.tag_label">{{tag.tag_label}}</span>
             <ng-container *ngIf="isDirectory()">
         <span class="count-contents">
           ({{ 'projectPage.labels.nodeFileCountContents' | translate }}
@@ -49,3 +50,28 @@
 
     <app-context-menu *ngIf="showContextMenu" [items]="FileNodeContextMenuFilter" [x]="contextMenuPosition.x" [y]="contextMenuPosition.y" (close)="onMenuClose()"></app-context-menu>
 </li>
+
+<div class="tag-modal" *ngIf="showAddTagModal">
+    <div class="tag-modal-content">
+        <h2>Управление тегами для элемента</h2>
+        <div class="tag-list">
+            <div *ngFor="let tag of tagService.getLocalTags()" class="tag-item">
+                <div class="tag-item-info">
+                    <span [style.background]="tag.tag_color" class="tag-color"></span>
+                    <span>{{ tag.tag_label }}</span>
+                </div>
+<!--                <app-fill-button-->
+<!--                        (click)="toggleTagAttachment(tag.tag_id)"-->
+<!--                        [buttonText]="tagService.isTagAttached(node.path, tag.tag_id) ? 'Отвязать' : 'Привязать'"-->
+<!--                        [colorBtn]="tagService.isTagAttached(node.path, tag.tag_id) ? danger : success"-->
+<!--                />-->
+                <app-fill-button
+                        (click)="toggleTagAttachment(tag.tag_id)"
+                        [buttonText]="tagService.isTagAttached(node.path, tag.tag_id) ? 'Привязать' : 'Отвязать'"
+                        [colorBtn]="tagService.isTagAttached(node.path, tag.tag_id) ? success : danger"
+                />
+            </div>
+        </div>
+        <app-fill-button (click)="closeAddTagModal()" buttonText="Закрыть" [colorBtn]="danger"/>
+    </div>
+</div>

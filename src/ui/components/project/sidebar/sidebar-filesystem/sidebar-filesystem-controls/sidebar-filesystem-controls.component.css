@@ -39,10 +39,84 @@
     align-items: center;
     cursor: pointer;
     /*background-color: var(--text-color);*/
-    background-color: var(--base-container-color);
+    background-color: var(--choose-bg);
 }
 
 .sidebar-filesystem-controls-item img{
     width: 24px;
     height: 24px;
+}
+
+.tag-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.tag-modal-content {
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: var(--text-color);
+}
+
+.tag-list {
+    margin-bottom: 20px;
+}
+
+.tag-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+.tag-item-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 10px;
+}
+
+.tag-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.create-tag {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.create-tag input[type="text"] {
+    flex: 1;
+    padding: 5px;
+}
+
+.create-tag input[type="color"] {
+    width: 40px;
+    padding: 0;
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
 }

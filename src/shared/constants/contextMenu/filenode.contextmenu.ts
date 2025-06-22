@@ -1,7 +1,7 @@
 import {ContextMenuItem} from "../../../interfaces/context-menu-item.interface";
 import {FileSystemService} from "../../../services/FileSystem/fileSystem.service";
 import {FileSystemNode} from "../../../interfaces/filesystem/filesystem-node.interface";
-export const FileNodeContextmenu = (node: FileSystemNode, deleteFile: () => void, createFolder: () => void, createNote: () => void, renameNode: () => void): ContextMenuItem[] => [
+export const FileNodeContextmenu = (node: FileSystemNode, deleteFile: () => void, createFolder: () => void, createNote: () => void, renameNode: () => void, addTag: () => void): ContextMenuItem[] => [
     {
         id: 'create',
         text: 'Создать',
@@ -22,6 +22,12 @@ export const FileNodeContextmenu = (node: FileSystemNode, deleteFile: () => void
             },
         ],
         isShow: !!(node && node.type_id && node.type_id === 'Directory')
+    },
+    {
+        id: 'add-tag',
+        text: 'Добавить тег',
+        icon: 'assets/icons/svg/contextMenu/add-tag.svg',
+        action: () => addTag()
     },
     {
         id: 'rename',
