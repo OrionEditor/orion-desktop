@@ -1,11 +1,11 @@
 {
-  "version": "0.1.5",
-  "notes": "Release notes for 0.1.5",
-  "pub_date": "2025-05-02T11:35:55Z",
+  "version": "0.1.6",
+  "notes": "Release notes for 0.1.6",
+  "pub_date": "2025-06-23T12:54:30Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "Signature not found",
-      "url": "https://github.com/DurmanPass/Durman-Desktop/releases/download/v0.1.42/DurmanPass_0.1.42_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTYVNWbXc3TE12SUlYdTNhRXZwb3Z6V2FXUStlV3ZMQy9sTEVVbExWUGxjbkw5VnB5SEZZN0ExU3ZyNVBCQzcwTWkvYlZsdHFlMFR1Uk1YOHltZEkwc3hRSDcwRUE1aEFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwNjgzMjUzCWZpbGU6T3Jpb25FZGl0b3JfMC4xLjZfeDY0X2VuLVVTLm1zaQpIS2t0dlZXeU5qSHF1K0dXSGp1SXpCTVVOVTRUUk5ZOU9Zdk1IUzFQY1VKRVBERTNzYVlaak42ZFlxTk9pbUFWUTNvM1VaWHNkdDJsUmEvYnZZUEZEdz09Cg==",
+      "url": "https://github.com/OrionEditor/orion-desktop/releases/download/v0.1.6/OrionEditor_0.1.6_x64_en-US.msi"
     }
   }
 }
