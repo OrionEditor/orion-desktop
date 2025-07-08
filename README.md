@@ -1,7 +1,13 @@
-# Tauri + Angular
+# OrionEditor - Текстовый Markdown-редактор
+## Главное окно (светлая тема)
+<img src="src/assets/screen/1)%20Start_page(light).png" alt="Главное окно">
 
-This template should help get you started developing with Tauri and Angular.
+## Главное окно (тёмная тема)
+<img src="src/assets/screen/1)%20Start_page.png" alt="Главное окно">
 
-## Recommended IDE Setup
+## Окно проекта
+<img src="src/assets/screen/5)%20project_page.png" alt="Окно проекта">
 
-[VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) + [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template).
+## Окно версий
+
+<img src="src/assets/screen/11)%20VERSION.png" alt="Окно версий">
